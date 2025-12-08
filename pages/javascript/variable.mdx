@@ -1,0 +1,44 @@
+import { Callout } from "nextra/components";
+
+# Variabel: Var, Let, dan Const
+
+Di JavaScript, ada 3 cara buat simpan data. Jangan sampe salah pilih ya!
+
+## 1. Var (Jadul 👴)
+
+Jangan dipake lagi kecuali terpaksa. Dia suka bocor (scope-nya global).
+
+```js
+var nama = "Otong Surotong";
+```
+
+## 2. Let (Modern 😎)
+
+Pake ini kalau nilainya bakal berubah-ubah.
+
+```js
+let umur = 20;
+umur = 21; // ✅ Boleh diubah
+```
+
+### 3. Const (Setia 🔒)
+
+Pake ini kalau nilainya GAK BOLEH berubah selamanya.
+
+```js
+const tglLahir = "1 Januari";
+// tglLahir = "2 Januari"; // ❌ Error! Gak bisa selingkuh.
+```
+
+<Callout type="info" emoji="ℹ️">
+  **Tips Pro:** Selalu gunakan `const` secara default. Kalau ternyata butuh
+  diubah, baru ganti jadi `let`.
+</Callout>
+
+<Callout type="warning" emoji="⚠️">
+  Jangan pernah pake `var` lagi ya, nanti dimarahin senior!
+</Callout>
+
+## Kesimpulan
+
+Gimana? Gampang kan bedainnya?

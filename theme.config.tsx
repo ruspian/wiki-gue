@@ -1,14 +1,12 @@
 const config = {
-  logo: <span>📚 Wiki Belajar Gue</span>,
+  logo: <span>📚 Wiki Gue</span>,
   project: {
-    link: "https://github.com/username-lo/wiki-gue", // Ganti link repo lo
+    link: "https://github.com/ruspian/wiki-gue",
   },
-  chat: {
-    link: "https://discord.com", // Opsional, bisa dihapus
-  },
-  docsRepositoryBase: "https://github.com/username-lo/wiki-gue/blob/main",
+
+  docsRepositoryBase: "https://github.com/ruspian/wiki-gue/blob/main",
   footer: {
-    text: "Dibuat sambil belajar TypeScript & Next.js",
+    text: "Dibuat dengan ❤️ oleh Ruspian untuk documentasi yang bermanfaat dan mudah dipahami.",
   },
   // Supaya SEO bagus dan tab browser rapi
   useNextSeoProps() {
