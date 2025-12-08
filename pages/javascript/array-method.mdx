@@ -1,0 +1,199 @@
+import { Callout } from "nextra/components";
+
+# Array Method 🛠️
+
+Lupain cara ribet pake `for (let i = 0...)`.
+JavaScript modern punya alat canggih buat ngolah data Array dengan bersih dan elegan.
+
+Kita pake data dummy ini buat latihan:
+
+```js
+const mahasiswa = [
+  { id: 1, nama: "Otong", nilai: 85, lunas: true },
+  { id: 2, nama: "Sentot", nilai: 50, lunas: false },
+  { id: 3, nama: "Asep", nilai: 90, lunas: true },
+];
+```
+
+## 1. Map (Pengubah) 🔄
+
+Ini method paling penting di React. Konsepnya: Lo punya bahan mentah, lo olah, jadi barang jadi. Jumlah masuk = Jumlah keluar.
+
+---
+
+```js
+// 'mhs' itu mewakili satu item di dalam array (lo bebas kasih nama apa aja)
+const daftarNama = mahasiswa.map((mhs) => mhs.nama);
+
+console.log(daftarNama);
+// Output: ["Otong", "Sentot", "Asep"]
+```
+
+<Callout type="info" emoji="⚛️">
+  {" "}
+  Penting buat React: Nanti di React, lo bakal sering pake map buat ubah Data JSON
+  jadi Codingan HTML.
+
+```js
+// Contoh React (Spoiler dikit)
+mahasiswa.map((mhs) => <h1>{mhs.nama}</h1>);
+```
+
+</Callout>
+
+## 2. Filter (Penyaring / Seleksi) 🗑️
+
+> **Kasus:** Cari mahasiswa yang nilainya lulus (di atas 70).
+
+```js
+const yangLulus = mahasiswa.filter((mhs) => mhs.nilai > 70);
+
+console.log(yangLulus);
+// Output: [{Otong...}, {Asep...}]
+// Si Sentot ilang karena nilainya cuma 50.
+```
+
+> **Trik React:** Ini sering dipake buat fitur Delete. Caranya: "Filter (simpan) semua item KECUALI yang ID-nya mau dihapus".
+
+---
+
+## 3. Find (Pencari Tunggal) 🔍
+
+Mirip filter, tapi dia cuma nyari SATU biji yang pertama kali ketemu. Hasilnya bukan Array, tapi langsung Object-nya.
+
+> **Kasus:** Cari data detail mahasiswa dengan ID 2.
+
+```js
+const siTarget = mahasiswa.find((mhs) => mhs.id == 2);
+
+console.log(siTarget);
+// Output: { id: 2, nama: "Sentot", ... }
+// Langsung dapet objectnya, gak pake kurung siku [].
+```
+
+---
+
+## 4. Reduce (Pengumpul) 💰
+
+Ini method paling _powerful_ tapi paling sering bikin pusing pemula.
+Konsepnya: **Banyak data masuk -> Satu hasil keluar.**
+
+> **Kasus:** Hitung total nilai semua mahasiswa (Sum).
+
+```js
+const nilaiKelas = [80, 90, 75, 100];
+
+// acc (Accumulator) = Celengan (nilai sementara)
+// curr (Current) = Uang yang mau dimasukin
+const totalNilai = nilaiKelas.reduce((acc, curr) => {
+  return acc + curr;
+}, 0); // 0 adalah modal awal celengan
+
+console.log(totalNilai); // 345
+```
+
+## 5. Includes (Cek Ketersediaan) ✅
+
+Cuma buat ngecek: "Ada gak sih barang ini di dalem?". Hasilnya cuma true atau false.
+
+    > **Kasus:** Cek apakah "Apel" ada di keranjang.
+
+```js
+const buah = ["Apel", "Jeruk", "Mangga"];
+
+const adaApel = buah.includes("Apel"); // true
+const adaDurian = buah.includes("Durian"); // false
+
+// Biasa dipake buat logic If
+if (buah.includes("Jeruk")) {
+  console.log("Jus jeruk siap!");
+}
+```
+
+<Callout type="warning"> `includes` cuma jalan buat data sederhana (String/Number). Kalau datanya Object `{id: 1}`, mending pake some. </Callout>
+
+## 6. Some & Every (Validasi) 🕵️‍♂️
+
+Buat validasi data yang lebih kompleks.
+
+### A. Some (Minimal Satu Aja)
+
+Ngecek apakah ADA (sebagian) yang memenuhi syarat.
+
+    > **Kasus:** Ada gak mahasiswa yang gak lulus?
+
+```js
+const nilai = [80, 90, 40, 70]; // Ada yg 40 nih
+
+const adaYangRemedial = nilai.some((n) => n < 60);
+console.log(adaYangRemedial); // true (Karena nemu si 40)
+```
+
+### B. Every (Harus Semua)
+
+Ngecek apakah SEMUANYA memenuhi syarat.
+
+    > **Kasus:** Apakah satu kelas lulus semua?
+
+```js
+const semuaLulus = nilai.every((n) => n >= 60);
+console.log(semuaLulus); // false (Gara-gara si 40 tadi)
+```
+
+## 7. Sort (Mengurutkan) 📶
+
+Buat ngurutin A-Z atau Kecil-Besar.
+
+<Callout type="error">
+  {" "}
+  Awas! `sort()` itu Mutating (Merubah data asli). Di React, ini haram. Lo harus
+  copy dulu pake spread operator `[...]`.{" "}
+</Callout>
+
+```js
+const angka = [3, 1, 10, 5];
+
+// ❌ Salah (Data asli berubah)
+// angka.sort();
+
+// ✅ Benar (Copy dulu baru sort)
+const urutKecil = [...angka].sort((a, b) => a - b);
+const urutBesar = [...angka].sort((a, b) => b - a);
+
+console.log(urutKecil); // [1, 3, 5, 10]
+```
+
+## 8. ForEach (Looping Biasa) 🔁
+
+Ini cuma buat ngelakuin sesuatu ke setiap item, TAPI gak menghasilkan `array` baru. Beda sama map yang menghasilkan `array` baru.
+
+```js
+const murid = ["A", "B", "C"];
+
+// Cuma mau nge-log doang, gak butuh data balikan
+murid.forEach((nama) => {
+  console.log(`Halo ${nama}`);
+  // Gak perlu return apa-apa
+});
+```
+
+### Rangkuman Cepat (Cheat Sheet) 📝
+
+| Method Hasil | Output        | Kapan Dipake?                                |
+| :----------- | :------------ | :------------------------------------------- |
+| .map()       | Array Baru    | Pas mau render list data ke layar.           |
+| .filter()    | Array Baru    | Pas mau bikin fitur Search atau Delete.      |
+| .find()      | Item (Object) | Pas mau buka halaman Detail salah satu item. |
+| .reduce()    | Number        | Pas mau hitung total nilai.                  |
+| .includes()  | Boolean       | Pas mau buka halaman Detail salah satu item. |
+| .some()      | Boolean       | Pas mau buka halaman Detail salah satu item. |
+| .every()     | Boolean       | Pas mau buka halaman Detail salah satu item. |
+| .sort()      | Array Baru    | Pas mau ngurutin data.                       |
+| .forEach()   | -             | Pas mau ngelakuin sesuatu ke setiap item.    |
+
+---
+
+### Cek Materi:
+
+- Coba baca lagi bagian **Tabel Rangkuman** di paling bawah. Itu contekan paling guna kalau nanti lo bingung _"Gue harus pake map atau filter ya?"_.
+- Coba baca bagian **`sort`** baik-baik. Itu sering banget jadi jebakan interview atau bug di React. Ingat rumusnya: **"Copy dulu, baru Sort"** (`[...arr].sort()`).

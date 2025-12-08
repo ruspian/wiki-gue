@@ -1,0 +1,140 @@
+import { Callout } from "nextra/components";
+
+# Async/Await: Menjinakkan Waktu ⏳
+
+JavaScript itu aslinya **Gak Sabaran** (Synchronous).
+Kalau ada kode yang butuh waktu lama (misal: ambil data dari server/API), dia gak mau nungguin. Dia bakal langsung loncat ke baris bawahnya.
+
+Akibatnya? Data belum nyampe, udah dipake. Hasilnya `undefined` atau `Error`.
+
+## 🛵 Analogi: Pesen GoFood
+
+Bayangin lo lagi coding:
+
+1.  **Pesen Makan** (Request Data ke Server).
+2.  **Makan** (Tampilin Data ke Layar).
+
+Kalau lo pake cara biasa (Synchronous), JS bakal ngelakuin ini:
+
+> - Pesen Makan -> Langsung Makan (Padahal abang ojolnya baru jalan).
+> - **Hasil:** Lo makan angin (Error).
+
+Kita butuh cara buat bilang ke JS: **"Woy, TUNGGUIN (`await`) sampe makanannya dateng, baru makan!"**
+
+---
+
+## 1. Masalah (Tanpa Async/Await)
+
+Coba liat kode yang bakal error ini:
+
+```js
+const ambilData = () => {
+  // Ceritanya ini proses lama (2 detik)
+  setTimeout(() => {
+    return "Data Rahasia";
+  }, 2000);
+};
+
+const main = () => {
+  const data = ambilData(); // JS gak mau nunggu di sini!
+  console.log(data); // Output: undefined
+};
+
+main();
+```
+
+## 2. Solusi (Pake Async/Await) ✅
+
+Ada 2 kata kunci sakti:
+
+    1. **async:** Tempel di function buat ngasih tau _"Eh, di dalem sini bakal ada proses yang harus ditungguin ya"_.
+
+    2. **await:** Tempel di depan proses yang lama buat bilang _"Tungguin gue kelar, baru lanjut ke bawah"_.
+
+```js
+// 1. Simulasi request ke server (Pura-pura fetch API)
+const ambilDataDariServer = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve("📦 Paket Data Sampai!");
+    }, 2000); // Nunggu 2 detik
+  });
+};
+
+// 2. Function Utama
+const main = async () => {
+  console.log("Menghubungi server...");
+
+  // 🛑 PAUSE: JS bakal diem di baris ini selama 2 detik
+  const hasil = await ambilDataDariServer();
+
+  // Baris ini baru jalan setelah data dapet
+  console.log("Sukses:", hasil);
+};
+
+main();
+```
+
+<Callout type="info" emoji="💡">
+  {" "}
+  **Aturan Emas:** Keyword `await` HANYA BISA dipake di dalam function yang punya
+  label `async`. Kalau lupa label `async`-nya, bakal `error`.{" "}
+</Callout>
+
+## 3. Handle Error (Try - Catch) 🛡️
+
+Gimana kalau abang ojolnya kecelakaan (Server Down)? Kita harus siapin skenario gagal pake blok `try...catch`.
+
+```js
+const ambilDataAman = async () => {
+  try {
+    // Coba lakuin ini (Skenario Sukses)
+    console.log("Lagi loading...");
+    const data = await fetch(
+      "[https://api.palsu.com/user](https://api.palsu.com/user)"
+    );
+    const json = await data.json();
+    console.log("Dapet data:", json);
+  } catch (error) {
+    // Kalau yang atas gagal, lari ke sini (Skenario Gagal)
+    console.log("Waduh error bos:", error.message);
+  }
+};
+
+ambilDataAman();
+```
+
+## 4. Real World Example (React) ⚛️
+
+Ini template yang bakal lo pake seumur hidup pas bikin React App buat ngambil data dari API.
+
+```js
+// Component React
+const HalamanUser = () => {
+  // Function buat fetch data
+  const fetchData = async () => {
+    try {
+      const res = await fetch(
+        "[https://jsonplaceholder.typicode.com/users](https://jsonplaceholder.typicode.com/users)"
+      );
+      const data = await res.json(); // Convert ke JSON juga butuh waktu, jadi di-await
+      console.log(data); // Masukin ke State di sini
+    } catch (err) {
+      console.log("Gagal ambil data");
+    }
+  };
+
+  // Dipanggil sekali pas halaman muncul
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  return <div>List User</div>;
+};
+```
+
+---
+
+### Cek Materi:
+
+Bagian **`Try - Catch`** itu penting banget. Di dunia kerja, server gak selalu nyala 24 jam. Kalau lo gak pake `try-catch`, aplikasi lo bakal _crash_ (layar putih) kalau servernya error. Dengan `try-catch`, lo bisa minimal nampilin pesan "Maaf server lagi gangguan".

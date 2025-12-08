@@ -1,0 +1,63 @@
+import { Callout } from "nextra/components";
+
+# Variabel: Var, Let, dan Const 📦
+
+Variabel itu ibarat **Kardus**. Fungsinya buat nyimpen data biar bisa dipake lagi nanti.
+Di JavaScript, kardusnya ada 3 jenis. Pilih yang mana?
+
+## 1. Var (Masa Lalu 👴)
+
+Ini cara lama. **SANGAT TIDAK DISARANKAN** dipakai di codingan modern.
+
+**Kenapa?** Karena `var` itu bocor (Global Scope). Dia bisa nembus tembok function atau if-statement, yang sering bikin bug aneh.
+
+```js
+if (true) {
+  var nama = "Otong Surotong"; // Harusnya cuma hidup di dalam kurung kurawal
+}
+
+console.log(nama); // Output: "Otong Surotong" (Loh kok bisa diakses dari luar? Bocor!)
+```
+
+## 2. Let (Modern & Fleksibel)
+
+Pake let kalau lo yakin datanya bakal berubah di masa depan. Contoh: Skor game, Umur, Counter loop.
+
+```js
+let skor = 0;
+skor = 10; // ✅ Aman, nilai berubah
+skor = 20; // ✅ Masih aman
+```
+
+## 3. Const (Paling Aman 🔒)
+
+Singkatan dari Constant (Tetap). Pake ini kalau datanya GAK BOLEH berubah.
+
+<Callout type="info" emoji="💡">
+  {" "}
+  Tips : Selalu pakai const sebagai default. Kalau ternyata nanti butuh diubah, baru
+  ganti jadi let. Ini bikin kodingan lo lebih stabil dan gampang dibaca.{" "}
+</Callout>
+
+```js
+const tglLahir = "1999-01-01";
+// tglLahir = "2000-01-01"; // ❌ ERROR! Gak boleh ganti tanggal lahir woy.
+```
+
+## Jebakan Batman di Const 🦇
+
+const itu ngunci Variable-nya, bukan Isinya (kalau isinya Object/Array).
+
+Ini sering bikin pemula bingung:
+
+```js
+const user = { nama: "Otong Surotong" };
+
+// Ganti isinya BOLEH
+user.nama = "Sentot"; // ✅ Gak Error!
+
+// Ganti "Kardusnya" GABOLEH
+// user = { nama: "Asep" }; // ❌ Error! Assignment to constant variable.
+```
+
+Analogi: Lo punya Rumah (const). Lo boleh ganti cat tembok atau perabotan di dalemnya (user.nama), tapi lo gak boleh ganti alamat rumahnya (user = ...).

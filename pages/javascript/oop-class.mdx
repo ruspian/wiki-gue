@@ -1,0 +1,140 @@
+import { Callout } from "nextra/components";
+
+# OOP: Class & Object 🏗️
+
+kita sudah belajar belajar tentang **Functional Programming** (Function, Arrow Func), sekarang kita belajar gaya satunya: **OOP** (Object Oriented Programming).
+
+OOP? Apa itu? OOP itu cara ngoding dengan menganggap semua hal sebagai **Objek** yang punya cetakan (Blueprint).
+
+## 1. Konsep Dasar: Cetakan vs Kue 🍪
+
+- **Class (Kelas):** Itu Cetakannya. (Cuma kertas gambar/rencana).
+- **Object (Instance):** Itu Kue-nya. (Barang jadinya).
+
+Dari 1 `Class` (Cetakan), kita bisa bikin ribuan `Object` (Kue) yang beda-beda topingnya.
+
+```js
+// 1. Bikin Cetakan (Class)
+class Mobil {
+  // Constructor: Fungsi yang jalan PERTAMA KALI pas mobil dibuat
+  constructor(merk, warna) {
+    this.merk = merk;
+    this.warna = warna;
+    this.bensin = 0;
+  }
+
+  // Method: Kemampuan si mobil
+  jalan() {
+    this.bensin -= 10;
+    return `${this.merk} warna ${this.warna} sedang berjalan... Ngeng!`;
+  }
+
+  isiBensin(liter) {
+    this.bensin += liter;
+    return `Bensin sekarang: ${this.bensin}`;
+  }
+}
+
+// 2. Bikin Object Nyata (Pake kata kunci 'new')
+const mobilOtong = new Mobil("Toyota", "Hitam");
+const mobilSentot = new Mobil("Honda", "Merah");
+
+console.log(mobilOtong.jalan()); // "Toyota warna Hitam sedang berjalan..."
+console.log(mobilSentot.isiBensin(50)); // "Bensin sekarang: 50"
+```
+
+## 2. Inheritance (Pewarisan) 👨‍👦
+
+Anak bisa mewarisi sifat Bapaknya, tapi bisa punya bakat tambahan sendiri. Pake kata kunci extends.
+
+```js
+// Class Bapak (Induk)
+class Hewan {
+  makan() {
+    return "Nyam nyam...";
+  }
+}
+
+// Class Anak (Turunan)
+class Sapi extends Hewan {
+  // Punya skill tambahan
+  suara() {
+    return "Moooooooo!";
+  }
+}
+
+const Rambon = new Sapi();
+
+console.log(Rambon.suara()); // "Moooooooo!" (Skill sendiri)
+console.log(Rambon.makan()); // "Nyam nyam..." (Skill warisan Bapaknya)
+```
+
+<Callout type="info" emoji="⚛️"> Sejarah React: Dulu sebelum ada Hooks (2019), semua komponen React dibikin pake Class kayak gini: class Button extends React.Component `{ ... }` Makanya lo wajib tau, biar gak bingung kalau nemu tutorial lama. </Callout>
+
+## 3. Keyword Keramat: this 👈
+
+Ini musuh bebuyutan pemula JS. this itu artinya _"Siapa Saya?"_ atau _"Siapa Pemiliknya?"_.
+
+Di dalam Class, this mengacu pada Object itu sendiri.
+
+```js
+class User {
+  constructor(nama) {
+    this.nama = nama; // 'this.nama' artinya 'nama milik object ini'
+  }
+
+  perkenalan() {
+    // Di sini, 'this' merujuk ke User yang lagi dipanggil
+    console.log(`Halo, nama saya ${this.nama}`);
+  }
+}
+
+const u1 = new User("Otong");
+u1.perkenalan(); // this = u1, jadi output "Halo... Otong"
+
+const u2 = new User("Sentot");
+u2.perkenalan(); // this = u2, jadi output "Halo... Sentot"
+```
+
+## 4. Static Method (Milik Bersama) 🗿
+
+Method yang nempel di **Cetakan**, bukan di Object. Dipake buat fungsi bantuan (Utility).
+
+```js
+class Matematika {
+  static tambah(a, b) {
+    return a + b;
+  }
+}
+
+// ❌ Gak perlu bikin 'new Matematika()' dulu
+// const m = new Matematika();
+
+// ✅ Langsung panggil dari Class-nya
+console.log(Matematika.tambah(5, 5)); // 10
+```
+
+## 5. Private Properties (Rahasia) 🔒
+
+Gimana kalau ada data yang gak boleh diakses dari luar? (Misal: Saldo ATM). Pake tanda pagar `#` di depannya.
+
+```js
+class Bank {
+  #saldo = 0; // Private (Gak bisa diintip)
+
+  constructor(uangAwal) {
+    this.#saldo = uangAwal;
+  }
+
+  cekSaldo() {
+    return `Saldo Anda: ${this.#saldo}`; // Cuma bisa diakses lewat method resmi
+  }
+}
+
+const atm = new Bank(100000);
+
+console.log(atm.cekSaldo()); // Aman
+
+// ❌ Error! Gak bisa akses langsung (Security)
+// console.log(atm.#saldo);
+```

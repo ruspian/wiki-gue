@@ -1,0 +1,14 @@
+{
+  "intro": "Apa itu JS?",
+  "variabel": "1. Var, Let, Const",
+  "tipe-data": "2. Tipe Data & Struktur",
+  "function": "3. Function & Arrow Func",
+  "array-method": "4. Array Magic",
+  "promise": "5. Promise",
+  "async-await": "6. Async Await",
+  "destructuring": "7. Destructuring & Spread",
+  "es6-features": "8. Modules & Ternary",
+  "cheatsheet-methods": "9. Cheatsheet Sakti",
+  "browser-api": "10. Browser API & Event Loop (Advanced)",
+  "oop-class": "11. OOP & Class (Blueprint)"
+}

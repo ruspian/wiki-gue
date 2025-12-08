@@ -1,0 +1,179 @@
+import { Callout } from "nextra/components";
+
+# Browser API & Event Loop ⚙️
+
+Ini adalah "Mesin Ruang Angkasa" di balik JavaScript. Paham ini bikin lo jago debugging masalah performa.
+
+## 1. The Event Loop (Rahasia Dapur JS) 🔄
+
+JavaScript itu **Single Threaded**. Artinya: Dia cuma punya **Satu Tangan**. Dia gak bisa ngerjain dua hal barengan.
+Tapi kok dia bisa handle ribuan request tanpa nge-lag? Jawabannya: **Event Loop**.
+
+### Analogi Restoran 🍽️
+
+- **Call Stack (Dapur):** Tempat masak. Cuma ada satu koki.
+- **Web API (Meja Tunggu):** Tempat nunggu proses lama (Timer, Fetch Data).
+- **Callback Queue (Antrian Pesanan):** Daftar tugas yang siap dimasak.
+
+[Event Loop](https://miro.medium.com/v2/resize:fit:1200/1*eFvdHDgxCM6C20Zt80I7Jg.png)
+
+### Contoh Kasus Ajaib
+
+Coba tebak urutan output kode ini:
+
+```js
+console.log("1. Pesan Makan");
+
+setTimeout(() => {
+  console.log("2. Makanan Datang");
+}, 0); // Waktunya 0 detik loh!
+
+console.log("3. Bayar Kasir");
+```
+
+**Jawabannya:**
+
+```
+1. Pesan Makan
+3. Bayar Kasir
+2. Makanan Datang
+```
+
+Loh kok?? Padahal 0 detik? Penjelasan: `setTimeout` itu tugas Web API. Meskipun 0 detik, dia dikeluarin dulu dari antrian utama (Dapur), disuruh ngantri di belakang. JavaScript bakal nyelesain semua tugas utama (`console.log 3`) baru ngurusin yang ngantri (`setTimeout`).
+
+<Callout type="info">
+  {" "}
+  Inilah kenapa JavaScript dibilang `Non-Blocking`. Dia gak bakal diem nungguin timer,
+  dia lanjut kerja yang lain dulu.{" "}
+</Callout>
+
+## 2. Web Storage (Gudang Browser) 🗄️
+
+Variable biasa (`const a = 10`) itu bakal ilang kalau di-refresh. Kalau mau permanen, simpan di gudang browser.
+
+### A. LocalStorage (Permanen)
+
+Data gak bakal ilang walau browser ditutup atau laptop dimatiin.
+
+    - Kapasitas: ±5MB.
+
+    - Guna: Simpan Token Login, Tema (Dark Mode), Isi Cart.
+
+```js
+// Simpan (Harus String)
+localStorage.setItem("tema", "gelap");
+
+// Ambil
+const tema = localStorage.getItem("tema");
+
+// Hapus
+localStorage.removeItem("tema");
+```
+
+### B. SessionStorage (Sementara)
+
+Data ilang kalau Tab ditutup.
+
+    - Guna: Data form sensitif yang gak perlu diingat lama-lama.
+
+```js
+sessionStorage.setItem("sesi_bank", "rahasia123");
+```
+
+### C. Cookies (Jadul tapi Penting) 🍪
+
+Data kecil yang otomatis dikirim bolak-balik ke Server setiap kali request.
+
+    - Guna: Auth Token (yang aman), Tracking Iklan.
+
+## 3. DOM Manipulation (Manual Mode) 🏗️
+
+React itu sebenernya "Robot" yang ngurusin DOM buat kita. Tapi kadang kita perlu turun tangan sendiri (Manual).
+
+DOM (`Document Object Model`) adalah struktur `HTML` yang bisa diacak-acak sama JS.
+
+### A. Nangkep Elemen (querySelector)
+
+```js
+// Cari elemen <h1 id="judul">
+const judul = document.querySelector("#judul");
+
+// Cari tombol class "btn"
+const tombol = document.querySelector(".btn");
+```
+
+### B. Ubah Tampilan
+
+```js
+// Ganti Teks
+judul.innerText = "Selamat Pagi Dunia";
+
+// Ganti Style (CSS)
+judul.style.color = "red";
+judul.style.fontSize = "50px";
+```
+
+### C. Dengerin User (addEventListener)
+
+```js
+tombol.addEventListener("click", () => {
+  alert("Tombol diklik!");
+});
+```
+
+<Callout type="warning" emoji="⚛️">
+  {" "}
+  React Note: Di React, hindari pake document.querySelector atau document.getElementById.
+  Gunakan `useRef` kalau mau akses elemen DOM secara langsung. React bakal marah
+  kalau lo main belakang ngubah DOM manual.{" "}
+</Callout>
+## 4. Fetch API (Cara Modern Ambil Data) 📡
+
+Dulu orang pake AJAX/XML. Sekarang pake fetch. Ini pasangan jiwanya `async/await`.
+
+```js
+// Method default-nya GET (Ambil data)
+fetch("[https://api.github.com/users/pian](https://api.github.com/users/pian)")
+  .then((res) => res.json()) // Ubah dari teks alien ke Object JS
+  .then((data) => console.log(data))
+  .catch((err) => console.error("Gagal bos:", err));
+```
+
+### Kirim Data (POST)
+
+Misal buat Login atau Register.
+
+```js
+fetch("[https://api.com/login](https://api.com/login)", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    // Inget! Harus diubah jadi String dulu
+    username: "pian",
+    pass: "rahasia",
+  }),
+});
+```
+
+## 5. Error Handling: Throw Error 🧨
+
+Kadang kita mau bikin error sendiri. Misal user masukin password kependekan.
+
+```js
+const cekPassword = (pass) => {
+  if (pass.length < 5) {
+    // Kita "Lempar" bom error
+    throw new Error("Password kekecilan woy!");
+  }
+  return "Aman";
+};
+
+try {
+  cekPassword("123");
+} catch (error) {
+  // Kita "Tangkap" bomnya di sini
+  console.log(error.message); // "Password kekecilan woy!"
+}
+```

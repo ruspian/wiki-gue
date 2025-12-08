@@ -1,0 +1,109 @@
+import { Callout } from "nextra/components";
+
+# Destructuring & Spread: Bongkar Pasang 🧩
+
+Fitur ini bikin kita males ngetik panjang-panjang. Tujuannya cuma dua: **Membongkar** data (Destructuring) atau **Menggabungkan** data (Spread).
+
+## 1. Destructuring Object (Bongkar Paket) 📦
+
+Dulu, kalau mau ambil data dari object, kita harus ketik ulang nama object-nya berkali-kali.
+
+```js
+const mhs = {
+  nama: "Otong",
+  jurusan: "Teknik Informatika",
+  ipk: 3.8,
+};
+
+// ❌ Cara Lama (Capek ngetik 'mhs.' terus)
+const n = mhs.nama;
+const j = mhs.jurusan;
+
+// ✅ Cara Destructuring (Langsung comot isinya)
+const { nama, jurusan } = mhs;
+
+console.log(nama); // "Otong"
+console.log(jurusan); // "Teknik Informatika"
+```
+
+### Rename Variable (Ganti Label)
+
+Kadang nama variabelnya bentrok sama variabel lain. Kita bisa ganti pas lagi dibongkar.
+
+```js
+// Ambil 'jurusan', tapi simpan dengan nama 'prodi'
+const { jurusan: prodi } = mhs;
+
+console.log(prodi); // "Teknik Informatika"
+```
+
+## 2. Destructuring Array 🚃
+
+Ini WAJIB dipahami karena dipake di React Hooks (`useState`). Bedanya sama **Object:** Kalau Array urutannya gak boleh ketuker, tapi namanya bebas.
+
+```js
+const warna = ["Merah", "Biru", "Hijau"];
+
+// Ambil index 0 dan 1
+const [primer, sekunder] = warna;
+
+console.log(primer); // "Merah"
+console.log(sekunder); // "Biru"
+```
+
+<Callout type="info" emoji="⚛️">
+  {" "}
+  Contoh **React:** `const [state, setState] = useState(0);` Itu sebenernya cuma
+  Array Destructuring biasa! `useState` ngasih array isi 2 biji, kita tangkep pake
+  nama state dan setState.{" "}
+</Callout>
+
+## 3. Spread Operator (`...`) ✨
+
+Ini jurus copy-paste paling sakti. Simbolnya `...` (titik tiga). Artinya: _"Tumpahin semua isinya ke sini"_.
+
+### A. Menggabungkan Array
+
+```js
+const hobiLama = ["Mancing", "Tidur"];
+const hobiBaru = ["Ngoding", ...hobiLama, "Gaming"];
+
+console.log(hobiBaru);
+// Output: ["Ngoding", "Mancing", "Tidur", "Gaming"]
+// Liat, 'Mancing' dan 'Tidur' tumpah keluar dari kurung sikunya.
+```
+
+### B. Update Object
+
+Di React, kita GAK BOLEH ubah data secara langsung (`state.nama = "Baru" ❌`). Kita harus bikin object baru, copy yang lama, lalu timpa yang mau diubah.
+
+```js
+const user = {
+  id: 1,
+  nama: "Otong",
+  role: "User",
+};
+
+// Kasus: Mau ganti 'role' jadi 'Admin', tapi sisa datanya harus tetep sama.
+const userUpdate = {
+  ...user, // 1. Copy semua data lama (id: 1, nama: Otong, role: User)
+  role: "Admin", // 2. Timpa bagian 'role' doang
+};
+
+console.log(userUpdate);
+// { id: 1, nama: "Otong", role: "Admin" }
+```
+
+<Callout type="warning">
+  {" "}
+  Urutan itu Penting! Pastikan ...user ditaruh di ATAS sebelum properti yang mau
+  diubah. Kalau ditaruh di bawah, nanti malah data lama yang menimpa perubahan baru.{" "}
+</Callout>
+
+## Rangkuman Simbol 📝
+
+| Simbol | Nama                 | Fungsi                                    |
+| :----- | :------------------- | :---------------------------------------- |
+| `{ }`  | Object Destructuring | Bongkar properti object berdasarkan nama. |
+| `[ ]`  | Array Destructuring  | Bongkar item array berdasarkan urutan.    |
+| `...`  | Spread Operator      | Copy & paste isi data ke tempat baru.     |

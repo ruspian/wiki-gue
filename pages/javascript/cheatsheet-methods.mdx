@@ -1,0 +1,342 @@
+import { Callout } from "nextra/components";
+
+# Cheatsheet Method Sakti 🧙‍♂️
+
+Ini adalah kumpulan method "kecil-kecil cabe rawit". Kelihatannya sepele, tapi kalau gak tau ini, lo bakal coding muter-muter.
+
+## 1. String Manipulation (Otak-atik Teks) 📝
+
+Sering dipake buat ngerapihin input user atau format tampilan.
+
+### A. Memecah & Menggabung (`split` & `join`)
+
+Jurus mengubah Kalimat jadi Array, dan sebaliknya.
+
+```js
+const kalimat = "aku-anak-sehat";
+
+// 1. Pecah jadi Array (Hapus tanda strip)
+const arr = kalimat.split("-");
+console.log(arr); // ["aku", "anak", "sehat"]
+
+// 2. Gabung lagi jadi String (Pake spasi)
+const baru = arr.join(" ");
+console.log(baru); // "aku anak sehat"
+```
+
+### B. Bersih-bersih (trim)
+
+Hapus spasi gak guna di depan/belakang (biasanya pas user input form).
+
+```js
+const inputUser = "   otong@gmail.com   ";
+console.log(inputUser.trim()); // "otong@gmail.com"
+```
+
+### C. Ganti Teks (replace)
+
+```js
+const teks = "Halo Anjing";
+// Ganti kata kasar (Cuma yang pertama ketemu)
+console.log(teks.replace("Anjing", "***")); // "Halo ***"
+
+// Ganti SEMUA (Pake replaceAll)
+console.log("A A A".replaceAll("A", "B")); // "B B B"
+```
+
+## 2. Object Methods (Bongkar Kunci) 🗝️
+
+> - **Masalah:** `Object` itu GAK BISA di-map (looping) secara langsung.
+> - **Solusi:** Ubah dulu jadi `Array` pake method ini.
+
+```js
+const user = {
+  nama: "Otong",
+  umur: 25,
+  kota: "Gorontalo",
+};
+```
+
+### A. Ambil Kuncinya (Object.keys)
+
+Berguna kalau lo mau bikin Table Header dinamis.
+
+```js
+const kunci = Object.keys(user);
+console.log(kunci); // ["nama", "umur", "kota"]
+```
+
+### B. Ambil Isinya (Object.values)
+
+Berguna kalau lo cuma butuh datanya doang.
+
+```js
+const isi = Object.values(user);
+console.log(isi); // ["Otong", 25, "Gorontalo"]
+```
+
+### C. Ambil Dua-duanya (Object.entries)
+
+Dapet array berpasangan [key, value].
+
+```js
+const pasangan = Object.entries(user);
+// [ ["nama", "Otong"], ["umur", 25] ... ]
+```
+
+## 3. JSON Conversion (Bahasa Alien) 👽
+
+Wajib tau kalau main `API`. Server sama Client ngobrol pake teks JSON.
+
+### A. Object ke String (JSON.stringify)
+
+Dipake pas mau Kirim Data ke server.
+
+```js
+const data = { id: 1, status: "ok" };
+
+const siapKirim = JSON.stringify(data);
+console.log(siapKirim); // '{"id":1,"status":"ok"}' (Jadi teks)
+```
+
+### B. String ke Object (JSON.parse)
+
+Dipake pas Nerima Data dari server (biar bisa dipake di JS).
+
+```js
+const dariServer = '{"nama": "Budi"}';
+
+const dataAsli = JSON.parse(dariServer);
+console.log(dataAsli.nama); // "Budi"
+```
+
+<Callout type="warning">
+  {" "}
+  `JSON.parse` bakal Error kalau format string-nya acak-acakan. Selalu bungkus pake
+  `try-catch` kalau parsing data gak jelas.{" "}
+</Callout>
+
+## 4. Number & Math (Hitungan) 🧮
+
+### A. Format Uang/Koma (toFixed)
+
+```js
+const harga = 15000.789;
+console.log(harga.toFixed(2)); // "15000.79" (Dibulatkan 2 desimal jadi string)
+```
+
+### B. Pembulatan
+
+```js
+    Math.round(4.7) -> 5 (Bulat terdekat)
+
+    Math.ceil(4.1) -> 5 (Paksa ke Atas / Plafon)
+
+    Math.floor(4.9) -> 4 (Paksa ke Bawah / Lantai)
+```
+
+### C. Angka Acak (Math.random)
+
+Berguna buat bikin ID unik sementara di React.
+
+```js
+// Angka acak 0 - 100
+const acak = Math.floor(Math.random() * 100);
+```
+
+## 5. Konversi Tipe Data (Sulap) 🎩
+
+Kadang angka dari `HTML` itu bentuknya String ("10"), harus diubah biar bisa dihitung.
+
+```js
+const a = "10";
+const b = "20.5";
+
+// String jadi Angka
+console.log(Number(a) + 5); // 15 (Benar)
+console.log(parseInt(b)); // 20 (Koma ilang)
+console.log(parseFloat(b)); // 20.5 (Koma aman)
+
+// Angka jadi String
+const c = 100;
+console.log(c.toString()); // "100"
+```
+
+## 6. Waktu / Timer ⏳
+
+Ini sering dipake buat efek animasi atau delay.
+
+### A. setTimeout (Sekali Jalan)
+
+_"Tunggu 3 detik, terus jalanin."_
+
+```js
+setTimeout(() => {
+  console.log("Muncul setelah 3 detik");
+}, 3000);
+```
+
+### B. setInterval (Berulang-ulang)
+
+_"Jalanin SETIAP 1 detik."_
+
+```js
+const waktu = setInterval(() => {
+  console.log("Detik...");
+}, 1000);
+
+// Cara stop:
+clearInterval(waktu);
+```
+
+<Callout type="error" emoji="⚛️">
+  {" "}
+  Warning React: Kalau pake `setInterval` di React, JANGAN LUPA dimatiin (`clearInterval`)
+  pas komponennya ilang (Unmount). Kalau nggak, laptop user bisa nge-lag!{" "}
+</Callout>
+
+---
+
+## 7. Logic Operators (Short Circuit) 🧠
+
+Di React, lo bakal jarang pake `if-else` panjang. Lo bakal sering pake simbol-simbol ini buat **Conditional Rendering** (Nampilin sesuatu berdasarkan syarat).
+
+### A. Operator DAN (`&&`)
+
+Artinya: _"Kalau Kiri bener, baru jalanin Kanan."_
+
+```js
+const isLogin = true;
+
+// Cara biasa
+if (isLogin) {
+  console.log("Selamat Datang");
+}
+
+// ✅ Cara Pro (React Style)
+isLogin && console.log("Selamat Datang");
+// Dibaca: Login oke? Yaudah print "Selamat Datang".
+```
+
+### B. Operator ATAU (||)
+
+**Artinya:** _"Ambil yang Kiri. Kalau Kiri kosong/salah, baru ambil yang Kanan (Cadangan)."_ Sering dipake buat nilai default.
+
+```js
+const inputUser = ""; // User gak isi nama (kosong)
+const nama = inputUser || "Tamu";
+
+console.log(nama); // "Tamu" (Karena inputUser kosong)
+```
+
+### C. Nullish Coalescing (??) ✨
+
+Mirip `||`, tapi lebih teliti. Dia cuma jalan kalau nilainya `null` atau `undefined`. Angka 0 dianggap valid.
+
+```js
+const skor = 0; // Skor 0 itu valid (bukan error)
+
+// ❌ Kalau pake || (Salah kaprah)
+console.log(skor || 10); // Output: 10 (Padahal skornya emang 0!)
+
+// ✅ Kalau pake ?? (Benar)
+console.log(skor ?? 10); // Output: 0 (Aman)
+```
+
+## 8. Date Object (Urusan Tanggal) 📅
+
+JavaScript punya fitur bawaan buat ngatur tanggal, tapi hati-hati... ada jebakannya.
+
+### A. Ambil Tanggal Sekarang
+
+```js
+const sekarang = new Date();
+console.log(sekarang); // Formatnya jelek banget (ISO String)
+```
+
+### B. Format Indonesia (toLocaleDateString) 🇮🇩
+
+Biar enak dibaca manusia.
+
+```js
+const opsi = {
+  weekday: "long",
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+};
+
+console.log(sekarang.toLocaleDateString("id-ID", opsi));
+// Output: "Senin, 9 Desember 2024" (Keren kan?)
+```
+
+### C. Ambil Pecahan (Hati-hati Bulan!) ⚠️
+
+```js
+const tgl = new Date();
+
+console.log(tgl.getDate()); // Tanggal (1-31)
+console.log(tgl.getFullYear()); // Tahun (2024)
+
+// ⚠️ JEBAKAN: Bulan dimulai dari 0!
+// Januari = 0, Desember = 11
+console.log(tgl.getMonth()); // Kalau Desember, keluarnya 11 (Bukan 12)
+
+// Solusi: Selalu tambah 1
+const bulanBenar = tgl.getMonth() + 1;
+```
+
+## 9. Set (Hapus Duplikat) 🦄
+
+Punya `array` isinya kembar-kembar? Pake Set buat ngebersihinnya dalam satu baris.
+
+```js
+const angka = [1, 2, 2, 3, 3, 3, 4];
+
+// Ubah ke Set (Otomatis buang duplikat), terus balikin ke Array
+const unik = [...new Set(angka)];
+
+console.log(unik); // [1, 2, 3, 4]
+```
+
+## 10. Debugging Keren (Console) 🐞
+
+Jangan cuma taunya console.log. Browser punya fitur lain biar mata gak sakit liat log.
+
+### A. Console Table (Buat Array Object)
+
+Enak banget buat liat data user/produk.
+
+```js
+const users = [
+  { id: 1, nama: "Pian", role: "Admin" },
+  { id: 2, nama: "Budi", role: "User" },
+];
+
+console.table(users);
+// Bakal muncul Tabel rapi di inspect element!
+```
+
+### B. Console Warn & Error
+
+Biar log-nya beda warna (Kuning/Merah).
+
+```js
+console.warn("Hati-hati memory bocor!"); // Warna Kuning
+console.error("Database meledak!"); // Warna Merah
+```
+
+## 11. Type Checking (Cek Jenis Data) 🕵️
+
+Berguna buat validasi biar aplikasi gak crash.
+
+```js
+const data = "123";
+
+console.log(typeof data); // "string"
+console.log(typeof 100); // "number"
+
+// Cek apakah dia Array? (Karena typeof Array itu 'object')
+const list = [1, 2];
+console.log(Array.isArray(list)); // true
+```

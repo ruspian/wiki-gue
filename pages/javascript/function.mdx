@@ -1,0 +1,83 @@
+import { Callout } from "nextra/components";
+
+# Function: Jantungnya Aplikasi ❤️
+
+Kalau Variabel itu **Bahan Makanan**, maka Function itu **Resep/Alat Masaknya**.
+Kita tulis rumusnya sekali, bisa dipake masak (dipanggil) berkali-kali.
+
+## 1. Regular Function (Cara Klasik 🏛️)
+
+Ini cara penulisan standar yang udah ada dari dulu.
+
+```js
+// Deklarasi
+function hitungLuas(panjang, lebar) {
+  let hasil = panjang * lebar;
+  return hasil; // Kembalikan nilai ke pemanggil
+}
+
+// Cara Panggil (Eksekusi)
+let kebun = hitungLuas(10, 5);
+console.log(kebun); // 50
+```
+
+## 2. Arrow Function (Gaya Modern 🏹)
+
+Ini primadonanya anak React. Penulisannya lebih singkat dan sexy.
+
+```js
+// Perhatikan tanda panah "=>" ini
+const hitungLuas = (panjang, lebar) => {
+  return panjang * lebar;
+};
+
+// Cara Panggil (Eksekusi)
+let kebun = hitungLuas(10, 5);
+console.log(kebun); // 50
+```
+
+### Fitur Sakti: "Implicit Return"
+
+Kalau function lo isinya cuma satu baris, lo bisa hapus kurung kurawal `{}` dan kata `return`. Dia bakal otomatis ngembaliin nilai.
+
+```js
+// Pendek banget kan?
+const kaliDua = (angka) => angka * 2;
+
+console.log(kaliDua(10)); // 20
+```
+
+<Callout type="info" emoji="💡">
+  {" "}
+  Kenapa Penting di React? Lo bakal sering liat codingan komponen React yang bersih
+  kayak gini berkat Implicit Return: `const Tombol = () => <button>
+    Klik Gue
+  </button>;`
+</Callout>
+### 3. Parameter & Default Value
+
+Kadang kita lupa masukin bahan `(argumen)` pas manggil function, akhirnya error/undefined. Solusinya: Kasih Nilai Cadangan.
+
+```js
+// Kalau 'nama' gak diisi, otomatis jadi "Tamu"
+const sapaUser = (nama = "Tamu") => {
+  return `Halo, ${nama}!`;
+};
+
+console.log(sapaUser("Otong")); // "Halo, Otong!"
+console.log(sapaUser()); // "Halo, Tamu!" (Gak error/undefined kan?)
+```
+
+## Bedanya Function Biasa vs Arrow? 🤔
+
+Selain cara nulis, bedanya ada di cara mereka menangani keyword this.
+
+    - Regular Function: `this`-nya plin-plan (tergantung siapa yang manggil).
+
+    - Arrow Function: `this`-nya setia (ngikutin bapaknya/scope luarnya).
+
+### Tips Buat Lo:
+
+Coba perhatikan bagian `"Implicit Return"`. Itu teknik yang bakal bikin kodingan Next.js lo nanti kelihatan pro dan bersih.
+
+Note: Di React modern (Functional Component), lo jarang pusingin this. Jadi cukup tau aja kalau Arrow Function itu lebih aman.

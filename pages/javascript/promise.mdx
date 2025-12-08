@@ -1,0 +1,79 @@
+import { Callout } from "nextra/components";
+
+# Promise: Sebuah Janji 🤞
+
+Sebelum ada `async/await`, kita pake yang namanya **Promise**.
+Konsepnya persis kayak janji di dunia nyata:
+
+1.  **Pending**: Janji dibuat (Masih nunggu).
+2.  **Fulfilled (Resolved)**: Janji ditepati (Sukses).
+3.  **Rejected**: Janji diingkari (Gagal/Error).
+
+## Cara Pakai (.then / .catch)
+
+Kalau `async/await` itu gaya modern, ini adalah gaya klasik-nya.
+
+```js
+const janjianNonton = new Promise((resolve, reject) => {
+  let tiketAda = true;
+
+  if (tiketAda) {
+    resolve("Tiket dapet bos!"); // ✅ Sukses
+  } else {
+    reject("Tiket abis cuy."); // ❌ Gagal
+  }
+});
+
+// Cara Menggunakan Janji (Consume)
+janjianNonton
+  .then((hasil) => {
+    // Masuk sini kalau Sukses (Resolved)
+    console.log(hasil);
+  })
+  .catch((error) => {
+    // Masuk sini kalau Gagal (Rejected)
+    console.log(error);
+  })
+  .finally(() => {
+    // Jalan mau sukses atau gagal (misal: tutup loading)
+    console.log("Proses selesai");
+  });
+```
+
+## Kenapa Masih Perlu Belajar Ini?
+
+Padahal kan udah ada `async/await?` Karena ada satu jurus sakti Promise yang gak bisa digantiin, yaitu `Promise.all`.
+
+### Jurus: Promise.all (Jalan Barengan) 🚀
+
+Bayangin lo butuh ambil data dari 3 API berbeda.
+
+    1. API User (2 detik)
+
+    2. API Product (2 detik)
+
+    3. API Transaction (2 detik)
+
+Kalau pake `await` satu-satu, total nunggu 6 detik. Pake `Promise.all`, kita jalanin barengan, total cuma 2 detik.
+
+```js
+const ambilSemuaData = async () => {
+  console.time("Waktu");
+
+  // Jalanin 3 request SEKALIGUS (Paralel)
+  const hasil = await Promise.all([
+    fetch("[https://api.com/user](https://api.com/user)"),
+    fetch("[https://api.com/product](https://api.com/product)"),
+    fetch("[https://api.com/transaksi](https://api.com/transaksi)"),
+  ]);
+
+  console.timeEnd("Waktu"); // Jauh lebih cepet!
+  console.log("Semua data kelar");
+};
+```
+
+<Callout type="info">
+  {" "}
+  `Promise.all` bakal sukses kalau SEMUA sukses. Kalau ada satu aja yang gagal, semuanya
+  dianggap gagal.{" "}
+</Callout>

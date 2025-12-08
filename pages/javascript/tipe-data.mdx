@@ -1,0 +1,142 @@
+import { Callout } from "nextra/components";
+
+# Tipe Data & Struktur 🧱
+
+Di JavaScript, tipe data dibagi jadi dua kubu utama: **Primitif** (Sederhana) dan **Non-Primitif** (Kompleks). Paham bedanya adalah kunci biar lo gak bingung kenapa data lo tiba-tiba berubah sendiri.
+
+## 1. Primitif (Sederhana)
+
+Tipe data ini cuma nyimpen **satu nilai**. Kalau dicopy, dia beneran duplikat nilainya.
+
+- **String**: Teks biasa. Contoh: `"Halo Otong"`.
+- **Number**: Angka (bulat/koma sama aja). Contoh: `10`, `3.14`.
+- **Boolean**: Cuma `true` atau `false`.
+
+### Battle: Null vs Undefined 🥊
+
+Sama-sama artinya "kosong", tapi beda rasa.
+
+- **Undefined**: "Belum ada isinya".
+  Ibarat beli gelas baru, isinya kosong karena emang belum dituang air. Default-nya JavaScript.
+- **Null**: "Sengaja dikosongin".
+  Ibarat gelas tadi ada isinya, terus lo buang airnya. Kosongnya _disengaja_.
+
+```js
+let user;
+console.log(user); // undefined (Lupa diisi)
+
+let hasilPencarian = null;
+console.log(hasilPencarian); // null (Dicari tapi gak ketemu, emang diniatin kosong)
+```
+
+## 2. Object (Kompleks)
+
+Object itu wadah yang bisa nyimpen banyak data sekaligus. Bayangin kayak Lemari Laci.
+
+didalam lemari ada beberapa barang, yaitu **Kunci** (Key) dan **Barang** (Value), key dan value ini disebut properti. Contoh:
+
+```js
+const mahasiswa = {
+  nama: "Otong", // Property (Key: Value)
+  umur: 20,
+  lulus: false,
+  alamat: {
+    // Nested Object (Object dalam Object)
+    kota: "Gorontalo",
+    jalan: "Trans",
+  },
+};
+
+// Cara akses:
+console.log(mahasiswa.nama); // "Otong"
+console.log(mahasiswa.alamat.kota); // "Gorontalo"
+```
+
+## 3. Array (Kompleks Juga)
+
+Kalau Object itu nyimpen data pake **Nama/Label** (Key), kalau Array nyimpen data pake **Urutan** (Index).
+
+Bayangin kayak gerbong kereta yang disambung-sambung.
+
+```js
+const hobi = ["Mancing", "Tidur", "Ngoding"]; // kalo mau string aja
+const tahun = [2021, 2022, 2023]; // kalo mau angka aja
+const kelas = [true, false, true]; // kalo mau boolean aja
+
+// Isinya boleh campur aduk: String, Angka, Boolean, bahkan Object.
+const keranjang = ["Apel", 100, true, { id: 1 }];
+```
+
+### Hukum Rimba Array:
+
+    - Mulai Dari Nol: Di dunia programming, kita berhitung mulai dari 0, bukan 1.
+
+    - Panjang vs Index: Panjangnya 3, tapi index terakhirnya 2.
+
+```js
+const hobi = ["Mancing", "Tidur", "Ngoding"];
+
+// Ambil data pertama (Gerbong ke-0)
+console.log(hobi[0]); // "Mancing"
+
+// Ambil data kedua
+console.log(hobi[1]); // "Tidur"
+
+// ❌ Jangan sampe bablas (Index out of bounds)
+console.log(hobi[99]); // undefined
+```
+
+---
+
+## ⚠️ Jebakan Betmen: Reference Type (Tipe Referensi)
+
+Ini konsep yang WAJIB dipahami buat calon anak React.
+
+    - Primitif (String/Number): Kalau dicopy, dia bikin barang baru.
+
+    - Object/Array: Kalau dicopy, dia cuma ngasih Alamat/Kunci ke barang yang sama.
+
+Liat kode horor di bawah ini:
+
+- Array
+
+```js
+const hobiLama = ["Tidur"];
+const hobiBaru = hobiLama; // ❌ Cuma copy alamat
+
+hobiBaru.push("Makan");
+
+console.log(hobiLama);
+// Output: ["Tidur", "Makan"]
+// Hobi lama ikutan nambah, padahal maunya misah!
+```
+
+- Object
+
+```js
+let a = { nama: "Otong" };
+let b = a; // Lo pikir b itu duplikat? SALAH. b cuma "link" ke a.
+
+b.nama = "Sentot"; // Lo ubah si b...
+
+console.log(a.nama);
+// Output: "Sentot" 😱
+// KOK SI A IKUT BERUBAH?!
+```
+
+<Callout type="error" emoji="🚫">
+  {" "}
+  Kesimpulan: Jangan pernah asal copy object pakai tanda sama dengan =. Karena kalau
+  satu diubah, yang asli ikut berubah (karena mereka merujuk ke memori yang sama).{" "}
+</Callout>
+### Solusinya?
+
+Gunakan Spread Operator (...) buat bikin duplikat beneran (kita bahas detail di bab Destructuring).
+
+```js
+let a = { nama: "Otong" };
+let b = { ...a }; // Ini bikin object BARU yang isinya sama.
+
+b.nama = "Sentot";
+console.log(a.nama); // "Otong" (Aman, si A gak keganggu)
+```

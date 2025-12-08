@@ -1,0 +1,90 @@
+import { Callout } from "nextra/components";
+
+# Modules & Logic Pendek 🧩
+
+Ini adalah "Printilan" ES6 yang wajib dikuasai karena struktur codingan React dibangun di atas fitur ini.
+
+## 1. Modules (Import / Export)
+
+Dulu codingan JS numpuk di satu file `script.js`. Sekarang kita pecah-pecah jadi file kecil (Module).
+
+### A. Export Default (Pemain Utama)
+
+Satu file cuma boleh punya **SATU** default export.
+Biasanya dipake buat Komponen React.
+
+```js
+// File: Navbar.js
+const Navbar = () => <h1>Menu</h1>;
+
+export default Navbar; // 👈 Cuma satu
+```
+
+Cara Import (Namanya bebas):
+
+```js
+// File: App.js
+import MenuAtas from "./Navbar"; // Boleh ganti nama jadi MenuAtas
+```
+
+### B. Named Export (Pemain Cadangan)
+
+Satu file boleh punya BANYAK named export. Biasanya buat file Utils atau Helpers.
+
+```js
+// File: matematika.js
+export const tambah = (a, b) => a + b;
+export const kurang = (a, b) => a - b;
+```
+
+Cara Import (Namanya HARUS sama & pake kurung kurawal):
+
+```js
+// File: App.js
+import { tambah, kurang } from "./matematika";
+```
+
+## 2. Ternary Operator (If-Else Satu Baris) ⚡
+
+Di dalam `JSX` (HTML-nya React), kita GAK BISA pake if-else biasa. Kita wajib pake Ternary.
+
+> **Rumus:** Kondisi ? "Kalau Benar" : "Kalau Salah"
+
+```js
+const lapar = true;
+
+// ❌ If-Else Biasa (Kepanjangan)
+let aksi;
+if (lapar) {
+  aksi = "Makan";
+} else {
+  aksi = "Tidur";
+}
+
+// ✅ Ternary Operator
+const aksiCepat = lapar ? "Makan" : "Tidur";
+```
+
+Contoh di React:
+
+```js
+// Tombol berubah tulisan tergantung status login
+<button>{isLogin ? "Logout" : "Login"}</button>
+```
+
+## 3. Optional Chaining (?.) 🛡️
+
+Pernah dapet error `Cannot read properties of undefined?` Ini obatnya. Dia bakal ngecek: _"Kalau datanya ada, lanjut. Kalau gak ada, stop (jangan error)."_
+
+```js
+const user = {
+  nama: "Otong",
+  // alamat: lupa diisi (undefined)
+};
+
+// ❌ Error Meledak
+// console.log(user.alamat.kota);
+
+// ✅ Aman (Return undefined, bukan Error)
+console.log(user?.alamat?.kota);
+```
