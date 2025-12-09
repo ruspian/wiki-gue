@@ -30,7 +30,7 @@ Pastikan Node.js sudah terinstall.
 1.  **Clone repository ini:**
 
     ```bash
-    git clone [https://github.com/USERNAME-LO/wiki-gue.git](https://github.com/USERNAME-LO/wiki-gue.git)
+    git clone https://github.com/ruspian/wiki-gue.git
     cd wiki-gue
     ```
 
