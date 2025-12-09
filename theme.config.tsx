@@ -6,7 +6,7 @@ const config = {
 
   docsRepositoryBase: "https://github.com/ruspian/wiki-gue/blob/main",
   footer: {
-    text: "Dibuat dengan ❤️ oleh Ruspian untuk documentasi yang bermanfaat dan mudah dipahami.",
+    text: "Dibuat dengan ❤️ oleh Ruspian semoga bermanfaat.",
   },
   // Supaya SEO bagus dan tab browser rapi
   useNextSeoProps() {
