@@ -1,0 +1,106 @@
+import { Callout } from "nextra/components";
+
+# Enums: Kamus Data 📖
+
+Enum (_Enumeration_) digunakan buat ngasih nama keren ke sekumpulan nilai tetap.
+Cocok buat data yang pilihannya terbatas, kayak: Arah Mata Angin, Status Order, atau Role User.
+
+## 1. Numeric Enums (Default) 🔢
+
+Kalau lo gak kasih nilai, TS bakal otomatis ngasih nomor urut mulai dari **0**.
+
+```ts
+enum Direction {
+  Up, // 0
+  Down, // 1
+  Left, // 2
+  Right, // 3
+}
+
+// Kita pakenya enak dibaca:
+let gerak = Direction.Up;
+
+// Tapi aslinya dia nyimpen angka:
+console.log(gerak); // Output: 0
+```
+
+**Mulai dari Angka Lain**
+
+Lo bisa atur start-nya, sisanya ngikutin. Jadi dia bakal auto increment
+
+```ts
+enum Status {
+  Pending = 1, // Mulai dari 1
+  Success, // Otomatis 2
+  Failed, // Otomatis 3
+}
+```
+
+## 2. String Enums (Lebih Jelas) 🔤
+
+Ini yang paling sering dipake. Nilainya bukan angka misterius, tapi Teks yang bisa dibaca manusia. Berguna banget pas debugging (karena log-nya jelas).
+
+```ts
+enum Role {
+  ADMIN = "ADMIN",
+  USER = "USER",
+  GUEST = "GUEST",
+}
+
+const userRole = Role.ADMIN;
+
+if (userRole === Role.ADMIN) {
+  console.log("Halo Admin!");
+}
+```
+
+## 3. Const Enums (Optimasi Performa) ⚡
+
+Enum biasa itu pas di-compile ke JS bakal jadi Object yang lumayan makan tempat. Kalau lo mau hemat, pake const enum.
+
+TS bakal menghapus nama enum-nya dan langsung ganti pake nilainya pas compile.
+
+```ts
+const enum Warna {
+  Merah = "FF0000",
+  Putih = "FFFFFF",
+}
+
+const cat = Warna.Merah;
+// Pas jadi JS, kodenya cuma: const cat = "FF0000"; (Efisien!)
+```
+
+## 4. Battle: Enum vs Union Types ⚔️
+
+Ini debat abadi di komunitas TypeScript. Kapan pake Enum? Kapan pake Union String?
+**Union Types (`type Status = "ok" | "fail"`)**
+
+    - Pro: Ringan. Gak nambah kode JS sama sekali.
+
+    - Contra: Kalau mau ganti nilai (misal "ok" jadi "success"), lo harus cari-ganti di semua file manual.
+
+    - Cocok buat: Parameter fungsi, Props React sederhana.
+
+**Enums (`enum Status { OK = "ok" }`)**
+
+    - Pro: Single Source of Truth. Ganti nilai cukup di satu tempat (definisi Enum), semua file otomatis berubah.
+
+    - Contra: Nambahin sedikit kode di bundle JS akhir.
+
+    - Cocok buat: Data yang dipake di BANYAK tempat (Global), kayak Role User, Kode Error, Config.
+
+<Callout type="info">
+  **Saran Gue:** Buat project React/Next.js modern, gue lebih sering pake `Union
+  Types` atau `Object as Const` karena lebih simpel.
+
+```ts
+// Object as Const (Alternatif Enum Modern)
+const ROLES = {
+  ADMIN: "admin",
+  USER: "user",
+} as const; // 'as const' bikin isinya readonly literal
+
+type Role = (typeof ROLES)[keyof typeof ROLES]; // type Role = "admin" | "user"
+```
+
+</Callout>

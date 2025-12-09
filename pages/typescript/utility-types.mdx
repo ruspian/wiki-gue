@@ -1,0 +1,130 @@
+import { Callout } from "nextra/components";
+
+# Utility Types: Cheat Codes 🛠️
+
+TypeScript nyediain fungsi bawaan buat **Mengubah** tipe data yang udah ada jadi bentuk baru. Gak perlu bikin interface baru dari nol!
+
+Kita pake contoh data ini buat eksperimen:
+
+```ts
+interface User {
+  id: number;
+  nama: string;
+  email: string;
+  alamat?: string; // Optional
+}
+```
+
+## 1. Partial `<T>` (Jadiin Optional Semua) ❓
+
+Gunanya: Mengubah SEMUA properti jadi `optional` (?). Sering dipake buat fitur Update Data (Patch), di mana user cuma kirim field yang mau diubah aja.
+
+```ts
+// Tipe ini isinya id?, nama?, email?, alamat?
+type UpdateUserPayload = Partial<User>;
+
+const dataUpdate: UpdateUserPayload = {
+  nama: "Otong Baru",
+  // Gak error walau gak ada id & email
+};
+```
+
+## 2. Required `<T>` (Jadiin Wajib Semua) ❗
+
+Kebalikan dari Partial. Mengubah semua properti jadi WAJIB.
+**Gunanya:** Memastikan data lengkap sebelum disave ke database.
+
+```ts
+type UserLengkap = Required<User>;
+
+const u: UserLengkap = {
+  id: 1,
+  nama: "Otong",
+  email: "a@b.com",
+  alamat: "Gorontalo",
+  // ❌ Error kalau alamat dihapus (padahal aslinya optional)
+};
+```
+
+## 3. Pick `<T, Keys>` (Ambil Sebagian) 🤏
+
+**Gunanya:** Memilih properti tertentu aja dari Interface gede. Mirip fitur "Select" di SQL.
+
+```ts
+// Cuma butuh id dan nama buat ditampilkan di List
+type UserPreview = Pick<User, "id" | "nama">;
+
+const preview: UserPreview = {
+  id: 1,
+  nama: "Otong",
+  // email & alamat gak ada di sini
+};
+```
+
+## 4. Omit `<T, Keys>` (Buang Sebagian) 🗑️
+
+Kebalikan dari Pick.
+**Gunanya:** Membuang properti yang gak diinginkan. Sering dipake buat nyembunyiin data sensitif (Password/Token).
+
+```ts
+// User tanpa email dan alamat
+type UserPublic = Omit<User, "email" | "alamat">;
+
+const publicData: UserPublic = {
+  id: 1,
+  nama: "Otong",
+};
+```
+
+## 5. Record `<Key, Value>` (Kamus Data) 📖
+
+**Gunanya:** Bikin object yang Key-nya dinamis tapi Value-nya seragam. Daripada pake any, mending pake ini.
+
+```ts
+// Key-nya string (nama barang), Value-nya number (harga)
+const hargaBarang: Record<string, number> = {
+  Apel: 5000,
+  Jeruk: 10000,
+  Mangga: 15000,
+};
+
+// Bisa juga dikombinasiin sama Union Type buat Key-nya
+type Role = "admin" | "user" | "guest";
+const permissions: Record<Role, string[]> = {
+  admin: ["create", "read", "update", "delete"],
+  user: ["read", "create"],
+  guest: ["read"],
+};
+```
+
+## 6. ReturnType `<T>` (Ambil Output Function) 🎣
+
+Ini fitur level dewa.
+**Gunanya:** Nyontek tipe data kembalian dari sebuah function library orang lain yang kita males cek dokumentasinya.
+
+```ts
+function getData() {
+  return { id: 1, text: "Halo", active: true };
+}
+
+// Daripada bikin interface manual: interface Data { id: number... }
+// Kita ambil aja dari functionnya:
+type DataHasil = ReturnType<typeof getData>;
+
+// Hasilnya otomatis: { id: number, text: string, active: boolean }
+```
+
+<Callout type="info" emoji="⚛️">
+  {" "}
+  React Case: Berguna kalau lo mau ambil tipe data dari Custom Hooks orang lain.{" "}
+</Callout>
+
+## Rangkuman Cheat Sheet 📝
+
+| Utility        | Fungsi               | Simbol Mental      |
+| :------------- | :------------------- | :----------------- |
+| Partial`<T>`   | Semua jadi Optional  | ?                  |
+| Required`<T>`  | Semua jadi Wajib     | !                  |
+| Pick`<T, K>`   | Ambil yang dimau     | Select             |
+| Omit`<T, K>`   | Buang yang gak dimau | Delete             |
+| Record`<K, V>` | Object dinamis       | `{ [key]: value }` |

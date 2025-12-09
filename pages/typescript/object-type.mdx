@@ -1,0 +1,129 @@
+import { Callout } from "nextra/components";
+
+# Object Type: Interface vs Type Alias ⚔️
+
+Di TypeScript, ada dua cara buat bikin "Cetakan" untuk Object: **Interface** dan **Type Alias**.
+Dua-duanya bisa dipake buat hal yang sama, tapi punya kekuatan super yang beda.
+
+## 1. Interface (Gaya OOP) 🏛️
+
+Interface itu cara klasik. Dia didesain khusus buat mendefinisikan **Bentuk Object** (Shape). Sangat mirip sama `class`.
+
+### Cara Penulisan
+
+Gak pake sama dengan `=`. Langsung kurung kurawal.
+
+```ts
+interface User {
+  nama: string;
+  umur: number;
+  email?: string; // Optional (Boleh kosong)
+  readonly id: number; // Readonly (Gak boleh diubah)
+}
+
+const u1: User = {
+  nama: "Pian",
+  umur: 25,
+  id: 101,
+};
+
+// u1.id = 999; // ❌ Error! Readonly bos.
+```
+
+**Mewarisi Sifat (Extends)**
+
+Mirip Class, `Interface` bisa mewarisi sifat dari `Interface` lain.
+
+```ts
+interface Hewan {
+  napas: boolean;
+}
+
+// Kucing punya sifat Hewan + sifat sendiri
+interface Kucing extends Hewan {
+  meong: boolean;
+}
+
+const oyen: Kucing = {
+  napas: true,
+  meong: true,
+};
+```
+
+**Kekuatan Spesial: Declaration Merging** 🪄
+
+Kalau lo bikin `Interface` dengan nama yang sama 2x, TS bakal Menggabungkannya. Fitur ini sering dipake buat nambahin property ke Library orang lain.
+
+```ts
+interface Mobil {
+  merk: string;
+}
+interface Mobil {
+  roda: number;
+}
+
+// Hasilnya Mobil wajib punya merk DAN roda (Digabung)
+const avanza: Mobil = {
+  merk: "Toyota",
+  roda: 4,
+};
+```
+
+## 2. Type Alias (Gaya Modern) ⚡
+
+Type `Alias` itu lebih fleksibel. Dia bukan cuma buat Object, tapi bisa buat kasih nama ke Tipe Apa Aja (Union, Primitif, Tuple, dll).
+**Cara Penulisan**
+
+Pake sama dengan `=`.
+
+```ts
+type User = {
+  nama: string;
+  umur: number;
+};
+```
+
+**Menggabungkan Tipe (Intersection &)**
+
+Kalau Interface pake `extends`, Type pake simbol `&` (Dan).
+
+```ts
+type Hewan = { napas: boolean };
+
+// Kucing = Hewan DAN { meong }
+type Kucing = Hewan & {
+  meong: boolean;
+};
+```
+
+**Kekuatan Spesial: Union Types (ATAU |) **🔥
+
+Ini fitur yang GAK BISA dilakuin sama `Interface`.
+
+```ts
+// Status boleh "success" ATAU "error"
+type Status = "success" | "error";
+
+// Interface gak bisa begini:
+// interface Status { "success" | "error" } // ❌ Error
+```
+
+## 3. Battle: Pilih Mana? 🤔
+
+| Fitur                 | Interface         | Type Alias                      |
+| :-------------------- | :---------------- | :------------------------------ |
+| Bentuk                | Object ✅ Bisa    | ✅ Bisa                         |
+| Syntax                | interface X { }   | type X = { }                    |
+| Extension             | extends           | & (Intersection)                |
+| Union (A atau B)      | ❌ Gak Bisa       | ✅ Bisa                         |
+| Tuple / Primitif      | ❌ Gak Bisa       | ✅ Bisa                         |
+| Merging (Duplikat)    | ✅ Yes (Otomatis) | ❌ Error (Duplicate Identifier) |
+| Dipake di React Props | ✅ Aman           | ✅ Aman                         |
+
+<Callout type="info" emoji="💡"> 
+**Rekomendasi Gue:**
+    - Gunakan type sebagai default. Kenapa? Karena dia lebih fleksibel (bisa Union, bisa Primitif) dan lebih aman dari ketidaksengajaan Merging.
+    - Gunakan interface kalau lo bikin Library. Biar user lain bisa nambahin property ke library lo (Merging) kalau perlu.
+    - Buat React Props (type Props = ...), gue pribadi lebih suka type.
+
+</Callout>

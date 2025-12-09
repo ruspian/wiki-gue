@@ -1,0 +1,15 @@
+{
+  "intro": "Intro: Kenapa Harus TS?",
+  "basic-types": "Tipe Data Primitif",
+  "special-types": "Tipe Spesial",
+  "array-tuple": "Array & Tuple",
+  "object-type": "Object Type",
+  "angle-brackets": "Angle Brackets & Casting",
+  "function-type": "unction Types",
+  "union-intersection": "Union & Intersection",
+  "enums": "Enums",
+  "generics": "Generics",
+  "utility-types": "Utility Types",
+  "config-dts": "Config & Declaration",
+  "troubleshooting": "Solusi Error Umum"
+}

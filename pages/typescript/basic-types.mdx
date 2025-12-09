@@ -1,0 +1,146 @@
+import { Callout } from "nextra/components";
+
+# Tipe Data Dasar (Basic Types) 🧱
+
+Sebelum masuk ke tipe data, kita harus paham dulu konsep **Type Annotation** dan **Type Inference**. Ini adalah cara kita "Ngobrol" sama TypeScript.
+
+## 1. Type Annotation (Memberi Label) 🏷️
+
+Type Annotation adalah cara eksplisit (terang-terangan) ngasih tau TypeScript: _"Eh, variabel ini isinya HARUS tipe X ya!"_.
+
+Caranya pake tanda titik dua (`:`) setelah nama variabel.
+
+**Syntax:**
+`let namaVariabel: TipeData = Nilai;`
+
+```ts
+// Kita MAKSA variabel ini harus String
+let nama: string = "Pian";
+
+// Kita MAKSA variabel ini harus Number
+let umur: number = 25;
+```
+
+## 2. Type Inference (Tebak-tebakan) 🧠
+
+TypeScript itu pinter. Kalau lo langsung ngisi nilainya pas deklarasi, lo GAK PERLU nulis Annotation. TS bakal nebak sendiri.
+
+**Syntax:**
+`let namaVariabel = Nilai;`
+
+```ts
+// TS liat ada kutip dua, dia otomatis stempel ini jadi 'string'
+let kota = "Jakarta";
+
+// kota = 100; // ❌ Error! TS marah: "Woy, tadi kan string?"
+```
+
+**Kapan Harus Pake Annotation?** 🤔
+
+Gunakan Annotation kalau:
+
+    - Variabelnya kosong dulu (belum ada nilainya).
+
+    - Tipe datanya ribet/unik (nanti kita bahas di Union Type).
+
+    - Return Function (biar jelas outputnya apa).
+
+```ts
+// Kasus 1: Deklarasi kosong
+let hobi: string;
+
+// Nanti baru diisi
+hobi = "Mancing";
+```
+
+## 3. The Primitives (Tipe Dasar)
+
+Ini adalah bahan baku utama di JavaScript & TypeScript.
+
+### A. String (Teks)
+
+Bisa pake kutip satu `'`, kutip dua `"`, atau backtick ` (Template Literal).
+
+```ts
+let depan: string = "Pian";
+let belakang: string = "Kurniawan";
+let sapaan: string = `Halo, nama gue ${depan}`; // Template Literal
+```
+
+### B. Number (Angka)
+
+Di TS, semua angka itu number. Gak ada bedanya antara bulat (`int`) atau koma (`float`).
+
+```ts
+let bulat: number = 10;
+let koma: number = 3.14;
+let minus: number = -5;
+let jutaan: number = 1_000_000; // Bisa pake underscore biar gampang dibaca
+```
+
+### C. Boolean (Logika)
+
+Cuma ada dua nilai: `true` atau `false`.
+
+```ts
+let isJomblo: boolean = true;
+let isSelesai: boolean = false;
+```
+
+## 4. Null & Undefined (Si Kosong) 🕳️
+
+Di TypeScript modern (dengan mode `strict: true`), sama dengan JavaScript, dua makhluk ini punya sifat beda.
+
+    - Undefined: Variabel udah dibuat, tapi belum diisi.
+
+    - Null: Variabel emang sengaja dikosongin.
+
+```ts
+let u: undefined = undefined;
+let n: null = null;
+```
+
+<Callout type="warning" emoji="⚠️">
+  Strict Null Checks: Secara default di TS modern, lo GAK BISA masukin null ke
+  variabel string atau number (Solusinya nanti pake `Union` Type: string | null)
+</Callout>
+
+## 5. BigInt & Symbol (Jarang Dipake tapi Ada) 🦕
+
+Biar lengkap, lo harus tau ini ada.
+
+### A. BigInt
+
+Buat angka yang GEDE BANGET (lebih dari 2^53). Tandanya pake huruf n di belakang.
+
+```ts
+// Perlu setting target: es2020 di tsconfig
+let angkaRaksasa: bigint = 10000000000000000000000n;
+```
+
+### B. Symbol
+
+Buat bikin identifier yang bener-bener unik (biasanya dipake library tingkat lanjut).
+
+```ts
+let id1 = Symbol("id");
+let id2 = Symbol("id");
+
+// id1 === id2 hasilnya FALSE. Walau namanya sama, mereka beda barang.
+```
+
+## Rangkuman: Kapan Pake Apa? 📝
+
+| Situasi             | Pake Annotation? (: Tipe)    | Pake Inference? (Langsung =) |
+| :------------------ | :--------------------------- | :--------------------------- |
+| Variable ada isinya | ❌ Gak usah (Mubazir)        | ✅ Yes (Lebih bersih)        |
+| Variable kosong     | ✅ Wajib (Biar gak jadi any) | ❌ Gak bisa                  |
+| Parameter Function  | ✅ Wajib (Biar aman)         | ❌ Gak bisa                  |
+
+```ts
+// ✅ Good Code (Bersih)
+let skor = 100;
+
+// ❌ Bad Code (Bertele-tele)
+let skor2: number = 100;
+```

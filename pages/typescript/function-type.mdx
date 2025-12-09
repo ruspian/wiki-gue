@@ -1,0 +1,156 @@
+import { Callout } from "nextra/components";
+
+# Function Types: Input & Output 🎛️
+
+Di JavaScript, function itu bebas banget. Bisa nerima apa aja, bisa balikin apa aja.
+Di TypeScript, kita pasang gerbang tol.
+
+## 1. Basic Typing (Parameter & Return)
+
+Kita kasih tipe data di parameter (kurung buka) dan return value (setelah kurung tutup).
+
+```ts
+// a & b wajib number. Outputnya WAJIB string.
+function tambah(a: number, b: number): string {
+  return `Hasilnya adalah ${a + b}`;
+}
+
+const hasil = tambah(10, 5); // "Hasilnya adalah 15"
+
+// ❌ Error: Kurang argumen
+// tambah(10);
+
+// ❌ Error: Tipe salah
+// tambah("10", 5);
+```
+
+**Type Inference di Return**
+
+Kalau lo males nulis : string di akhir `function`, TS sebenernya bisa nebak sendiri berdasarkan isinya.
+
+```ts
+// TS tau ini return number karena (angka + angka = angka)
+const kali = (a: number, b: number) => {
+  return a * b;
+};
+```
+
+## 2. Function Type Expression (Function Signature) ✍️
+
+Gimana kalau kita mau bikin variable yang Isinya `Function`? Atau `function` yang nerima `function` lain (`Callback`)? Kita butuh bikin "Cetakan Function".
+
+```ts
+// Cetakan: "Function yang nerima string, dan gak balikin apa-apa (void)"
+type LogFunction = (pesan: string) => void;
+
+const errorLogger: LogFunction = (pesan) => {
+  console.error("ERROR:", pesan);
+};
+
+// Cetakan: "Function matematika (angka -> angka)"
+type MathFunc = (x: number, y: number) => number;
+
+const tambah: MathFunc = (a, b) => a + b;
+const kurang: MathFunc = (a, b) => a - b;
+```
+
+## 3. Optional & Default Parameters ❓
+
+Kadang kita mau parameter yang gak wajib diisi.
+Optional Parameter (`?`)
+
+Pake tanda tanya. Nilainya otomatis jadi undefined kalau gak diisi.
+
+```ts
+const sapa = (nama: string, gelar?: string) => {
+  if (gelar) {
+    return `Halo ${gelar} ${nama}`;
+  }
+  return `Halo ${nama}`;
+};
+
+sapa("Otong"); // "Halo Otong"
+sapa("Otong", "Master"); // "Halo Master Otong"
+```
+
+<Callout type="warning">
+  {" "}
+  **Aturan:** Parameter optional (`?`) WAJIB ditaruh di Paling Belakang. Gak boleh
+  di depan.{" "}
+</Callout>
+
+**Default Parameter (=)**
+
+Kalau gak diisi, pake nilai standar.
+
+```ts
+// Kalau 'negara' kosong, otomatis jadi "Indonesia"
+const dataUser = (nama: string, negara: string = "Indonesia") => {
+  return `${nama} dari ${negara}`;
+};
+
+console.log(dataUser("Otong")); // "Otong dari Indonesia"
+```
+
+## 4. Rest Parameters (...args) 🎒
+
+Gimana kalau kita gak tau user bakal ngirim berapa banyak argumen? (Misal: Function jumlahan total). Di TS, Rest Parameter harus ditandai sebagai Array.
+
+```ts
+// ...angka akan jadi array number[]
+const total = (...angka: number[]): number => {
+  return angka.reduce((acc, curr) => acc + curr, 0);
+};
+
+console.log(total(10, 20)); // 30
+console.log(total(1, 2, 3, 4, 5)); // 15
+```
+
+## 5. Function Overloads (Level Advanced) 🤯
+
+Ini fitur unik. Kadang satu function bisa punya Banyak Wajah. Misal: Bisa nerima String, bisa nerima Number, tapi outputnya beda logic.
+
+Kita tulis "Daftar Menu" (Signature) dulu, baru "Dapurnya" (Implementation).
+
+```ts
+// 1. Menu Wajah A (Nerima String)
+function proses(input: string): string;
+
+// 2. Menu Wajah B (Nerima Number)
+function proses(input: number): number;
+
+// 3. Dapur (Implementation) - Harus bisa handle SEMUA kemungkinan (any/unknown)
+function proses(input: any): any {
+  if (typeof input === "string") {
+    return input.toUpperCase(); // Logic String
+  } else {
+    return input * 2; // Logic Number
+  }
+}
+
+// Cara Pakai:
+const hasil1 = proses("halo"); // Output String "HALO"
+const hasil2 = proses(10); // Output Number 20
+
+// ❌ Error: Boolean gak ada di menu!
+// proses(true);
+```
+
+<Callout type="info">
+  {" "}
+  **Kapan pake Overload?** Jarang dipake di aplikasi biasa. Sering dipake kalau lo
+  bikin Library biar IntelliSense-nya (Auto-complete) enak dibaca sama user lain.{" "}
+</Callout>
+
+## 6. Async Function ⏳
+
+Ingat, function `async` itu **SELALU** mengembalikan `Promise`. Jadi return type-nya harus dibungkus `Promise<...>`.
+
+```ts
+type User = { id: number; nama: string };
+
+// Return-nya BUKAN User, tapi Promise<User>
+const getUser = async (id: number): Promise<User> => {
+  return { id, nama: "Pian" };
+};
+```

@@ -1,0 +1,135 @@
+import { Callout } from "nextra/components";
+
+# Array & Tuple: Mengelola Daftar 📦
+
+Kalau variabel biasa cuma nyimpen satu barang, Array & Tuple bisa nyimpen sekardus sekaligus. Tapi di TS, aturannya ketat bos!
+
+## 1. Array (Daftar Seragam) 📋
+
+Array di TS biasanya dipake buat nyimpen data yang **tipenya sama semua**.
+
+### Cara Deklarasi
+
+Ada dua gaya penulisan. Hasilnya sama aja, pilih yang lo suka.
+
+```ts
+// Gaya 1: Pake kurung siku [] (Paling umum)
+let hobi: string[] = ["Mancing", "Tidur", "Ngoding"];
+
+// Gaya 2: Pake Generic Array<T> (Lebih formal)
+let nilai: Array<number> = [80, 90, 100];
+```
+
+**Array Campur Aduk (Union)**
+
+Gimana kalau isinya boleh angka ATAU string? Pake kurung `()` dan pipa `|`.
+
+```ts
+// Boleh diisi String atau Number
+let idUser: (string | number)[] = [101, "A-202", 303];
+
+// ❌ Error: Boolean gak diajak
+// idUser.push(true);
+```
+
+**Readonly Array (Array Batu)** 🗿
+
+Ini fitur penting buat Functional Programming atau Redux. Lo bikin array yang GAK BISA DIUBAH isinya (Immutable).
+
+```ts
+const anggota: readonly string[] = ["Pian", "Budi"];
+
+// ✅ Cuma boleh dibaca
+console.log(anggota[0]);
+
+// ❌ Error Meledak! Gak bisa nambah/hapus/ganti
+// anggota.push("Asep");
+// anggota[0] = "Joko";
+// anggota.pop();
+```
+
+## 2. Tuple (Daftar Spesifik) 🔒
+
+Tuple itu sebenernya Array juga, tapi Lebih Posesif. Dia ngatur:
+
+    - Jumlah item harus pas.
+
+    - Urutan tipe data harus pas.
+
+### Basic Tuple
+
+```ts
+// Index 0 WAJIB string (Nama)
+// Index 1 WAJIB number (Umur)
+// Index 2 WAJIB boolean (Lulus)
+let murid: [string, number, boolean];
+
+murid = ["Pian", 25, true]; // ✅ Aman
+
+// ❌ Error Urutan:
+// murid = [25, "Pian", true];
+
+// ❌ Error Jumlah:
+// murid = ["Pian", 25]; // Kurang satu!
+```
+
+### Named Tuple (Tuple Berlabel) 🏷️
+
+Biar kodingan lo lebih enak dibaca (`self-documenting`), lo bisa kasih label di tipenya. Ini gak ngaruh ke logic, cuma buat dokumentasi.
+
+```ts
+// Tanpa Label (Bingung ini angka apaan?)
+let kordinat: [number, number] = [10, 20];
+
+// Dengan Label (Jelas!)
+let lokasi: [lat: number, long: number] = [10, 20];
+```
+
+### Optional Tuple Elements ❓
+
+Tuple juga bisa punya elemen yang "Boleh ada, boleh enggak". Pake tanda tanya `?`.
+
+```ts
+// Elemen ke-3 (Alpha/Transparan) itu opsional
+let warna: [number, number, number, number?] = [255, 0, 0];
+
+// Kalau mau diisi juga boleh
+let warnaLengkap: [number, number, number, number?] = [255, 0, 0, 0.5];
+```
+
+### Real World Use Case: React Hooks ⚛️
+
+Kenapa useState return-nya pake `[]` (Array Destructuring)? Karena aslinya dia balikin Tuple!
+
+```ts
+// Simulasi tipe data useState
+function myState(initial: number): [number, (v: number) => void] {
+  let val = initial;
+  const setVal = (v: number) => {
+    val = v;
+  };
+
+  return [val, setVal]; // Balikin Tuple [Value, Function]
+}
+
+const [skor, setSkor] = myState(0);
+```
+
+## 3. Tuple vs Array (Kapan Pake Siapa?) 🤔
+
+| Fitur        | Array type[]           | Tuple [type, type]                        |
+| :----------- | :--------------------- | :---------------------------------------- |
+| Panjang Data | Bebas (Dinamis)        | Tetap (Fixed)                             |
+| Tipe Data    | Seragam (Biasanya)     | Spesifik per Index                        |
+| Contoh       | List Produk, List User | Kordinat GPS [x,y], Format CSV [id, nama] |
+| Keamanan     | Medium                 | High                                      |
+
+```ts
+// Array: Lo gak tau data ke-10 itu ada atau nggak
+const list = [1, 2, 3];
+const item = list[10]; // undefined (tapi TS kadang nganggap ini number, hati-hati!)
+
+// Tuple: TS tau persis panjangnya
+const point: [number, number] = [10, 20];
+// const z = point[2]; // ❌ TS Error: "Woy, panjangnya cuma 2!" (Lebih Aman)
+```

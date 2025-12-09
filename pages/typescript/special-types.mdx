@@ -1,0 +1,123 @@
+import { Callout } from "nextra/components";
+
+# Tipe Spesial: The Good, The Bad, & The Weird 👽
+
+Di TS, ada tipe data yang fungsinya bukan buat nyimpen data, tapi buat **Mengontrol Perilaku** kodingan. Kita bahas dari yang paling bahaya sampe yang paling ketat.
+
+## 1. The Bad: `any` 😈
+
+`any` adalah cara kita bilang ke TypeScript: _"Terserah lo dah mau isi gue apa aja"_
+
+Saat lo pake `any`, lo mematikan semua fitur keamanan TS buat variabel itu.
+
+```ts
+// Lo bisa isi apa aja
+let sampah: any = "Halo";
+sampah = 100;
+sampah = false;
+
+// ⚠️ BAHAYA: Lo bisa akses property ngawur tanpa error di Editor!
+// Editor gak merah, tapi pas dijalankan CRASH (Runtime Error).
+sampah.fungsiYangGakAda();
+```
+
+**Kapan Boleh Pake any?**
+
+Hanya ada 2 kondisi yang dimaafkan:
+
+    - Migrasi Project: Lo mindahin kodingan JS lama ke TS dan males benerin error satu-satu.
+
+    - Library 3rd Party Buruk: Lo pake library orang lain yang gak punya definisi tipe data (jarang terjadi sekarang).
+
+## 2. The Good: unknown 🛡️
+
+Ini adalah saudara kembar `any`, tapi Versi Aman. Dia bisa nerima data apa aja, TAPI Gak bisa dipake sembarangan sebelum dicek isinya.
+
+```ts
+let kotakMisteri: unknown;
+
+kotakMisteri = "Ini String"; // Boleh masukin apa aja
+kotakMisteri = 100;
+
+// ❌ Error! TS ngelarang: "Eits, cek dulu isinya apaan!"
+// let hasil = kotakMisteri + 10;
+
+// ✅ Solusi: Type Narrowing (Penyempitan Tipe)
+if (typeof kotakMisteri === "number") {
+  // Di dalam blok if ini, TS tau kotakMisteri adalah NUMBER
+  let hasil = kotakMisteri + 10; // Aman
+  console.log(hasil);
+}
+```
+
+<Callout type="info">
+  {" "}
+  Tips Pro: Kalau lo nerima data dari API (`Fetch`) yang lo gak tau bentuknya, pake
+  unknown dulu, jangan any. Itu memaksa lo buat validasi data.{" "}
+</Callout>
+
+## 3. The Void: void 🕳️
+
+Dipake khusus buat Function yang tidak mengembalikan nilai (Gak ada `return`).
+
+```ts
+const logPesan = (pesan: string): void => {
+  console.log(pesan);
+  // Secara teknis, JS akan return 'undefined' di belakang layar.
+  // Tapi bagi TS, ini dianggap 'void' (jangan dipake nilainya).
+};
+
+// ❌ Error! Gak bisa dimasukin ke variabel
+// const hasil: string = logPesan("Halo");
+```
+
+## 4. The Weird: never 🚫
+
+Ini tipe yang paling unik. Artinya: _"Nilai yang GAK AKAN PERNAH terjadi."_ Beda sama void (yang masih return undefined), never bener-bener gak sampai ke titik finish.
+
+> **Kasus 1:** Error Throwing
+
+Function yang melempar error itu gak pernah selesai secara normal.
+
+```ts
+const errorFatal = (msg: string): never => {
+  throw new Error(msg);
+  // Code di bawah sini gak akan pernah jalan (Unreachable)
+};
+```
+
+> **Kasus 2:** Infinite Loop
+
+```ts
+const loopSelamanya = (): never => {
+  while (true) {
+    console.log("Muter...");
+  }
+};
+```
+
+> **Kasus 3:** Exhaustive Check (Ilmu Tingkat Dewa) 🤯
+
+Ini trik yang sering dipake Senior Dev buat mastiin semua kemungkinan udah dihandle.
+
+```ts
+type Role = "Admin" | "User";
+
+function cekRole(role: Role) {
+  if (role === "Admin") {
+    // Logic Admin
+  } else if (role === "User") {
+    // Logic User
+  } else {
+    // Blok ini tipenya 'never'.
+    // Kenapa? Karena semua kemungkinan (Admin & User) udah diambil di atas.
+    // Jadi gak mungkin ada sisa yang masuk sini.
+    const sisa: never = role;
+  }
+}
+```
+
+**Gunanya apa?**
+Misal nanti lo tambah role baru: `type Role = "Admin" | "User" | "Guest"`. Maka kodingan di atas bakal **ERROR MERAH** di baris `const sisa: never = role`. Kenapa? Karena si "Guest" masuk ke `else`, padahal `else` itu jatahnya `never` (kosong).
+
+Ini cara TS ngingetin lo: _"Woy, lo nambah role Guest tapi lupa handle logic-nya di function cekRole!"_. Keren kan?

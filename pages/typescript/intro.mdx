@@ -1,0 +1,51 @@
+import { Callout } from "nextra/components";
+
+# Pengenalan: TypeScript itu Polisi 👮‍♂️
+
+JavaScript itu bahasa yang **"Bebas & Liar"**. Lo bisa masukin Angka ke variabel String, JS masa bodoh. Tapi pas dijalankan? **ERROR MELEDAK**.
+
+TypeScript (TS) hadir sebagai **Polisi / Satpam**.
+Dia bakal nangkep error **SEBELUM** kodingan lo dijalankan (Waktu ngetik di VS Code).
+
+## Bedanya JS vs TS
+
+### JavaScript (Pasrah) 💀
+
+```js
+function tambah(a, b) {
+  return a + b;
+}
+
+// Niatnya angka, tapi user masukin string "10" dan "20"
+console.log(tambah("10", "20"));
+// Hasil: "1020" (String) -> ERROR LOGIKA! 😱
+// JS diem aja, gak ngasih warning.
+```
+
+### TypeScript (Tegas) 🛡️
+
+```ts
+function tambah(a: number, b: number) {
+  return a + b;
+}
+
+// Pas lo ketik ini, VS Code langsung garis merah tebal!
+// console.log(tambah("10", "20"));
+// ❌ Error: Argument of type 'string' is not assignable to parameter of type 'number'.
+```
+
+## Bagaimana Cara Kerjanya? ⚙️
+
+Browser (Chrome/Firefox) sebenernya GAK NGERTI `TypeScript`. Jadi, ada proses namanya Compiling (`Transpiling`).
+
+    - Lo nulis kode .ts (TypeScript).
+
+    - Compiler ngubah kode itu jadi .js (JavaScript) biasa.
+
+    - Browser jalanin file .js hasil perubahan tadi.
+
+<Callout type="info" emoji="💡">
+  {" "}
+  Intinya: TS itu cuma alat bantu developer pas ngoding (Development Time). Pas udah
+  jadi website (Runtime), dia menghilang dan berubah jadi JS murni.{" "}
+</Callout>

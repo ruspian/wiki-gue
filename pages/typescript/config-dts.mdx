@@ -1,0 +1,117 @@
+import { Callout } from "nextra/components";
+
+# Config & Declaration Files ⚙️
+
+Coding TS itu bukan cuma soal syntax, tapi juga lingkungan kerjanya.
+Semua aturan main diatur di file keramat bernama **`tsconfig.json`**.
+
+## 1. tsconfig.json (Pusat Komando) 🎛️
+
+Pas lo jalanin `npx tsc --init`, file ini dibuat. Isinya banyak banget, tapi lo cuma perlu paham yang penting-penting aja.
+
+### A. Strict Mode (Wajib Aktif!)
+
+```json
+{
+  "compilerOptions": {
+    "strict": true
+  }
+}
+```
+
+Ini tombol sakti. Kalau `true`, dia mengaktifkan semua fitur keamanan ketat:
+
+    * `noImplicitAny`: Gak boleh ada any terselubung.
+
+    * `strictNullChecks`: `null` gak boleh masuk ke tipe lain.
+
+    * `strictFunctionTypes`: Cek parameter fungsi lebih teliti.
+
+<Callout type="error">
+  {" "}
+  Jangan pernah set `strict: false` di project baru. Itu sama aja lo coding JS biasa
+  tapi file-nya `.ts`. Buang-buang waktu.{" "}
+</Callout>
+
+### B. Target (Versi JS Hasil Compile)
+
+TS bakal diubah jadi JS. Mau jadi JS versi berapa?
+
+    * `"target": "ES5"`: Jadul (Support IE11). Kodenya bakal panjang & ribet.
+
+    * `"target": "ES6" / "ES2015"`: Standar aman.
+
+    * `"target": "ESNext"`: Versi terbaru browser. Kode lebih bersih.
+
+### C. BaseUrl & Paths (Alias Import) 🛣️
+
+Males ngetik `import X from "../../../components/Button"`? Atur ini biar bisa pake `@`.
+
+```json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}
+```
+
+Hasilnya: `import X from "@/components/Button"`.
+
+## 2. Declaration Files (`.d.ts`) 🗺️
+
+Pernah liat file berakhiran `.d.ts`? Itu adalah Peta Harta Karun. File ini isinya CUMA tipe data, gak ada logic kodingan sama sekali.
+
+**Gunanya apa?** Memberi tahu TS tentang tipe data dari library JavaScript biasa.
+**Masalah: "Could not find a declaration file" 😱**
+
+Pas install library lama, sering muncul error merah:
+
+    _Could not find a declaration file for module 'jquery'. 'jquery' implicitly has an 'any' type._
+
+**Solusinya:**
+
+1. **Cari Type Definition:** Biasanya komunitas udah buatin. Coba install:
+
+```bash
+npm install --save-dev @types/nama-library
+# Contoh: npm install --save-dev @types/jquery
+```
+
+2. **Bikin Manual (Kalau kepepet):** Buat file baru di root: types.d.ts.
+
+```ts
+// Bilang ke TS: "Udah percaya aja, modul ini ada kok."
+declare module "nama-library-jadul";
+```
+
+## 3. Global Types (declare global) 🌍
+
+Kadang lo mau nambahin properti ke Object global bawaan browser, misal `window`. Secara default, TS bakal marah kalau lo tulis `window.namaSaya = "Otong"`.
+
+Caranya: Extend tipe global.
+
+```ts
+// Di file index.ts atau global.d.ts
+export {};
+
+declare global {
+  interface Window {
+    namaSaya: string; // Tambahin properti baru
+  }
+}
+
+// Sekarang aman
+window.namaSaya = "Otong";
+```
+
+## Rangkuman Config 📝
+
+| Setting      | Rekomendasi       | Fungsi                                                   |
+| :----------- | :---------------- | :------------------------------------------------------- |
+| strict       | true              | Polisi Galak (Aman).                                     |
+| target       | ES2017 / ESNext   | Versi JS hasil build.                                    |
+| noEmit       | true (di Next.js) | Gak usah bikin file .js (Next.js yg urus).               |
+| skipLibCheck | true              | Gak usah ngecek error di file node_modules (Biar cepet). |

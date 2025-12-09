@@ -1,0 +1,118 @@
+import { Callout } from "nextra/components";
+
+# Angle Brackets `< >` & Type Assertion 📐
+
+Kalau lo liat simbol kurung lancip `<...>` di TypeScript, jangan panik. Itu bukan HTML, tapi itu sintaks khusus TS buat ngasih tau tipe data secara **Eksplisit**.
+
+Simbol ini dipake di dua kondisi: **Assertion** (Pemaksaan) dan **Generics** (Parameter).
+
+---
+
+## 1. Type Assertion (Maksa / Casting) 💪
+
+Kadang TS bingung nebak tipe data, tapi **LO LEBIH TAU** daripada TS.
+Di sini kita pake jurus "Paksa".
+
+### Gaya Lama (Angle Bracket) 👴
+
+Menulis tipe di dalam kurung `< >` di depan variabel.
+
+```ts
+let kotakMisteri: any = "Ini aslinya string";
+
+// Kita paksa: "Woy TS, anggap ini string ya!"
+let panjang = (<string>kotakMisteri).length;
+```
+
+<Callout type="error" emoji="⚛️">
+  {" "}
+  PANTANGAN REACT: Kalau lo pake file .tsx (React), JANGAN PAKE gaya &lt;string&gt;
+  ini. Kenapa? Karena React bakal bingung: "Ini tag HTML &lt;string&gt; atau Tipe
+  Data?".{" "}
+</Callout>
+
+### Gaya Baru (Keyword as) 👶
+
+Ini gaya yang Disarankan dan aman buat React.
+
+```ts
+let kotakMisteri: any = "Ini aslinya string";
+
+// Bacanya: "Anggap kotakMisteri SEBAGAI (as) string"
+let panjang = (kotakMisteri as string).length;
+```
+
+### Kapan Harus Maksa?
+
+Biasanya pas nangkep elemen `DOM`. Karena TS taunya itu cuma Element biasa, bukan `HTMLInputElement`.
+
+```ts
+// TS gak tau kalau ini input form
+// const input = document.getElementById("username");
+
+// Kita paksa: "Ini INPUT woy, biar gue bisa akses .value"
+const input = document.getElementById("username") as HTMLInputElement;
+
+console.log(input.value); // Aman
+```
+
+## 2. Generics Syntax (Type Parameter) 🧬
+
+Ini penggunaan `< >` yang paling sering lo liat.
+
+> **Konsepnya:** Mengirim Tipe Data ke dalam Tipe lain.
+
+Bayangin `< >` itu kayak kurung `( )` di function, tapi isinya Jenis Data, bukan Nilai.
+
+- Contoh di Array
+
+```ts
+// Array ini Menerima tipe number sebagai isinya
+let nilai: Array<number> = [10, 20, 30];
+```
+
+- Contoh di Promise
+
+```ts
+// Janji ini Menerima tipe string sebagai hasil akhirnya
+const ambilData = async (): Promise<string> => {
+  return "Data Sukses";
+};
+```
+
+- Contoh di React (useState)
+
+```ts
+// State ini Menerima tipe User atau null
+const [user, setUser] = useState<User | null>(null);
+```
+
+<Callout type="info">
+  {" "}
+  Analogi Gampang: Array&lt;number&gt; dibaca: "Array OF Number" (Array yang isinya
+  Number). Promise&lt;string&gt; dibaca: "Promise OF String".{" "}
+</Callout>
+
+## 3. Double Assertion (Jurus Terlarang) 😈
+
+Kadang TS keras kepala banget dan gak ngebolehin lo `casting`. Misal dari `string` mau diubah paksa jadi `number` (padahal gak nyambung).
+
+Triknya adalah `Double Casting` (Paksa dua kali). Ubah ke `unknown` dulu, baru ke target.
+
+```ts
+let nama = "Otong";
+
+// ❌ Error: Gak masuk akal string jadi number
+// let angka = nama as number;
+
+// ✅ Cara Maksa (Jangan ditiru kecuali kepepet)
+let angka = nama as unknown as number;
+```
+
+## Rangkuman Simbol `< >` 📝
+
+| Sintaks            | Nama             | Aman buat React? | Fungsi                |
+| :----------------- | :--------------- | :--------------- | :-------------------- |
+| `<Type>variabel`   | Assertion (Lama) | ❌ NO            | Maksa tipe (Casting)  |
+| `variabel as Type` | Assertion (Baru) | ✅ YES           | Maksa tipe (Casting)  |
+| `Array<Type>`      | Generics         | ✅ YES           | Ngasih parameter tipe |

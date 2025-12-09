@@ -1,0 +1,134 @@
+import { Callout } from "nextra/components";
+
+# Union & Intersection Types 🍹
+
+Kadang hidup gak sesimpel "Hitam atau Putih". Kadang kita butuh data yang bisa berubah bentuk.
+Di sini kita pake jurus **Union (`|`)** dan **Intersection (`&`)**.
+
+![Gambar](https://miro.medium.com/1*9n2pjVRYcNUGYzO3Pioh4w.png)
+
+## 1. Union Types (ATAU / `|`) 🔀
+
+Simbolnya pipa `|`. Artinya: Variabel ini boleh Tipe A **ATAU** Tipe B.
+
+```ts
+// ID bisa berupa angka (101) atau string ("U-101")
+let id: string | number;
+
+id = 101; // ✅ Boleh
+id = "U-101"; // ✅ Boleh
+// id = true;   // ❌ Error: Boolean gak diajak
+```
+
+**Type Narrowing (Penyempitan)** 🕵️
+
+Pas lo pake Union, TS bakal bingung: _"Ini lagi jadi String atau Number?"_. TS bakal ngelarang lo pake method khusus string (kayak .toUpperCase) kalau dia belum yakin itu string.
+
+> **Solusinya:** Cek dulu (Narrowing).
+
+```ts
+function cetakId(id: string | number) {
+  // ❌ Error! Number gak punya toLowerCase
+  // console.log(id.toLowerCase());
+
+  if (typeof id === "string") {
+    // ✅ Di dalam blok ini, TS tau id adalah STRING
+    console.log("ID String:", id.toUpperCase());
+  } else {
+    // ✅ Di sini, TS tau sisanya pasti NUMBER
+    console.log("ID Angka:", id.toFixed(2));
+  }
+}
+```
+
+## 2. Literal Types (Nilai Mati) 🔒
+
+Kita bisa kunci variabel biar isinya cuma boleh kata-kata tertentu. Ini sering banget dipake di React buat status atau tema.
+
+```ts
+// Cuma boleh isi 3 kata ini. Selain itu ERROR.
+type Status = "success" | "error" | "loading";
+
+let appStatus: Status = "loading";
+// appStatus = "pending"; // ❌ Error! "pending" gak ada di daftar.
+```
+
+**Union Type di Array**
+
+Masih ingat materi Array? Kalau lupa dibuka lagi deh!
+
+```ts
+// Array yang isinya boleh campur
+const data: (string | number | boolean)[] = ["Otong", 1, true];
+```
+
+## 3. Intersection Types (DAN / &) 🤝
+
+Simbolnya `&`. Artinya: Gabungan dari Tipe A DAN Tipe B. Hasilnya adalah tipe baru yang super lengkap (Fusion).
+
+Ini sering dipake buat Merging Objects.
+
+```ts
+type PunyaNama = { nama: string };
+type PunyaSkill = { skill: string };
+
+// Karyawan harus punya Nama DAN Skill
+type Karyawan = PunyaNama & PunyaSkill;
+
+const staff: Karyawan = {
+  nama: "Pian",
+  skill: "Coding",
+  // ❌ Error kalau salah satu properti ilang.
+};
+```
+
+<Callout type="info" emoji="⚛️"> 
+Contoh React Props: Kadang kita mau bikin komponen yang nerima props HTML biasa `(misal id, className)` TAPI ditambah props kita sendiri.
+```ts
+type TombolProps = React.ComponentProps<"button"> & {
+  variant: "primary" | "secondary"; // Props tambahan kita
+};
+```
+</Callout>
+
+## 4. Discriminated Unions (Jurus Dewa) 🤯
+
+Ini pola tingkat lanjut yang sering dipake di library besar (seperti Redux). Kita punya beberapa tipe Object, tapi kita kasih satu "Tanda Pengenal" (`Discriminator`) yang sama.
+
+```ts
+// Tipe 1: Sapi
+interface Sapi {
+  jenis: "sapi"; // Tanda Pengenal
+  melenguh: () => void;
+}
+
+// Tipe 2: Kuda
+interface Kuda {
+  jenis: "kuda"; // Tanda Pengenal
+  lari: () => void;
+}
+
+type Hewan = Sapi | Kuda;
+
+function mainHewan(hewan: Hewan) {
+  // TS otomatis tau method apa yang tersedia berdasarkan 'jenis'
+  switch (hewan.jenis) {
+    case "sapi":
+      hewan.melenguh(); // ✅ Aman, TS tau ini Sapi
+      break;
+    case "kuda":
+      hewan.lari(); // ✅ Aman, TS tau ini Kuda
+      break;
+  }
+}
+```
+
+**Kenapa ini keren?**
+Kalau lo tambah hewan baru (misal Ayam) tapi lupa nambahin case "ayam", TS bisa ngasih warning kalau lo pake teknik Exhaustive Check (yang kita pelajari di bab never).
+
+## Rangkuman Simbol 📝
+
+| Simbol | Nama         | Logika             | Contoh Penggunaan |
+| :----- | :----------- | :----------------- | :---------------- |
+| pipe   | Union        | ATAU (Pilih satu)  | User atau Admin   |
+| &      | Intersection | DAN (Gabung semua) | User & Admin      |

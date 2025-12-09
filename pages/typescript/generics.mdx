@@ -1,0 +1,127 @@
+import { Callout } from "nextra/components";
+
+# Generics: Type yang Fleksibel `<T>` 🧬
+
+Generics adalah cara bikin komponen (Function/Interface) yang **Bisa Menerima Berbagai Macam Tipe Data**, tapi tetap aman dan terjaga (bukan `any`).
+
+## Analogi: Mesin Label 🏷️
+
+Bayangin lo punya mesin pembungkus paket.
+
+- Tanpa Generics: Lo harus bikin mesin khusus Paket Buku, mesin khusus Paket Baju, dll. (Capek!).
+- Dengan Generics: Lo bikin **Satu Mesin** yang bisa ditempel label: "Ini isinya Buku" atau "Ini isinya Baju". Mesinnya satu, labelnya gonta-ganti.
+
+---
+
+## 1. Masalah: Duplikasi Kode 😫
+
+Misal lo mau bikin fungsi buat ngebungkus data jadi Array.
+
+```ts
+// Khusus Number
+function bungkusAngka(data: number): number[] {
+  return [data];
+}
+
+// Khusus String
+function bungkusKata(data: string): string[] {
+  return [data];
+}
+
+// Gimana kalau butuh buat Boolean? Object? Masa bikin fungsi baru terus?
+```
+
+Kalau pake `any`, kita kehilangan fitur keamanan TS. Jadi solusinya? **Generics**.
+
+## 2. Solusi: Generic Function `<T>` ✅
+
+Kita pake Variable Tipe Data. Biasanya disimbolkan dengan huruf `T` (singkatan dari Type), tapi bebas mau kasih nama apa aja.
+
+```ts
+// <T> di sini artinya: "Fungsi ini bakal nerima suatu tipe, kita sebut aja T"
+function bungkus<T>(data: T): T[] {
+  return [data];
+}
+
+// Cara Pakai:
+
+// 1. Kita kasih label <string> -> Maka input & output WAJIB string
+const kata = bungkus<string>("Halo");
+
+// 2. Kita kasih label <number> -> Maka input & output WAJIB number
+const angka = bungkus<number>(100);
+
+// 3. Type Inference (TS Nebak Sendiri)
+// Gak usah tulis <boolean>, TS tau isinya boolean
+const status = bungkus(true);
+```
+
+## 3. Generic Interface (API Response) 📡
+
+Ini kasus paling nyata di dunia kerja. Biasanya format response API itu sama: Ada `status`, `message`, dan `data`. Bedanya cuma di isi data-nya.
+
+```ts
+// Tipe Data dinamis kita taruh di <Data>
+interface ApiResponse<Data> {
+  status: number;
+  message: string;
+  data: Data; // Bagian ini yang berubah-ubah
+}
+
+// Kasus 1: Response User
+type User = { id: number; nama: string };
+const resUser: ApiResponse<User> = {
+  status: 200,
+  message: "Success",
+  data: { id: 1, nama: "Pian" }, // Wajib sesuai tipe User
+};
+
+// Kasus 2: Response Product
+type Product = { sku: string; harga: number };
+const resProduct: ApiResponse<Product> = {
+  status: 200,
+  message: "Success",
+  data: { sku: "ABC", harga: 5000 }, // Wajib sesuai tipe Product
+};
+```
+
+Bayangin tanpa Generics, lo harus bikin `UserResponse`, `ProductResponse`, `OrderResponse...` capek bos!
+
+## 4. Generic Constraints (Batasan) 🚧
+
+Kadang T itu terlalu bebas (bisa apa aja). Kita mau T minimal punya fitur tertentu. Pake kata kunci `extends`.
+
+Contoh: Kita mau fungsi yang cuma nerima data yang punya `.length` (kayak String atau Array).
+
+```ts
+// T HARUS punya property 'length' yang isinya number
+function hitungPanjang<T extends { length: number }>(item: T): string {
+  return `Panjangnya adalah ${item.length}`;
+}
+
+hitungPanjang("Halo"); // ✅ Boleh (String punya length)
+hitungPanjang([1, 2, 3]); // ✅ Boleh (Array punya length)
+
+// hitungPanjang(100);       // ❌ Error! (Number gak punya length)
+```
+
+## 5. Multiple Generics (Lebih dari Satu) 🔠
+
+Bisa pake `T`, `U`, `V` (urut abjad biasanya).
+
+```ts
+// Fungsi buat gabungin dua object
+function merge<T, U>(objA: T, objB: U) {
+  return { ...objA, ...objB };
+}
+
+const hasil = merge({ nama: "Pian" }, { umur: 25 });
+// TS otomatis tau tipe 'hasil' adalah gabungan keduanya
+```
+
+<Callout type="info" emoji="⚛️">
+ React Note: Di React (file `.tsx`), kalau nulis Arrow Function Generic, kadang TS bingung sama tag HTML.
+
+Solusinya kasih koma: `const myFunc = <T,>(arg: T) => ... `
+
+</Callout>

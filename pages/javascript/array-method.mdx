@@ -5,7 +5,7 @@ import { Callout } from "nextra/components";
 Lupain cara ribet pake `for (let i = 0...)`.
 JavaScript modern punya alat canggih buat ngolah data Array dengan bersih dan elegan.
 
-Kita pake data dummy ini buat latihan:
+Kita pake data dummy ini buat latihan map, filter dan kawan-kawan:
 
 ```js
 const mahasiswa = [
@@ -13,6 +13,83 @@ const mahasiswa = [
   { id: 2, nama: "Sentot", nilai: 50, lunas: false },
   { id: 3, nama: "Asep", nilai: 90, lunas: true },
 ];
+```
+
+## 0. Basic Mutation (Ubah Data Asli) 🏗️
+
+Hati-hati! Method di bawah ini akan **Mengubah Array Aslinya** secara langsung.
+
+### A. Belakang (Ekor)
+
+- **Push:** Tambah data di belakang.
+- **Pop:** Hapus data paling belakang.
+
+```js
+const stack = ["Buku", "Laptop"];
+
+// Tambah
+stack.push("Mouse");
+console.log(stack); // ["Buku", "Laptop", "Mouse"]
+
+// Hapus
+const itemKeluar = stack.pop();
+console.log(itemKeluar); // "Mouse"
+console.log(stack); // ["Buku", "Laptop"] (Balik lagi)
+```
+
+### B. Depan (Kepala)
+
+    * **Unshift:** Tambah data di depan (Antrian masuk).
+
+    * **Shift:** Hapus data paling depan (Antrian dipanggil).
+
+```js
+const antrian = ["Budi", "Asep"];
+
+// Ada yang nyerobot antrian
+antrian.unshift("Raja");
+console.log(antrian); // ["Raja", "Budi", "Asep"]
+
+// Panggil antrian pertama
+const dipanggil = antrian.shift();
+console.log(dipanggil); // "Raja"
+```
+
+### C. Tengah (Splice) 🔪
+
+Ini method "Sapu Jagat". Bisa buat Hapus, Tambah, atau Ganti data di tengah-tengah array.
+
+**Rumus:** `array.splice(MulaiIndex, BerapaDihapus, ...ItemBaru)`
+
+```js
+const hewan = ["Kucing", "Anjing", "Babi", "Sapi"];
+
+// 1. Hapus "Babi" (Mulai index 2, hapus 1 biji)
+hewan.splice(2, 1);
+console.log(hewan); // ["Kucing", "Anjing", "Sapi"]
+
+// 2. Tambah "Kelinci" setelah Kucing (Mulai index 1, hapus 0, masukin "Kelinci")
+hewan.splice(1, 0, "Kelinci");
+console.log(hewan); // ["Kucing", "Kelinci", "Anjing", "Sapi"]
+```
+
+### ⚠️ Peringatan Keras buat React Dev
+
+Di React, lo GAK BOLEH pake method ini langsung ke State! Karena React gak akan tau kalau datanya berubah (karena alamat memorinya sama).
+
+**❌ Cara Salah:**
+
+```js
+const [list, setList] = useState([1, 2]);
+
+// Gak akan memicu re-render!
+list.push(3);
+```
+
+**✅ Cara Benar (Copy dulu):** Gunakan Spread Operator buat bikin array baru, baru di-push (atau langsung digabung).
+
+```js
+setList([...list, 3]);
 ```
 
 ## 1. Map (Pengubah) 🔄

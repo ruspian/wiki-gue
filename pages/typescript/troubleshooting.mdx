@@ -1,0 +1,95 @@
+import { Callout } from "nextra/components";
+
+# Troubleshooting: P3K TypeScript 🚑
+
+TypeScript itu bawel. Sering banget dia ngasih pesan error yang panjang dan bikin panik.
+Tenang, ini daftar "penyakit" umum dan "obatnya".
+
+## 1. "Object is possibly 'null' or 'undefined'" 👻
+
+**Artinya:** TS takut variabel lo kosong pas lagi diakses.
+
+```ts
+const input = document.getElementById("email");
+// ❌ Error: input.value (Gimana kalau elemennya gak ketemu?)
+```
+
+**Solusi:**
+
+    * **Pake If (Type Guard):** `if (input) { ... }`
+
+    * **Optional Chaining:** `input?.value` (Aman, return undefined kalau kosong)
+
+    * **Non-null Assertion (Tanda Seru):** `input!.value` (Cuma kalau lo yakin 1000% ada isinya)
+
+## 2. "Element implicitly has an 'any' type..." 🗝️
+
+**Artinya:** Lo coba akses `Object` pake `Key` yang dinamis (string), tapi TS gak tau isi object-nya apa aja.
+
+```ts
+const user = { nama: "Pian", umur: 25 };
+const kunci = "nama";
+
+// ❌ Error: TS gak tau kalau "nama" beneran ada di user
+// console.log(user[kunci]);
+```
+
+**Solusi:** Kasih tipe `Record` atau `keyof`.
+
+```ts
+// Cara 1: Casting kuncinya
+console.log(user[kunci as keyof typeof user]);
+
+// Cara 2: Definisi tipe di awal
+const data: Record<string, any> = { ... };
+```
+
+## 3. "Property 'X' does not exist on type 'Y'" 🚫
+
+**Artinya:** Lo mau akses properti yang gak ada di definisi tipe data lo.
+
+```ts
+interface User {
+  nama: string;
+}
+const u: User = { nama: "Pian" };
+
+// ❌ Error: Di Interface User gak ada 'umur' woy!
+// u.umur = 25;
+```
+
+**Solusi:**
+
+    * Cek typo.
+
+    * Tambahin properti di `Interface` (pake `?` kalau optional).
+
+    * Atau pake `Intersection` (`User & { umur: number }`) kalau mau nambah dadakan.
+
+## 4. "Type 'string' is not assignable to type 'number'" 🧱
+
+**Artinya:** Jelas banget. Salah masukin tipe data.
+
+**Solusi:**
+
+    * Cek variabel lo.
+
+    * Cek return value function lo.
+
+    * Kalau emang datanya dari luar (API) bisa berubah-ubah, pake `unknown` atau `Union Type`.
+
+## 5. "Circular dependency detected" 🔄
+
+**Artinya:** File A import File B, tapi File B import File A. Muter-muter terus gak ada ujungnya.
+
+**Solusi:** Pecah kodingan yang diperebutkan ke File C (Shared). Biar A dan B sama-sama import dari C.
+
+## Tips Debugging Cepat ⚡
+
+    1. Restart TS Server: Kadang VS Code nge-lag.
+
+        * Cmd + Shift + P -> Ketik "Restart TS Server".
+
+    2. Hover is Your Friend: Arahkan mouse ke variabel yang error, baca tooltip-nya pelan-pelan.
+
+    3. No Any: Jangan tergoda pake any buat nyelesain masalah. Itu nunda masalah, bukan nyelesain.
