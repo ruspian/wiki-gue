@@ -1,0 +1,145 @@
+import { Callout } from "nextra/components";
+
+# Logika: If/Else & Pilihan Hidup 🔀
+
+Hidup itu penuh pilihan.
+
+- Kalau bangun pagi -> Gak telat kuliah.
+- Kalau bangun siang -> Nitip absen (jangan ditiru).
+
+Di C++, kita pake mantra **`if`** dan **`else`** buat ngajarin komputer ngambil keputusan.
+
+![Gambar](https://www.codingpanel.com/wp-content/uploads/2020/11/if-flowchart-2.png)
+
+## 1. Struktur Dasar (If - Else) 🚧
+
+Cek syaratnya. Kalau `true` (benar), jalanin. Kalau `false` (salah), tendang ke `else`.
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int main() {
+    int nilai;
+    cout << "Masukin nilai lo: ";
+    cin >> nilai;
+
+    // Syarat: Apakah nilai lebih dari 75?
+    if (nilai > 75) {
+        // Kalau BENAR, masuk sini
+        cout << "Selamat! Lo Lulus. Traktir dong.";
+    } else {
+        // Kalau SALAH, dilempar ke sini
+        cout << "Waduh, ketemu lagi semester depan (Remedial).";
+    }
+
+    return 0;
+}
+```
+
+## 2. Pilihan Banyak (Else If) 🎢
+
+Gimana kalau pilihannya gak cuma dua (Lulus/Gagal)? Tapi ada A, B, C, D, E? Pake `else if` (Kalau bukan yang atas, coba cek yang ini).
+
+```cpp
+if (nilai >= 85) {
+    cout << "Grade A (Dewa)";
+} else if (nilai >= 75) {
+    cout << "Grade B (Aman)";
+} else if (nilai >= 60) {
+    cout << "Grade C (Pas-pasan)";
+} else {
+    cout << "Grade E (Dalah)";
+}
+```
+
+<Callout type="warning" emoji="⚠️"> 
+**Aturan Main:** Komputer itu males. Dia ngecek dari ATAS ke BAWAH. Begitu nemu satu syarat yang BENAR, dia langsung jalanin perintahnya dan KABUR (gak bakal ngecek bawahnya lagi).
+
+Jadi urutan itu **PENTING!** Jangan taruh syarat yang gampang di paling atas kalau ada syarat yang lebih susah.
+
+</Callout>
+
+## 3. Operator Pembanding ⚔️
+
+Biar `if` lo jalan, lo butuh alat buat ngebandingin nilai.
+
+| Simbol | Arti                    | Contoh             |
+| :----- | :---------------------- | :----------------- |
+| `==`   | Apakah SAMA DENGAN?     | if (x == 10)       |
+| `!=`   | Apakah TIDAK SAMA?      | if (pass != "123") |
+| `>`    | Lebih Besar             | if (umur > 17)     |
+| `<`    | Lebih Kecil             | if (gaji < UMR)    |
+| `>=`   | Lebih Besar Sama Dengan | if (nilai >= 75)   |
+
+#### ☠️ Sangat Penting!: == vs =
+
+Ini error logika paling umum di dunia.
+
+    `a = 10` : **Assignment** (Isi nilai a jadi 10).
+
+    `a == 10` : `Comparison` (Cek apakah a isinya 10?).
+
+```cpp
+// ❌ SALAH FATAL
+if (nilai = 100) { ... }
+// Ini artinya: "Ubah nilai jadi 100". Hasilnya SELALU TRUE.
+// Lo bakal dapet A terus padahal nilai asli lo 0.
+
+// ✅ BENAR
+if (nilai == 100) { ... }
+```
+
+## 4. Logika Ganda (DAN / ATAU) 🤝
+
+Gimana kalau syaratnya ada dua? Misal: "Lulus kalau Nilai > 70 **DAN** Absen > 80%".
+
+    * `&&` (**DAN / AND**): Dua-duanya WAJIB benar. Kalau satu salah, gagal.
+
+    * `||` (**ATAU / OR**): Salah satu benar aja udah cukup.
+
+```cpp
+int nilai = 80;
+int absen = 50;
+
+// Pake AND (&&)
+if (nilai > 70 && absen > 75) {
+    cout << "Lulus!";
+} else {
+    cout << "Gagal! Nilai bagus tapi jarang masuk.";
+}
+// Output: Gagal (Karena absen cuma 50)
+```
+
+## 5. Switch Case (Jalur Alternatif) 🔀
+
+Kalau lo kebanyakan `else if` buat ngecek nilai yang **PASTI** (bukan lebih besar/kecil), mending pake `switch`. Lebih rapi.
+
+Biasanya dipake buat bikin Menu Pilihan.
+
+```cpp
+int menu;
+cout << "Pilih menu (1-3): ";
+cin >> menu;
+
+switch (menu) {
+    case 1:
+        cout << "Nasi Goreng";
+        break; // Wajib break biar gak bablas ke bawah!
+    case 2:
+        cout << "Mie Ayam";
+        break;
+    case 3:
+        cout << "Es Teh";
+        break;
+    default: // Kalau user ngawur input angka 99
+        cout << "Menu gak ada woy!";
+}
+```
+
+<Callout type="error" emoji="💣"> 
+Jangan Lupa `break`! Kalau di `switch` lo lupa kasih `break`, komputer bakal Bablas jalanin `case` di bawahnya juga (namanya Fallthrough).
+
+Kecuali lo emang sengaja mau gitu. Tapi 99% kasus, lo butuh `break`.
+
+</Callout>

@@ -1,0 +1,84 @@
+import { Callout } from "nextra/components";
+
+# Persiapan Perang 🛠️
+
+Lo gak bisa ngoding C++ di Microsoft Word, apalagi di status WhatsApp.
+Lo butuh yang namanya **IDE** (_Integrated Development Environment_). Bahasa manusianya: **Bengkel Koding**.
+
+Pilih senjata lo sesuai kepribadian:
+
+## 1. Dev-C++ 🏛️
+
+Ini IDE favorit Dosen-dosen senior se-Indonesia.
+
+- **Tampilan:** Burik, kayak aplikasi Windows 98.
+- **Kelebihan:** Install langsung jalan. Gak perlu setting aneh-aneh. Ringan banget, laptop kentang spek kalkulator pun kuat.
+- **Kekurangan:** Gak ada fitur canggih (Auto Complete-nya bego).
+
+**Cara Install:**
+
+1.  Download di [SourceForge](https://sourceforge.net/projects/orwelldevcpp/).
+2.  Klik _Next, Next, I Agree, Install_. (Jangan dibaca, langsung gas aja).
+3.  Keluar logo biru, **Selesai**.
+
+<Callout type="info">
+  **Saran:** Buat mahasiswa yang baru belajar, pake ini aja dulu. Biar lo fokus
+  belajar LOGIKA, bukan pusing mikirin settingan error.
+</Callout>
+
+---
+
+## 2. Online GDB 🛌
+
+Males install? Laptop lagi dipinjem adek buat nonton Dracin di YouTube? Pake browser aja.
+
+- **Link:** [onlinegdb.com](https://www.onlinegdb.com/online_c++_compiler)
+- **Cara:** Buka webnya, pilih bahasa **C++**, ketik, klik **Run**.
+- **Minus:** Harus ada internet. Tethering dikit gak masalahkan? hehehehe
+
+---
+
+## 3. VS Code 😎
+
+Ini IDE sejuta umat zaman _now_. Tampilannya ganteng, gelap (Dark Mode), dan banyak warna-warni.
+
+- **Kelebihan:** Keren, fitur canggih, banyak Extension.
+- **Kekurangan:** **RIBET SETTINGNYA!** C++ di VS Code gak langsung jalan. Lo harus install Compiler (MinGW) manual, setting Path di Windows, dll.
+
+**Kalau maksa mau pake VS Code:**
+
+1.  Install [VS Code](https://code.visualstudio.com/).
+2.  Install Extension "C/C++" buatan Microsoft.
+3.  Install Compiler (MinGW-w64). _Tutorialnya cari di YouTube ya, panjang soalnya._ 🤣
+
+---
+
+## Cek Senjata: Hello World Pertama 🔫
+
+Apapun IDE yang lo pilih, ayo kita tes.
+Buka IDE lo, bikin file baru (`Ctrl + N`), copas kode keramat ini:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int main() {
+    cout << "Bismillah IPK 4.0" << endl;
+    return 0;
+}
+```
+
+1. Save dulu (Kasih nama latihan1.cpp).
+
+2. Cari tombol Compile & Run (Biasanya F11 di Dev-C++, atau tombol Segitiga Hijau).
+
+3. Kalau muncul kotak hitam tulisan "Bismillah IPK 4.0", SELAMAT! 🎉
+
+Komputer lo udah siap diajak menderita bareng.
+
+<Callout type="error" emoji="💣">
+  {" "}
+  Error "g++ not recognized"? Itu artinya komputer lo belum punya otak C++ (Compiler).
+  Kalau lo pake Dev-C++, ini gak bakal kejadian. Makanya gue bilang pake Dev-C++
+  aja dulu buat awal-awal!{" "}
+</Callout>

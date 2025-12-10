@@ -1,0 +1,146 @@
+import { Callout } from "nextra/components";
+
+# Perulangan: Looping Muter-muter 🔄
+
+Pernah dihukum guru SD nulis _"Saya tidak akan telat lagi"_ 100x di papan tulis?
+Kalau lo lakuin itu manual di C++:
+
+```cpp
+cout << "Saya tidak akan telat lagi" << endl;
+cout << "Saya tidak akan telat lagi" << endl;
+// ... (Copas sampe 100 baris. Jempol keriting, keyboard jebol)
+```
+
+**Solusinya? Looping**. Cukup tulis perintahnya Sekali, suruh komputer ulangin 100 kali.
+
+## 1. For Loop 📅
+
+Pake ini kalau lo **TAU** mau ngulang berapa kali. Misal: _"Lari keliling lapangan 5 putaran."_
+
+**Rumus:** `for (Mulai; Syarat Lanjut; Langkah)`
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int main() {
+    // i = index (biasanya dipake buat hitungan)
+    // 1. Mulai dari i = 1
+    // 2. Cek apakah i <= 5? Kalau iya, gass.
+    // 3. i++ (Setiap selesai satu putaran, i nambah 1)
+
+    for (int i = 1; i <= 5; i++) {
+        cout << "Putaran ke-" << i << ": Semangat!" << endl;
+    }
+
+    return 0;
+}
+```
+
+Output:
+
+```
+Putaran ke-1: Semangat!
+Putaran ke-2: Semangat!
+...
+Putaran ke-5: Semangat!
+```
+
+## 2. While Loop 🤷‍♂️
+
+Pake ini kalau lo **GAK TAU** mau ngulang berapa kali, yang penting syaratnya masih bener. Misal: _"Makan terus SELAMA belum kenyang."_ (Bisa 5 suap, bisa 20 suap).
+
+**Rumus:** `while (Syarat)`
+
+```cpp
+int nyawa = 3;
+
+// Selama nyawa masih di atas 0, main terus!
+while (nyawa > 0) {
+    cout << "Masih hidup! Nyawa sisa: " << nyawa << endl;
+
+    // PENTING: Harus ada yang ngubah kondisi
+    nyawa--; // Nyawa berkurang 1
+}
+
+cout << "Game Over, cupu lo.";
+
+```
+
+## 3. Do-While Loop 👊
+
+Mirip while, tapi dia Kerjain Dulu, Baru Mikir. Minimal pasti jalan **SATU KALI,** walau syaratnya salah.
+
+Biasanya dipake buat program Menu.
+
+```cpp
+int pilihan;
+
+do {
+    cout << "1. Main\n2. Keluar\nPilih: ";
+    cin >> pilihan;
+
+    // Dia bakal nanya terus minimal sekali
+} while (pilihan != 2); // Ulangi terus SELAMA user gak milih 2
+```
+
+#### ☠️ BAHAYA: Infinite Loop (Perulangan Abadi)
+
+Ini mimpi buruk setiap programmer. Kalau lo **LUPA** ngasih jalan keluar (kayak lupa `i++` atau `nyawa--`), komputer bakal terjebak dalam lingkaran setan selamanya.
+
+```cpp
+// ❌ JANGAN DITIRU
+int i = 1;
+while (i <= 5) {
+    cout << "Hahaha komputer lo hang!";
+    // Lupa nulis i++
+    // Akibatnya: i selamanya 1. 1 selalu kurang dari 5.
+    // Loop gak bakal berhenti sampe kiamat.
+}
+```
+
+<Callout type="error" emoji="💣">
+  {" "}
+  **Solusi Panik:** Kalau terminal lo nge-spam teks gak berhenti-berhenti dan laptop
+  mulai panas: Tekan `Ctrl + C `di keyboard buat **MMBUNUH** program secara paksa.{" "}
+</Callout>
+
+## 4. Break & Continue 👮‍♂️
+
+Kadang kita mau ngatur arus looping di tengah jalan.
+
+#### Break (Putus Hubungan) 💔
+
+Berhenti **TOTAL**. Keluar dari loop.
+
+```cpp
+for (int i = 1; i <= 10; i++) {
+    if (i == 5) {
+        cout << "Capek ah, berhenti.";
+        break; // Stop di angka 5. Angka 6-10 gak dipeduliin.
+    }
+    cout << i << endl;
+}
+```
+
+#### Continue (Skip Iklan) ⏭️
+
+Cuma lewati putaran **INI** aja, lanjut ke putaran berikutnya.
+
+```cpp
+for (int i = 1; i <= 5; i++) {
+    if (i == 3) {
+        continue; // Angka 3 di-skip, langsung loncat ke 4.
+    }
+    cout << i << endl;
+}
+// Output: 1, 2, 4, 5 (Tiganya ilang)
+```
+
+## Rangkuman: Kapan Pake Apa?
+
+| Kondisi                                | Pake Apa?  |
+| -------------------------------------- | ---------- |
+| Tau jumlah pastinya (misal: 10x)       | For Loop   |
+| Gak tau jumlahnya (tergantung kondisi) | While Loop |
+| Harus jalan minimal sekali (buat Menu) | Do-While   |

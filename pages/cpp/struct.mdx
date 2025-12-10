@@ -1,0 +1,107 @@
+import { Callout } from "nextra/components";
+
+# Struct: Bikin Tipe Data Sendiri 🛠️
+
+Kita sudah belajar Variabel. Ada `int`, `string`, `double`. Mereka cuma bisa nyimpen **satu jenis data** aja.
+
+Bayangin lo mau nyimpen data **Mahasiswa**.
+Mahasiswa itu punya: **NIM (int)**, **Nama (string)**, dan **IPK (double)**.
+Gak mungkin kan lo nyimpen tiga data ini di satu variabel `int`?
+
+**Solusinya? STRUCT (Structure).**
+Struct itu ibarat **Kardus Multi-kompartemen** yang lo desain sendiri. Isinya bisa campur-campur tipe data, tapi dihitung sebagai **SATU** objek.
+
+---
+
+## 1. Cara Bikin Blueprint (Definisi Struct) 📝
+
+Lo harus bikin "cetakan" Struct-nya dulu, biasanya di atas `main()`.
+
+```cpp
+// Kata kunci: struct
+struct Mahasiswa {
+    // Ini isinya (Member/Field)
+    int nim;
+    string nama;
+    double ipk;
+};
+// JANGAN LUPA TITIK KOMA di akhir!
+```
+
+**Artinya:** Lo baru aja bikin tipe data baru bernama `Mahasiswa`. Tipe data ini punya 3 properti di dalamnya.
+
+## 2. Cara Menggunakan Struct (Deklarasi Variabel) 🏷️
+
+Setelah cetakan dibuat, baru kita bisa bikin "barang" dari cetakan itu.
+
+```cpp
+#include <iostream>
+#include <string>
+using namespace std;
+
+// Blueprint
+struct Mahasiswa {
+    int nim;
+    string nama;
+    double ipk;
+};
+
+int main() {
+    // 1. Deklarasi (Bikin Variabel dari tipe Mahasiswa)
+    Mahasiswa maba1;
+    Mahasiswa maba2;
+
+    // 2. Akses Member (Pake Tanda TITIK .)
+    // Isikan data maba1
+    maba1.nim = 12345;
+    maba1.nama = "Udin Keren";
+    maba1.ipk = 3.90;
+
+    // Isikan data maba2
+    maba2.nim = 67890;
+    maba2.nama = "Bambang Santuy";
+    maba2.ipk = 3.25;
+
+    // 3. Tampilkan Data
+    cout << "Nama Maba 1: " << maba1.nama << " (NIM: " << maba1.nim << ")" << endl;
+    cout << "IPK Maba 2: " << maba2.ipk << endl;
+
+    return 0;
+}
+```
+
+<Callout type="info" emoji="💡">
+  {" "}
+  Ingat TITIK (`.`)! Tanda titik . itu cara lo masuk ke "kompartemen" atau "properti"
+  di dalam `Struct`. Mau isi nama? Panggil `maba1.nama.` Mau cek IPK? Panggil `maba1.ipk.`{" "}
+</Callout>
+
+## 3. Struct dalam Array 🏢
+
+Kalau lo mau nyimpen data 100 mahasiswa, lo gak mungkin bikin maba1, maba2, maba3...
+
+Lo gabungin `Struct` dan `Array`.
+
+```cpp
+// Deklarasi array dari tipe Struct Mahasiswa
+// Array ini isinya 3 slot, tiap slot adalah 1 Objek Mahasiswa
+Mahasiswa daftarMaba[3];
+
+// Isi data di slot ke-0 (Mahasiswa pertama)
+daftarMaba[0].nama = "Joko";
+daftarMaba[0].ipk = 3.50;
+
+// Akses data pake Looping
+for (int i = 0; i < 3; i++) {
+    // Lopping akan menampilkan Mahasiswa ke-i
+    cout << "Nama Maba ke-" << i << ": " << daftarMaba[i].nama << endl;
+}
+```
+
+<Callout type="warning" emoji="🤯">
+  {" "}
+  **Level Advance:** Kalau lo udah bisa ngoding `struct` di dalam `array` terus lo
+  kelola datanya pake `for loop` dan `if/else`, lo udah siap bikin program `CRUD`
+  (`Create`, `Read`, `Update`, `Delete`) data sederhana. Tugas akhir lo udah 50%
+  kelar kalau bisa ini.{" "}
+</Callout>

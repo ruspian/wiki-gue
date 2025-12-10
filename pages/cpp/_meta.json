@@ -1,0 +1,13 @@
+{
+  "intro": "Intro",
+  "setup": "Setup",
+  "syntax": "Syntax",
+  "variabel": "Variabel",
+  "io": "Input Output",
+  "logika": "Logika Percabangan",
+  "looping": "Perulangan",
+  "array": "Array",
+  "function": "Function",
+  "struct": "Struct",
+  "pointer": "Pointer"
+}

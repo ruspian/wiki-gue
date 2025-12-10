@@ -1,0 +1,102 @@
+import { Callout } from "nextra/components";
+
+# Input & Output 🗣️
+
+Program komputer kalau cuma nampilin teks doang mah gak asik, itu namanya **Pengumuman**.
+Biar seru, kita harus bisa minta data dari user, terus kita olah.
+
+Di C++, ada dua juragan utama: **`cout`** (Si Mulut) dan **`cin`** (Si Kuping).
+
+## 1. `cout` (Console Out) 📢
+
+Cara bacanya: **"See-Out"** (Lihat Keluar).
+Fungsinya: Nampilin sesuatu ke layar monitor.
+
+**Ciri Khas:**
+Pake panah ke KIRI **`<<`**.
+Artinya: _"Ambil teks ini, lempar KELUAR ke layar"_.
+
+```cpp
+cout << "Halo Maba";
+cout << "Halo" << " " << "Dunia"; // Bisa disambung-sambung (Chaining)
+cout << "Nilai lo: " << 100 << endl; // Bisa campur teks sama angka
+```
+
+## 2. cin (Console In) 👂
+
+Cara bacanya: **"See-In"** (Lihat Masuk).
+Fungsinya: Nangkep ketikan user dari keyboard.
+
+**Ciri Khas:**
+Pake panah ke KANAN **`>>`**.
+Artinya: _"Ambil ketikan dari keyboard, masukin KEDALAM variabel"_.
+
+```cpp
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+    string nama; // Siapin kardus kosong dulu
+    int umur;
+
+    // 1. Pancing user biar ngomong
+    cout << "Masukin nama lo: ";
+
+    // 2. Tangkep omongannya
+    // Program bakal BERHENTI (Pause) di sini nunggu user teken ENTER
+    cin >> nama;
+
+    cout << "Umur berapa? ";
+    cin >> umur;
+
+    // 3. Olah datanya
+    cout << "Oke sip, " << nama << ". Ternyata lo udah " << umur << " tahun." << endl;
+
+    return 0;
+}
+```
+
+<Callout type="info" emoji="💡"> 
+Tips Menghafal Panah:
+
+    * cout &lt;&lt; : Panahnya Keluar dari cout (Nampilin).
+
+    * cin &gt;&gt; : Panahnya Masuk ke Variabel (Nyimpen).
+
+    * Jangan kebalik, nanti errornya bikin malu.
+    </Callout>
+
+## 3. Jebakan Spasi (Penyakit cin) 🐛
+
+Coba lo jalanin kode di atas, terus pas ditanya nama, lo ketik: **"Otong Ganteng"**.
+
+**Hasilnya:**
+
+    > Oke sip, Otong.
+
+**Loh, "Ganteng"-nya mana?!** 😡 `cin` itu punya penyakit: **Dia Alergi Spasi**. Begitu ketemu spasi, dia berhenti baca. Kata "Ganteng" ditinggalin gitu aja di memori (kasian banget).
+
+**Solusinya:** `getline`
+
+Kalau mau baca satu kalimat utuh (termasuk spasi), jangan pake `cin` biasa. Pake `getline`.
+
+```cpp
+string namaLengkap;
+
+cout << "Nama lengkap (boleh pake spasi): ";
+
+// Baca satu baris full dari cin, masukin ke namaLengkap
+getline(cin, namaLengkap);
+
+cout << "Halo, " << namaLengkap;
+// Input: "Otong Ganteng" -> Output: "Halo, Otong Ganteng" (Aman!)
+```
+
+<Callout type="warning" emoji="⚠️">
+  **Masalah:** `cin` ketemu `getline` Kalau lo pake `cin` dulu (buat angka),
+  terus bawahnya pake `getline` (buat teks), biasanya `getline`-nya bakal
+  ke-skip (error). Ini bug klasik C++. **Solusinya:** Tambahin `cin.ignore();`
+  di antara mereka. (Nanti tanya Kating atau Dosen pas praktikum kenapa, panjang
+  jelasinnya wkwk).
+</Callout>

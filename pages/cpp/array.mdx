@@ -1,0 +1,128 @@
+import { Callout } from "nextra/components";
+
+# Array: Kos-kosan Data 🏢
+
+Bayangin lo punya 100 mahasiswa.
+Kalau gak pake Array, lo harus bikin variabel satu-satu kayak orang kurang kerjaan:
+
+```cpp
+string mhs1 = "Otong";
+string mhs2 = "Sentot";
+string mhs3 = "Asep";
+// ... sampe mhs100 (Jari lo keriting, keyboard lo jebol)
+```
+
+**Solusinya? Pake ARRAY**. Array itu ibarat Gedung Kos-kosan. Satu gedung (satu nama variabel), tapi kamarnya banyak.
+
+## 1. Cara Deklarasi 🏗️
+
+**Rumusnya:** TipeData Nama[JumlahKamar];
+
+```cpp
+// Bikin gedung 'nilai' isi 5 kamar. Isinya harus int semua.
+int nilai[5];
+
+// Bikin gedung 'nama' isi 3 kamar, langsung diisi penghuninya.
+string nama[3] = {"Pian", "Budi", "Siti"};
+```
+
+**Aturan Kos-kosan (Array) C++** ⚠️
+
+    1. Nomor Kamar Mulai dari 0 (NOL)! Kamar pertama itu Nomor 0. Kamar kedua itu Nomor 1. Jadi kalau isinya 5 kamar, nomornya: 0, 1, 2, 3, 4. (Jangan tanya kenapa, programmer emang aneh).
+
+    2. Tipe Penghuni Harus Sama. Gak boleh Kamar 0 isinya Angka, Kamar 1 isinya Teks. Kos-kosan C++ itu rasis sama tipe data.
+
+    3. Ukuran Gak Bisa Diubah. Sekali lo bangun 5 kamar, selamanya cuma 5. Gak bisa tiba-tiba nambah jadi 6. Kalau mau nambah, beli tanah baru (bikin array baru).
+
+## 2. Cara Akses & Isi Data 🔑
+
+Gimana cara nendang pintu kamar nomor 2?
+
+```cpp
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+    string hobi[3] = {"Mancing", "Tidur", "Ngoding"};
+
+    // Cek isi kamar nomor 0 (Kamar pertama)
+    cout << "Hobi 1: " << hobi[0] << endl; // Output: Mancing
+
+    // Cek isi kamar nomor 2 (Kamar ketiga)
+    cout << "Hobi 3: " << hobi[2] << endl; // Output: Ngoding
+
+    // Ganti penghuni (Ngusir 'Tidur', ganti jadi 'Makan')
+    hobi[1] = "Makan";
+
+    cout << "Hobi baru anak kedua: " << hobi[1]; // Output: Makan
+
+    return 0;
+}
+```
+
+<Callout type="error" emoji="💣"> 
+**Jebakan Maut:** Index Out of Bound
+
+Lo punya array isinya 3 kamar (0, 1, 2). Terus lo maksa akses hobi[99].
+
+**Apa yang terjadi?**
+
+    * Program lo tetep jalan (C++ gak ngasih error pas compile).
+
+    * Pas di-run, dia bakal nampilin Angka Setan (nilai sampah dari memori acak) atau Crash seketika.
+
+_Moral of the story:_ Sadar diri sama ukuran array sendiri.
+
+</Callout>
+
+## 3. Looping Array (Jurus Kagebunshin) 🔄
+
+Masa iya kalau mau nampilin 100 data, lo ketik `cout` 100 kali? Gabungin Array sama For Loop. Mereka itu Bestie.
+
+```cpp
+int nilai[5] = {80, 90, 75, 100, 60};
+
+// "i" kita pake sebagai Nomor Kamar (Index)
+// Mulai dari 0, Stop sebelum 5 (karena index terakhir cuma 4)
+for(int i = 0; i < 5; i++) {
+    cout << "Nilai absen ke-" << i << ": " << nilai[i] << endl;
+}
+```
+
+**Logikanya:**
+
+    * Putaran 1: `i=0` -> Tampil `nilai[0]`
+
+    * Putaran 2: `i=1` -> Tampil `nilai[1]`
+
+    * ...sampai `i=4`.
+
+## 4. Array Multidimensi (Matrix) 🏢
+
+Array di dalem Array. Bayangin Gedung Apartemen. Punya Lantai, dan punya Nomor Kamar.
+
+```cpp
+// [Baris/Lantai][Kolom/Kamar]
+// 2 Lantai, tiap lantai 3 Kamar
+int matrix[2][3] = {
+    {1, 2, 3}, // Lantai 0
+    {4, 5, 6}  // Lantai 1
+};
+
+// Cara akses: Lantai 1, Kamar 2 (Inget mulai dari 0)
+// Baris index 1, Kolom index 2
+cout << matrix[1][2]; // Output: 6
+```
+
+Kalau lo paham ini, selamat! Lo udah siap ngerjain tugas "Penjumlahan Matriks" yang pasti dikasih dosen minggu depan.
+
+## Rangkuman buat Contekan UTS 📝
+
+| Istilah      | Arti        | Contoh                 |
+| :----------- | :---------- | :--------------------- |
+| Deklarasi    | Bikin Array | `int x[5];`            |
+| Inisialisasi | Isi Awal    | `int x[2] = {1, 2};`   |
+| Index        | Nomor Kamar | `x[0] (Mulai dari 0!)` |
+| Akses        | Ambil Data  | `cout << x[0];  `      |
+| Assign       | Ubah Data   | `x[0] = 10; `          |

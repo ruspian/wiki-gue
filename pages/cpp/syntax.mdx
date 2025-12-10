@@ -1,0 +1,103 @@
+import { Callout } from "nextra/components";
+
+# Bedah Anatomi & Titik Koma ; 🔪
+
+Kodingan C++ itu punya struktur wajib. Kalau satu aja ilang, program lo bakal cacat atau mati total.
+Ini adalah **Kerangka Tulang** yang harus lo hafal di luar kepala (atau minimal lo save di template).
+
+```cpp
+// 1. HEADER (Mantra Pemanggil)
+#include <iostream>
+
+// 2. NAMESPACE (Biar Gak Capek)
+using namespace std;
+
+// 3. MAIN FUNCTION (Otak Utama)
+int main() {
+
+    // 4. STATEMENT (Perintah)
+    cout << "Halo Dunia Tipu-tipu!" << endl;
+
+    // 5. RETURN (Laporan)
+    return 0;
+}
+```
+
+Yuk kita bedah satu-satu!
+
+## 1. `#include <iostream>` 🧰
+
+Bayangin lo mau masak Indomie. Lo butuh panci, kompor, dan air kan? Nah, `#include` itu cara lo bilang ke komputer: _"Coy, ambilin gue alat-alat masak dong!"_
+
+    * `io` = Input Output (Masuk Keluar).
+
+    * `stream` = Aliran data.
+
+Tanpa baris ini, komputer lo **BISU** dan **TULI**. Gak bisa nampilin teks (`cout`), gak bisa nerima input keyboard (`cin`).
+
+## 2. `using namespace std;` 💤
+
+Di C++, nama asli perintah print itu `std::cout` (dibaca: _Standard Console Out_). Ribet kan kalau setiap baris harus nulis `std::` terus?
+
+```cpp
+// Kalau GAK PAKE 'using namespace std'
+std::cout << "Halo";
+std::cin >> angka;
+
+// Kalau PAKE (Lebih bersih)
+cout << "Halo";
+cin >> angka;
+```
+
+Baris ini artinya: _"Komputer, kalau gue gak sebut nama lengkapnya, anggep aja itu dari folder std ya."_
+
+## 3. `int main() { ... }` 🚧
+
+Ini adalah Pintu Masuk. Komputer cuma mau jalanin kode yang ada di dalem kurung kurawal `{ ... }` milik si `main`.
+
+Lo boleh nulis puisi cinta di luar kurung kurawal itu, komputer gak bakal peduli. Dia cuma fokus ke `main`.
+
+## 4. `cout <<` 📢
+
+Gue serius, `cout` itu singkatan dari _Console Out_. Simbol `<<` (panah ke kiri) artinya: _"Ambil teks ini, lempar ke layar (output)"_.
+
+Ada juga `endl` (_End Line_). Itu sama aja kayak lo nekan tombol **ENTER** di keyboard (Ganti baris).
+
+## 5. `return 0;` ✅
+
+Di akhir tugas, lo lapor ke atasan (Sistem Operasi).
+
+    * `return 0` = _"Lapor! Program selesai tanpa error (Aman)."_
+
+    * `return 1 / -1` = _"Lapor! Ada yang meledak di dalem."_
+
+## ☠️ Titik Koma (`;`)
+
+Ini musuh bebuyutan mahasiswa semester 1 sampai skripsi. C++ itu bahasa yang gila hormat. Setiap selesai satu perintah, lo **WAJIB** kasih titik koma.
+
+```cpp
+cout << "Halo"  // ❌ ERROR! (Lupa titik koma)
+cout << "Halo"; // ✅ AMAN
+```
+
+<Callout type="error" emoji="🤬">
+  {" "}
+  **Penyebab Error Terbanyak:** Kalau program lo error dan muncul tulisan merah aneh-aneh
+  kayak `"Expected ';' before..."`, **99% ITU KARENA LO LUPA TITIK KOMA DI BARIS
+  SEBELUMNYA**. Cek baris atasnya, bukan baris yang ditunjuk errornya.{" "}
+</Callout>
+
+## 👻 Komentar
+
+Kadang lo mau nulis catetan buat diri sendiri biar gak lupa, tapi gak mau dibaca sama komputer. Pake **Komentar**.
+
+```cpp
+// Ini komentar satu baris (Pake garis miring dua)
+
+/* Ini komentar
+   banyak baris
+   (Pake bintang)
+*/
+```
+
+Komputer bakal nganggep tulisan ini gaib (dicuekin).

@@ -1,0 +1,117 @@
+import { Callout } from "nextra/components";
+
+# Variabel: Kardus Posesif 📦
+
+Sama seperti bahasa pemrograman lain, variabel itu ibarat **Kardus** tempat nyimpen barang. Lo tulis nama di luarnya (misal: "Sepatu"), terus lo isi barang di dalemnya.
+
+TAPI... C++ itu penganut aliran keras **Strongly Typed**.
+Artinya: Sekali lo bilang kardus ini buat **Sepatu**, lo **GABOLEH** isi pake **Nasi Goreng**. Kardusnya bakal nolak (Error).
+
+## Tipe Data Wajib Tau
+
+Hafalin 5 tipe data ini, hidup lo aman sampe UTS.
+
+```cpp
+#include <iostream>
+// WAJIB include ini kalau mau pake teks panjang
+#include <string>
+
+using namespace std;
+
+int main() {
+    // 1. int (Integer) -> Angka Bulat
+    // Gak pake koma. Cocok buat: Umur, Jumlah Mantan, Semester.
+    int semester = 1;
+    // int nilai = 3.9; // ❌ Bahaya! Komanya bakal dibuang paksa jadi 3.
+
+    // 2. double / float -> Angka Koma (Desimal)
+    // Cocok buat: IPK, Tinggi Badan, Harga Cilok.
+    // 'double' lebih presisi daripada 'float'. Pake double aja biar aman.
+    double ipk = 3.85;
+
+    // 3. char (Character) -> CUMA SATU HURUF
+    // Pake kutip SATU (' '). Jangan bandel pake kutip dua.
+    char nilaiMatkul = 'A';
+    // char grade = "A"; // ❌ Error! Kutip dua itu buat String.
+    // char grade = 'AB'; // ❌ Error! Kebanyakan huruf.
+
+    // 4. bool (Boolean) -> Hidup atau Mati
+    // Isinya cuma: true (1) atau false (0).
+    bool lulus = true;
+    bool punyaPacar = false;
+
+    // 5. string -> Teks Panjang
+    // Pake kutip DUA (" "). Kumpulan dari char.
+    string nama = "Pian";
+    string curhat = "C++ susah banget tolong";
+
+    // Cara nampilinnya digabung-gabung pake <<
+    cout << "Nama: " << nama << endl;
+    cout << "IPK: " << ipk << endl;
+    cout << "Status Lulus: " << lulus << endl; // Bakal ngeprint 1 (true)
+
+    return 0;
+}
+```
+
+## Jebakan Betmen 🦇
+
+Di C++ ada banyak "Ranjau Darat" yang siap meledakkan nilai tugas lo.
+
+#### 1. Jebakan Pembagian Integer
+
+Coba tebak hasil kodingan ini:
+
+```cpp
+
+int a = 5;
+int b = 2;
+cout << a / b;
+```
+
+**Jawaban lo:** 2.5? **Jawaban C++:** 2.
+
+**LOH KOK?!** 😡 Karena `int` dibagi `int` hasilnya HARUS `int`. Koma di belakangnya dibuang ke laut, gak peduli matematikanya bener atau salah.
+
+`Solusi:` Salah satu harus jadi double.
+
+```cpp
+double a = 5.0; // Pake koma
+int b = 2;
+cout << a / b; // Hasil: 2.5 (Aman)
+```
+
+#### 2. Jebakan Kutip (' vs ")
+
+Ini sepele tapi bikin error merah semiliar baris.
+
+    * `'A'` (Kutip Satu) = `char`. Hemat memori, cuma 1 huruf.
+
+    * `"A"` (Kutip Dua) = `string`. Boros memori, dianggap teks.
+
+    _"Jangan kasih kutip dua ke tipe data char. Dia bakal ngambek."_
+
+## Rumus Deklarasi Variabel
+
+Ada 2 gaya, pilih yang lo suka:
+
+#### Gaya 1: Booking Dulu, Isi Nanti
+
+```cpp
+int umur; // Booking kardus kosong
+umur = 19; // Baru diisi
+```
+
+#### Gaya 2: Langsung Isi (Inisialisasi)
+
+```cpp
+int umur = 19; // Lebih singkat, lebih disarankan.
+```
+
+## Aturan Penamaan (Naming Convention)
+
+    * Gak boleh ada spasi (`int jumlah pacar` ❌). Pake `jumlah_pacar` atau `jumlahPacar`.
+
+    * Gak boleh diawali angka (`int 1ranking` ❌).
+
+    * Gak boleh pake kata keramat C++ (`int int` ❌, `int return `❌).

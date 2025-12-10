@@ -1,0 +1,114 @@
+import { Callout } from "nextra/components";
+
+# Function 👷
+
+Coba bayangin lo punya Bos.
+Apakah Bos ngerjain semuanya sendiri? Mulai dari nyapu, bikin kopi, sampe meeting? **Enggak.**
+Bos cuma nyuruh-nyuruh doang.
+
+Di C++, **`main()` itu adalah BOS.**
+Tugas dia cuma manggil bawahan (Function) buat ngerjain tugas spesifik.
+
+---
+
+## 1. Kenapa Butuh Function? 😫
+
+Tanpa function, kodingan lo numpuk semua di `main`.
+
+- Susah dibaca.
+- Kalau ada error, pusing nyarinya.
+- Kalau mau ngerjain hal yang sama berkali-kali, harus copas kode (Capek!).
+
+Dengan function, kita pecah program jadi bagian-bagian kecil.
+
+---
+
+## 2. Struktur Dasar Function 🏗️
+
+```cpp
+// TipeData NamaFungsi(Parameter) { ... }
+
+// Contoh: Fungsi buat nyapa doang (Gak ngehasilin data)
+void sapaMantan() {
+    cout << "Halo, apa kabar?" << endl;
+}
+
+// Contoh: Fungsi matematika (Ngehasilin angka integer)
+int tambah(int a, int b) {
+    return a + b;
+}
+```
+
+## 3. Void vs Return Type (Babu vs Profesional) 🥊
+
+Ini bedanya function yang Cuma Kerja sama function yang Ngasilin Laporan.
+
+#### A. Void (Function Kuli)
+
+Dia disuruh kerja, ya kerja aja. Gak perlu lapor balik ke Bos.
+**Cirinya:** Pake kata kunci `void`.
+
+```cpp
+void bersihKamar() {
+    cout << "Kamar udah bersih bos!" << endl;
+    // Gak ada 'return'
+}
+
+int main() {
+    bersihKamar(); // Panggil
+    return 0;
+}
+```
+
+#### B. Return Type (Function Profesional)
+
+Dia disuruh kerja, terus Wajib Lapor Hasilnya ke Bos.
+**Cirinya:** Pake tipe data (int, double, string) dan wajib ada `return`.
+
+```cpp
+// Juru hitung luas
+int hitungLuas(int p, int l) {
+    int hasil = p * l;
+    return hasil; // Laporin hasilnya ke Bos
+}
+
+int main() {
+    // Bos nangkep laporannya di variabel 'luas'
+    int luas = hitungLuas(10, 5);
+
+    cout << "Luas tanah: " << luas;
+    return 0;
+}
+```
+
+## 4. Parameter 🥘
+
+`Function` itu kayak Blender. Kalau mau nge-jus, harus dimasukin buahnya (`Parameter`).
+
+```cpp
+// 'nama' dan 'waktu' adalah Parameter (Bahan)
+void sapa(string nama, string waktu) {
+    cout << "Selamat " << waktu << ", " << nama << "!" << endl;
+}
+
+int main() {
+    sapa("Pian", "Pagi"); // Output: Selamat Pagi, Pian!
+    sapa("Budi", "Malam"); // Output: Selamat Malam, Budi!
+    return 0;
+}
+```
+
+<Callout type="error" emoji="⚠️">
+**Aturan Posisi:** C++ itu baca dari Atas ke Bawah. Jadi, Bikin Function-nya DI ATAS main().
+
+Kalau lo bikin di bawah `main()`, si `main` bakal **bingung:** _"Siapa nih? Gue gak kenal."_ (`Error: Function not declared`)
+
+</Callout>
+
+## Rangkuman buat Contekan 📝
+
+| Jenis     | Ciri-ciri         | Contoh                  |
+| --------- | ----------------- | ----------------------- |
+| Void      | Gak balikin nilai | void cetakMenu()        |
+| Return    | Wajib ada return  | int hitungGaji()        |
+| Parameter | Butuh data input  | void login(string user) |

@@ -1,0 +1,124 @@
+import { Callout } from "nextra/components";
+
+# Pointer: Si Pembuat Pusing 🤯
+
+Selamat datang di materi tersulit di C++.
+Kalau lo paham ini, lo resmi bukan maba biasa lagi. Lo udah punya "Mata Batin" buat liat memori komputer.
+
+## 1. Konsep Dasar: Nilai vs Alamat 🏠
+
+Selama ini kita belajar variabel kayak gini:
+`int a = 10;`
+
+Artinya: "Bikin kotak bernama **a**, isi dengan angka **10**".
+
+Tapi lo tau gak? Kotak **a** itu punya lokasi fisik di RAM laptop lo.
+Lokasi itu disebut **ALAMAT MEMORI** (_Memory Address_).
+
+- **Nilai:** Isinya (10).
+- **Alamat:** Lokasinya di RAM (misal: `0x7ffee...` bahasa alien heksadesimal).
+
+**POINTER ADALAH VARIABEL YANG ISINYA BUKAN DATA, TAPI ALAMAT MEMORI.**
+
+---
+
+## 2. Simbol Keramat (`&` dan `*`) ⚔️
+
+Di materi ini, lo bakal sering liat dua simbol ini berantem.
+
+### `&` (Address Of) = "Minta Alamatnya Dong"
+
+Simbol Dan (`&`) dipake buat ngambil alamat dari variabel biasa.
+
+```cpp
+int a = 10;
+cout << a;  // Output: 10 (Isinya)
+cout << &a; // Output: 0x61ff0c (Alamat rumahnya di RAM)
+```
+
+**`*` (Pointer / Dereference) = "Si Penunjuk"**
+
+Simbol Bintang (`*`) punya dua fungsi tergantung posisinya:
+
+    1. Pas Deklarasi (`int* p`): _"Halo, gue adalah Pointer. Gue cuma mau nyimpen alamat."_
+
+    2. Pas Dipake (`*p`): _"Woy, anterin gue ke alamat yang gue pegang, terus ambil isinya!"_ (Dereference).
+
+## 3. Kodingan Pointer (Praktek Langsung) 👨‍💻
+
+Coba jalanin ini biar lo percaya.
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int main() {
+    // 1. Variabel Biasa
+    int angka = 99;
+
+    // 2. Bikin Pointer (Si Penunjuk)
+    // "pAngka adalah pointer yang bakal nyimpen alamat integer"
+    int *pAngka;
+
+    // 3. Isi Pointer
+    // "pAngka, nih simpen alamatnya si 'angka'"
+    pAngka = &angka;
+
+    cout << "Isi variabel angka: " << angka << endl;       // 99
+    cout << "Alamat variabel angka: " << &angka << endl;   // 0x61ff...
+
+    cout << "Isi pointer pAngka: " << pAngka << endl;      // 0x61ff... (Sama kan?)
+
+    // 4. JURUS DEREFERENCE (*)
+    // "Pergi ke alamat yang dipegang pAngka, ambil isinya"
+    cout << "Nilai yang ditunjuk pAngka: " << *pAngka << endl; // 99
+
+    return 0;
+}
+```
+
+## 4. Manipulasi Jalur Belakang 🕵️‍♂️
+
+Ini yang bikin `Pointer` sakti. Kita bisa ngubah isi variabel angka **TANPA** menyentuh variabel angka-nya langsung, tapi lewat pointernya.
+
+```cpp
+// Lanjut kodingan di atas...
+
+// Kita ubah isinya lewat pointer
+*pAngka = 100;
+
+// Ajaib! Variabel aslinya ikut berubah
+cout << "Nilai angka sekarang: " << angka; // Output: 100
+```
+
+    > **Analogi:** Pointer itu kayak lo punya Remote TV. Lo gak perlu jalan ke TV buat ganti channel (ubah variabel). Cukup tekan tombol di remote (pointer), TV-nya berubah.
+
+## 5. Bahaya Pointer (Segmentation Fault) ☠️
+
+Pointer itu senjata tajam. Kalau gak hati-hati, program lo bakal CRASH seketika.
+
+**Kasus:** Pointer Nyasar
+
+```cpp
+int *p; // Pointer dibuat tapi GAK DIISI alamat apa-apa (Isinya sampah/acak)
+
+*p = 10; // ❌ ERROR FATAL!
+// Lo nyuruh komputer: "Pergi ke alamat antah berantah, simpen angka 10".
+// Komputer: "Itu alamat rumah orang woy! CRASH!" (Segmentation Fault).
+```
+
+**Solusi:** Selalu isi pointer dengan alamat yang jelas (`&variabel`) atau isi dengan `nullptr` (kosong aman) kalau belum mau dipake.
+
+```cpp
+C++
+
+int *p = nullptr; // Aman, pointer nganggur.
+```
+
+Rangkuman Simbol 📝
+
+| Simbol   | Nama        | Fungsi                                      |
+| :------- | :---------- | :------------------------------------------ |
+| `&x`     | Address-of  | _"Di mana alamat si x?"_                    |
+| `int *p` | Deklarasi   | _"Gue variabel pointer (penyimpan alamat)"_ |
+| `*p`     | Dereference | _"Pergi ke alamat p, ambil isinya"_         |
