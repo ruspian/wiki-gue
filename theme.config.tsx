@@ -1,4 +1,6 @@
-const config = {
+import { DocsThemeConfig } from "nextra-theme-docs";
+
+const config: DocsThemeConfig = {
   logo: <span>📚 Wiki Gue</span>,
   project: {
     link: "https://github.com/ruspian/wiki-gue",
