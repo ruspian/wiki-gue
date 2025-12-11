@@ -1,0 +1,15 @@
+{
+  "intro": "Apa itu Next.js?",
+  "setup": "Setup & File Structure",
+  "routing": "App Router",
+  "rendering": "Server vs Client Components",
+  "fetching": "Data Fetching",
+  "api-routes": "API Routes",
+  "optimization": "SEO & Image",
+  "server-actions": "Server Actions",
+  "middleware": "Middleware",
+  "zustand": "Global State",
+  "form-validation": "Validasi Form",
+  "shadcn": "UI Library",
+  "deployment": "Deployment"
+}

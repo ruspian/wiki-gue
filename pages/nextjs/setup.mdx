@@ -1,0 +1,86 @@
+import { Callout } from "nextra/components";
+
+# Setup & File Structure 📂
+
+Kita bakal pake standar terbaru Next.js yaitu **App Router** (versi 13 ke atas).
+Jangan pake "Pages Router" lagi, itu udah masa lalu.
+
+## 1. Cara Install 🛠️
+
+Buka terminal, arahkan ke folder tempat lo mau nyimpen project, terus ketik:
+
+```bash
+npx create-next-app@latest nama-project-lo
+```
+
+Nanti dia bakal nanya-nanya (kayak sensus penduduk). Jawab gini:
+
+    * Would you like to use TypeScript? **Yes** (Pilih yes kalo mau pake TypeScript)
+
+    * Would you like to use ESLint? **Yes**
+
+    * Would you like to use Tailwind CSS? **Yes** (Biar ganteng)
+
+    * Would you like to use src/ directory? **Yes** (Biar rapi)
+
+    * Would you like to use App Router? **YES** (⚠️ PENTING!)
+
+    * Would you like to customize the default import alias? **No**
+
+Tungguin proses install selesai, terus masuk ke foldernya:
+
+```bash
+cd nama-project-lo
+npm run dev
+```
+
+Buka localhost:3000. Selamat, lo udah pake Next.js! 🎉
+
+## 2. Bedah Struktur Folder (src/app) 🩻
+
+Di Next.js App Router, folder `src/app` adalah jantungnya. Nama file di sini **PUNYA ARTI KHUSUS**. Gak boleh asal kasih nama `home.tsx` atau `dashboard.tsx` buat halaman.
+
+Berikut file-file keramatnya:
+
+#### A. page.tsx (Halaman / UI)
+
+Ini adalah konten utama yang tampil di layar.
+
+    * `src/app/page.tsx` -> Tampil di Home (/)
+
+    * `src/app/about/page.tsx` -> Tampil di About (/about)
+
+#### B. layout.tsx (Bungkusan / Wrapper)
+
+Ini file yang membungkus `page.tsx`. Biasanya isinya tag `<html>`, `<body>`, `Navbar`, dan `Footer`. Apapun yang lo taruh di sini, bakal MUNCUL TERUS di semua halaman (gak ikut ke-refresh pas pindah halaman).
+
+```tsx
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>
+        <Navbar /> {/* Muncul terus */}
+        <main>{children}</main> {/* Halaman berubah di sini */}
+        <Footer /> {/* Muncul terus */}
+      </body>
+    </html>
+  );
+}
+```
+
+#### C. File Spesial Lainnya ✨
+
+Next.js udah nyediain file buat `loading` dan `error` handling otomatis:
+
+    * **loading.tsx:** Tampilan loading (skeleton/spinner) yang muncul otomatis pas halaman lagi dimuat.
+
+    * **not-found.tsx:** Tampilan Error 404 kalau user nyasar.
+
+    * **error.tsx:** Tampilan kalau ada kodingan yang error/crash.
+
+<Callout type="warning" emoji="⚠️">
+  {" "}
+  **Aturan Emas:** Di dalam folder app, hanya file bernama `page.tsx` yang akan jadi
+  Halaman Website (Route). File lain kayak `components.tsx` atau `utils.ts` gak akan
+  bisa dibuka di browser secara langsung.{" "}
+</Callout>

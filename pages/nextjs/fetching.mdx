@@ -1,0 +1,95 @@
+import { Callout } from "nextra/components";
+
+# Data Fetching: Cara Sakti 🎣
+
+Lupakan cara ribet `useEffect` di React biasa.
+Di Next.js App Router, karena komponen kita adalah **Server Component**, kita bisa bikin function-nya jadi **`async`** dan langsung `await` datanya.
+
+## 1. Fetching di Server Component (Recommended) 🏢
+
+Gak perlu `useState`, gak perlu `useEffect`, gak perlu loading manual.
+
+```tsx
+// src/app/users/page.tsx
+
+// 1. Function Component jadi ASYNC
+export default async function UsersPage() {
+  // 2. Langsung Fetch di sini (Jalan di Server)
+  const res = await fetch(
+    "[https://jsonplaceholder.typicode.com/users](https://jsonplaceholder.typicode.com/users)"
+  );
+  const users = await res.json();
+
+  // 3. Render datanya
+  return (
+    <div>
+      <h1>Daftar User</h1>
+      <ul>
+        {users.map((user: any) => (
+          <li key={user.id}>{user.name}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+```
+
+**Kelebihan:**
+
+    * Data diambil di server, browser user terima HTML yang udah ada isinya.
+
+    * SEO Bagus Banget. Google bisa baca list user-nya.
+
+    * Cepat, karena server biasanya internetnya lebih ngebut dari user.
+
+## 2. Caching & Revalidating (Jurus Hemat) 💾
+
+Next.js otomatis nyimpen (cache) hasil fetch lo. Jadi kalau ada 1000 user buka halaman itu, Next.js gak bakal nembak API 1000 kali. Dia cuma nembak sekali, sisanya dikasih "fotokopian" (Cache).
+
+Gimana kalau datanya sering berubah (misal berita bola)? Kita atur `Revalidate`.
+
+```tsx
+// Update data tiap 10 detik (Incremental Static Regeneration)
+const res = await fetch(
+  "[https://api.bola.com/skor](https://api.bola.com/skor)",
+  {
+    next: { revalidate: 10 },
+  }
+);
+```
+
+    * `revalidate: 0`: Jangan di-cache (Selalu ambil data baru tiap refresh). Cocok buat data Live.
+
+    * `revalidate: 3600`: Update data tiap 1 jam sekali. Cocok buat Blog.
+
+## 3. Loading UI (Otomatis) ⏳
+
+Gimana cara nampilin "Loading..." pas data lagi diambil? Gak perlu `if-else` ribet. Cukup bikin file `loading.tsx ` di folder yang sama.
+
+**Struktur Folder:**
+
+    * `src/app/users/page.tsx` (Halaman utama)
+
+    * `src/app/users/loading.tsx` (Tampilan loading)
+
+**Isi loading.tsx:**
+
+```tsx
+export default function Loading() {
+  return <div className="text-center">Sabar bos, lagi ambil data...</div>;
+}
+```
+
+Next.js bakal otomatis nampilin komponen Loading selama `page.tsx` belum kelar nge-fetch data. Ajaib kan?
+
+## 4. Fetching di Client Component 💻
+
+Kalau lo terpaksa fetch di Client (misal: fetch data pas tombol diklik), caranya balik lagi pake cara lama React (`useEffect`) atau pake library TanStack Query (Sangat Disarankan).
+
+Tapi usahakan 90% fetching lo lakuin di Server Component aja biar performa ngebut.
+
+<Callout type="info" emoji="💡">
+  {" "}
+  **Tips:** Selalu prioritaskan fetch data di Server Component (`async/awai`t di
+  `page.tsx`). Itu adalah kekuatan utama Next.js.{" "}
+</Callout>

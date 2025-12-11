@@ -1,0 +1,58 @@
+import { Callout } from "nextra/components";
+
+# Apa itu Next.js? 🤔
+
+Kalau React adalah **"Mesin"**, maka Next.js adalah **"Mobil Mewah Siap Pakai"**. 🏎️
+
+React itu sebenernya cuma **Library UI**. Tugas dia cuma ngurusin tampilan.
+Kalau lo mau bikin website beneran pake React biasa (Vite), lo harus rakit sendiri fitur-fitur lain kayak:
+
+- Routing (Pindah halaman).
+- Optimasi SEO (Biar muncul di Google).
+- Optimasi Gambar.
+- Backend API.
+
+**Next.js** datang sebagai **Full Stack Framework**.
+Semua fitur di atas udah dipasangin dari pabrik. Lo tinggal gas.
+
+---
+
+## Masalah di React Biasa (Vite/CRA) 😫
+
+React biasa menggunakan sistem **Client-Side Rendering (CSR)**.
+
+1.  Browser download halaman kosong putih dulu.
+2.  Baru download JavaScript React yang gede.
+3.  Baru kontennya muncul.
+
+**Akibatnya:**
+
+- **SEO Buruk:** Robot Google ngeliat halaman lo kosong pas pertama kali mampir.
+- **Loading Awal Berat:** User harus nunggu JS kelar di-download baru bisa liat sesuatu.
+
+---
+
+## Solusi Next.js (Framework Sultan) 😎
+
+Next.js bisa melakukan **Server-Side Rendering (SSR)**.
+
+1.  Halaman dirakit (dimasak) dulu di Server.
+2.  Dikirim ke browser dalam bentuk HTML mateng.
+3.  **User langsung liat konten!** (Gak pake layar putih).
+4.  Robot Google seneng, website lo gampang naik ranking.
+
+## Perbandingan Fitur
+
+| Fitur         | React Biasa (Vite)               | Next.js                              |
+| :------------ | :------------------------------- | :----------------------------------- |
+| **Rendering** | Client Side (Browser yang kerja) | Server Side (Server yang kerja)      |
+| **Routing**   | Install `react-router-dom` dulu  | Otomatis (Pake Folder)               |
+| **SEO**       | Susah dideteksi Google           | Google Friendly banget               |
+| **Backend**   | Gak punya                        | Punya API Routes sendiri             |
+| **Gambar**    | Tag `<img>` biasa                | Komponen `<Image />` (Auto compress) |
+
+<Callout type="info" emoji="🚀">
+  **Kesimpulan:** Pake React biasa itu ibarat lo beli bahan masakan, harus masak
+  sendiri. Pake Next.js itu ibarat lo pesen makanan di restoran, dateng udah
+  mateng tinggal makan.
+</Callout>

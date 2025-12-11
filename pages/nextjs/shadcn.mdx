@@ -1,0 +1,53 @@
+import { Callout } from "nextra/components";
+
+# UI Library: Shadcn UI 🎨
+
+Bikin komponen kayak **Modal, Dropdown, DatePicker** dari nol itu susah banget (terutama urusan aksesibilitas keyboard).
+Tapi pake library kayak MUI/Bootstrap kadang susah di-custom warnanya.
+
+Solusinya: **Shadcn UI**.
+Ini bukan library biasa. Ini adalah koleksi komponen yang lo **Copy-Paste** ke project lo.
+
+## 1. Setup Awal 🛠️
+
+Di terminal project Next.js lo, jalankan:
+
+```bash
+npx shadcn@latest init
+```
+
+Jawab pertanyaan style-nya (pilih New York, warna Zinc, dll).
+
+## 2. Cara Nambah Komponen ➕
+
+Misal lo butuh Button keren.
+
+```bash
+npx shadcn@latest add button
+```
+
+Cek folder `src/components/ui/button.tsx`. Kodingan tombolnya ada di situ! Lo bisa edit sesuka hati.
+
+## 3. Cara Pakai 💻
+
+Langsung import kayak komponen biasa.
+
+```tsx
+import { Button } from "@/components/ui/button";
+
+export default function Home() {
+  return (
+    <div className="p-10">
+      <Button variant="default">Klik Saya</Button>
+      <Button variant="destructive">Hapus Data</Button>
+      <Button variant="outline">Batal</Button>
+    </div>
+  );
+}
+```
+
+<Callout type="info" emoji="💎">
+  {" "}
+  Kenapa Populer? Karena dia pake Tailwind CSS. Jadi kalau lo mau ganti warna tombol,
+  tinggal ganti class Tailwind di file komponennya. Gak perlu override CSS yang ribet.{" "}
+</Callout>

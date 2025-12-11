@@ -1,0 +1,87 @@
+import { Callout } from "nextra/components";
+
+# Deployment: Go Public 🌍
+
+Saatnya website lo dilihat dunia.
+Kita akan deploy ke **Vercel** (Hosting terbaik buat Next.js).
+
+## 1. Upload ke GitHub (Wajib) 🐙
+
+Vercel ngambil kodingan lo dari GitHub. Jadi langkah pertama adalah push kodingan lo ke sana.
+
+1.  Bikin Repository baru di [GitHub](https://github.com/new).
+2.  Buka terminal di VS Code, ketik mantra ini:
+
+```bash
+git init
+git add .
+git commit -m "First commit: Siap deploy"
+git branch -M main
+git remote add origin [https://github.com/username-lo/nama-repo.git](https://github.com/username-lo/nama-repo.git)
+git push -u origin main
+```
+
+(Ganti URL git-nya sesuai repo lo ya!)
+
+## 2. Connect ke Vercel ▲
+
+    * Buka vercel.com dan Login pake GitHub.
+
+    * Di Dashboard, klik tombol "Add New..." -> Project.
+
+    * Di daftar repository, cari repo yang baru lo upload tadi. Klik Import.
+
+## 3. Konfigurasi Project ⚙️
+
+Vercel biasanya pinter, dia tau ini project Next.js.
+
+    * **Framework Preset:** Next.js (Otomatis)
+
+    * **Root Directory:** ./ (Biarian aja)
+
+⚠️ **PENTING:** Environment Variables Kalau di laptop lo punya file `.env `(misal isinya API Key atau Database URL), lo WAJIB masukin di sini. Vercel gak bisa baca file `.env` di laptop lo.
+
+    * Buka bagian Environment Variables.
+
+    * Copy nama variabel (misal DATABASE_URL) dan isinya.
+
+    * Klik Add.
+
+Kalau udah semua, klik tombol **DEPLOY**.
+
+## 4. Tunggu & Nikmati 🎉
+
+Vercel bakal mulai "memasak" (Build) website lo. Tunggu sekitar 1-2 menit. Kalau sukses, layar bakal penuh kembang api dan lo dapet link domain: https://project-lo.vercel.app
+
+Coba buka link itu di HP. Kirim ke temen. Pamerin ke gebetan.
+
+## 5. Update Otomatis (CI/CD) 🔄
+
+Ini fitur paling enak. Gimana kalau besok lo mau ganti warna tombol atau nambah fitur?
+
+    * Edit kodingan di laptop.
+
+    * Push lagi ke GitHub:
+
+```bash
+    git add .
+    git commit -m "Ganti warna tombol jadi merah"
+    git push
+```
+
+    * Selesai.
+
+Vercel bakal otomatis mendeteksi perubahan di GitHub, dan nge-deploy ulang website lo dalam hitungan detik.
+
+<Callout type="error" emoji="🚧">
+ **Kalau Error Pas Deploy:** Cek tab Logs di dashboard Vercel. Biasanya error terjadi karena:
+
+    * Ada `console.log` yang ketinggalan (di settingan strict).
+
+    * Ada Type Error TypeScript (any, atau properti null).
+
+    * Lupa masukin Environment Variable.
+
+Next.js di Vercel itu **LEBIH KETAT** daripada di laptop lo. Jadi pastikan kodingan lo bersih!
+
+</Callout>

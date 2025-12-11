@@ -1,0 +1,89 @@
+import { Callout } from "nextra/components";
+
+# App Router: Folder = URL 🛣️
+
+Di Next.js, struktur folder lo menentukan alamat URL website lo.
+Sistem ini disebut **File-system Based Routing**.
+
+## 1. Routing Dasar (Static) 🏠
+
+Rumusnya gampang: **Bikin Folder -> Isi `page.tsx`**.
+
+- **`src/app/page.tsx`**
+  - URL: `localhost:3000/` (Home)
+- **`src/app/about/page.tsx`**
+  - URL: `localhost:3000/about`
+- **`src/app/dashboard/settings/page.tsx`**
+  - URL: `localhost:3000/dashboard/settings`
+
+<Callout type="info" emoji="💡">
+  **Ingat:** Kalau lo bikin folder tapi gak ada `page.tsx`-nya, URL itu bakal
+  **404 Not Found**. Folder cuma dianggap wadah biasa.
+</Callout>
+
+---
+
+## 2. Dynamic Routing (Slug) 🆔
+
+Gimana kalau mau bikin halaman detail produk?
+
+- `/produk/sepatu`
+- `/produk/baju`
+- `/produk/topi`
+
+Gak mungkin kan bikin folder satu-satu? Kita pake **Kurung Siku `[]`**.
+
+**Struktur Folder:**
+`src/app/produk/[slug]/page.tsx`
+
+**Isi File `page.tsx`:**
+Next.js otomatis ngirim parameter lewat `params`.
+
+```tsx
+// params.slug bakal berisi "sepatu", "baju", atau "topi"
+export default function DetailProduk({ params }: { params: { slug: string } }) {
+  return (
+    <div>
+      <h1>Detail Produk: {params.slug}</h1>
+    </div>
+  );
+}
+```
+
+## 3. Navigasi Antar Halaman 🔗
+
+Jangan pernah pake tag `<a>` biasa! Itu bakal me-refresh halaman (layar putih sebentar) dan bikin lemot. Gunakan komponen `<Link>` bawaan Next.js.
+
+```tsx
+import Link from "next/link"; // Import wajib
+
+export default function Navbar() {
+  return (
+    <nav className="flex gap-4">
+      {/* Salah (Reload Halaman) ❌ */}
+      <a href="/about">About Biasa</a>
+
+      {/* Benar (Pindah Instan) ✅ */}
+      <Link href="/about">About Next.js</Link>
+
+      <Link href="/dashboard">Dashboard</Link>
+    </nav>
+  );
+}
+```
+
+**Kenapa harus `<Link>`?**
+
+Karena `<Link>` melakukan Prefetching. Pas tombolnya muncul di layar user, Next.js diem-diem udah download halaman tujuannya di background. Jadi pas user klik, pindahnya INSTAN (0 detik).
+
+## 4. Folder Group (Tanda Kurung `()`) 👻
+
+Kadang lo pengen ngelompokkin folder biar rapi, tapi gak mau ngerubah URL. Gunakan tanda kurung `()`.
+
+**Contoh:** Lo mau misahin halaman "`Auth`" (Login/Register) dari halaman lain.
+
+    * `src/app/(auth)/login/page.tsx` -> URL: /login
+
+    * `src/app/(auth)/register/page.tsx` -> URL: /register
+
+Perhatikan URL-nya tetep `/login`, bukan `/(auth)/login`. Folder (auth) dianggap hantu (gak kebaca di URL).

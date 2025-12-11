@@ -1,0 +1,110 @@
+import { Callout } from "nextra/components";
+
+# Server vs Client Components ⚡
+
+Di Next.js (App Router), secara default **SEMUA KOMPONEN ADALAH SERVER COMPONENT**.
+Artinya, komponen itu dimasak di server, dikirim ke browser udah jadi HTML mateng.
+
+Ini beda banget sama React biasa (Vite) yang semuanya Client Component.
+
+---
+
+## 1. Server Component (Default) 🏢
+
+Ini adalah mode standar Next.js.
+
+**Karakteristik:**
+
+- Di-render di Server (Backend).
+- Kode JS-nya **GAK DIKIRIM** ke browser (Hemat kuota user).
+- Bisa akses database langsung (karena jalan di server).
+- **GAK BISA INTERAKSI** (Gak bisa diklik, gak bisa input form).
+
+**Contoh (Aman):**
+
+```tsx
+// src/app/page.tsx
+// Ini Server Component. Gak perlu nulis apa-apa.
+
+export default function HomePage() {
+  console.log("Halo!"); // Tulisan ini muncul di Terminal Server, BUKAN di Console Browser!
+
+  return (
+    <div>
+      <h1>Ini Halaman Statis</h1>
+      <p>Sangat cepat dan disukai Google (SEO).</p>
+    </div>
+  );
+}
+```
+
+## 2. Client Component ("use client") 💻
+
+Ini adalah komponen React "klasik" yang biasa lo pake. Digunakan kalau lo butuh Interaksi User atau Hooks.
+
+**Syarat Wajib:** Tambahkan tulisan `'use client'` di baris paling atas file.
+
+**Contoh (Wajib `'use client'`):**
+
+```tsx
+"use client"; // 👈 MANTRA WAJIB!
+
+import { useState } from "react";
+
+export default function Counter() {
+  const [count, setCount] = useState(0); // Hooks cuma jalan di Client
+
+  return (
+    <button onClick={() => setCount(count + 1)}>Klik Saya: {count}</button>
+  );
+}
+```
+
+<Callout type="error" emoji="💣">
+  {" "}
+  **Error Klasik:** Kalau lo pake `useState`, `useEffect`, atau `onClick` TAPI lupa
+  nulis &#39;use client&#39;, Next.js bakal error marah-marah.{" "}
+</Callout>
+## 3. Kapan Pake Yang Mana? 🤔
+
+Jangan bingung, pake contekan ini:
+
+| Fitur                              | Server Component 🏢 | Client Component 💻 |
+| :--------------------------------- | :------------------ | :------------------ |
+| Ambil Data (Fetch)                 | ✅ (Recommended)    | ✅                  |
+| Akses Database                     | ✅                  | ❌ (Bahaya!)        |
+| Simpan Data Sensitif (API Key)     | ✅                  | ❌ (Bisa dicolong)  |
+| useState / useEffect               | ❌                  | ✅                  |
+| onClick / onChange                 | ❌                  | ✅                  |
+| Browser API (window, localStorage) | ❌                  | ✅                  |
+
+## 4. Pola Terbaik 🍃
+
+Jangan ubah semua halaman jadi Client Component. Sayang fiturnya Next.js. Usahakan halaman utama tetep Server Component, cuma bagian kecil yang butuh interaksi aja yang jadi Client Component.
+
+**Contoh Struktur:**
+
+    * `Page.tsx` (Server - Buat SEO & Layout)
+
+        * `Navbar.tsx` (Client - Karena ada tombol menu mobile)
+
+        * `KontenArtikel.tsx` (Server - Teks doang)
+
+        * `TombolLike.tsx` (Client - Karena butuh onClick)
+
+```tsx
+// src/app/page.tsx (Server)
+import TombolLike from "./TombolLike"; // Import Client Component ke Server Component itu BOLEH.
+
+export default function BlogPage() {
+  return (
+    <div>
+      <h1>Judul Artikel</h1>
+      <p>Isi artikel panjang banget...</p>
+
+      {/* Bagian interaktif dipisah jadi komponen sendiri */}
+      <TombolLike />
+    </div>
+  );
+}
+```

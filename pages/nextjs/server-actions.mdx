@@ -1,0 +1,100 @@
+import { Callout } from "nextra/components";
+
+# Server Actions: Jurus Tanpa API 🪄
+
+Dulu, kalau mau kirim data form (misal: Register), flow-nya ribet:
+
+1.  Frontend bikin `useState` buat nampung input.
+2.  Backend bikin API Route (`/api/register`).
+3.  Frontend nembak pake `fetch('/api/register')`.
+
+Di Next.js terbaru, kita punya **Server Actions**.
+Lo bisa bikin function di Server, dan **langsung dipanggil** dari tombol form di Frontend. Gak perlu API Route!
+
+---
+
+## 1. Cara Pakai (Form Action) 📝
+
+Cukup tambahkan `'use server'` di dalam function. Next.js bakal otomatis ngubah function itu jadi endpoint rahasia.
+
+Contoh di **Server Component** (langsung di `page.tsx`):
+
+```tsx
+// src/app/register/page.tsx
+import { redirect } from "next/navigation";
+
+export default function RegisterPage() {
+  // Ini Function Server (Jalan di Backend)
+  async function daftarUser(formData: FormData) {
+    "use server"; // 👈 MANTRA AJAIB (Wajib ada)
+
+    // Ambil data dari input form
+    const nama = formData.get("nama");
+    const email = formData.get("email");
+
+    // Ceritanya simpan ke Database
+    console.log("Simpan ke DB:", nama, email);
+
+    // Kalau sukses, lempar user ke dashboard
+    redirect("/dashboard");
+  }
+
+  return (
+    <form action={daftarUser} className="flex flex-col gap-4">
+      <input name="nama" type="text" placeholder="Nama Lengkap" />
+      <input name="email" type="email" placeholder="Alamat Email" />
+      <button type="submit">Daftar Sekarang</button>
+    </form>
+  );
+}
+```
+
+**Kenapa ini Keren?**
+
+    * **Progressive Enhancement:** Form ini tetep jalan walaupun JavaScript di browser user mati/belum kelar loading.
+
+    * **Aman:** Logika database ada di dalam function daftarUser, gak bakal bocor ke browser client.
+
+    * **Simpel:** Gak perlu useState atau useEffect sama sekali.
+
+## 2. Server Actions di Client Component 💻
+
+Kadang lo butuh validasi realtime atau animasi loading di tombolnya. Itu butuh Client Component. Caranya, pindahin logika servernya ke file terpisah.
+
+#### Langkah A: Bikin file `src/actions/auth.ts`
+
+```ts
+"use server";
+
+import { redirect } from "next/navigation";
+
+export async function login(formData: FormData) {
+  // Logika login di sini...
+  console.log("Login berhasil");
+  redirect("/dashboard");
+}
+```
+
+#### Langkah B: Panggil di src/app/login/page.tsx
+
+```ts
+"use client"; // Client Component
+import { login } from "@/actions/auth"; // Import dari file tadi
+
+export default function LoginPage() {
+  return (
+    <form action={login}>
+      <input name="username" type="text" />
+      <input name="password" type="password" />
+      <button type="submit">Login</button>
+    </form>
+  );
+}
+```
+
+<Callout type="info" emoji="🚀">
+  {" "}
+  **Tips:** Gunakan API Routes kalau endpoint-nya mau dipake aplikasi luar (Mobile
+  App). Gunakan Server Actions kalau cuma buat interaksi internal website lo sendiri
+  (Form Submit).{" "}
+</Callout>

@@ -1,0 +1,67 @@
+import { Callout } from "nextra/components";
+
+# Global State: Zustand 🐻
+
+Di React, kita belajar `Context API` buat nyimpen data global. Tapi itu butuh `<Provider>` yang bikin kodingan numpuk.
+
+Di dunia kerja, kita pake **Zustand**.
+Library gambar beruang ini kecil, ngebut, dan gampang banget.
+
+## 1. Install 📦
+
+```bash
+npm install zustand
+```
+
+## 2. Buat Store 🏪
+
+Bikin file `src/store/useCartStore.ts`. Kita mau nyimpen data Keranjang Belanja.
+
+```tsx
+import { create } from "zustand";
+
+// Definisikan tipe datanya (TS)
+interface CartState {
+  totalItem: number;
+  tambah: () => void;
+  reset: () => void;
+}
+
+// Bikin Store-nya
+export const useCartStore = create<CartState>((set) => ({
+  totalItem: 0, // Data awal
+
+  // Aksi (Function buat ngubah data)
+  tambah: () => set((state) => ({ totalItem: state.totalItem + 1 })),
+  reset: () => set({ totalItem: 0 }),
+}));
+```
+
+## 3. Pake di Mana Aja (Tanpa Provider) 🚀
+
+Lo bisa pake ini di `Navbar`, di Halaman `Checkout`, di mana aja. Gak perlu bungkus-bungkus app.
+
+```tsx
+"use client";
+import { useCartStore } from "@/store/useCartStore";
+
+export default function Navbar() {
+  // Ambil data dan function dari gudang
+  const { totalItem, tambah } = useCartStore();
+
+  return (
+    <div className="flex gap-4">
+      <h1>Keranjang: {totalItem} barang</h1>
+      <button onClick={tambah}>Beli Lagi</button>
+    </div>
+  );
+}
+```
+
+<Callout type="info" emoji="💡"> 
+**Kenapa Zustand?**
+
+    * **Boilerplate dikit:** Gak perlu file `reducer`, `action`, `types` yang misah-misah kayak Redux.
+
+    * **No Provider Hell:** Gak perlu `MainContext.Provider` di `layout.tsx`.
+    </Callout>

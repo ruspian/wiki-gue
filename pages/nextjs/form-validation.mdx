@@ -1,0 +1,72 @@
+# Validasi Form: Zod + React Hook Form 🛡️
+
+Ngananin form itu mimpi buruk:
+
+- Harus cek email valid gak?
+- Password udah 8 karakter belum?
+- Konfirmasi password sama gak?
+
+Kita serahin tugas kotor ini ke **Zod**.
+
+## 1. Install 📦
+
+```bash
+npm install zod react-hook-form @hookform/resolvers
+```
+
+## 2. Bikin Aturan (Schema) 📜
+
+Misal buat form Register.
+
+```ts
+import { z } from "zod";
+
+// Aturan mainnya:
+const registerSchema = z.object({
+  username: z.string().min(3, "Username minimal 3 huruf"),
+  email: z.string().email("Email gak valid woy"),
+  password: z.string().min(8, "Password minimal 8 karakter"),
+});
+
+// Ubah schema jadi Tipe TypeScript otomatis!
+type RegisterForm = z.infer<typeof registerSchema>;
+```
+
+## 3. Pasang di Form 📝
+
+```tsx
+"use client";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+export default function RegisterPage() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }, // Nangkep error
+  } = useForm<RegisterForm>({
+    resolver: zodResolver(registerSchema), // Sambungin Zod ke Form
+  });
+
+  const onSubmit = (data: RegisterForm) => {
+    console.log("Data Valid:", data); // Cuma jalan kalau semua valid
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
+      {/* Input Username */}
+      <input {...register("username")} placeholder="Username" />
+      {/* Munculin error kalau ada */}
+      {errors.username && (
+        <p className="text-red-500">{errors.username.message}</p>
+      )}
+
+      {/* Input Email */}
+      <input {...register("email")} placeholder="Email" />
+      {errors.email && <p className="text-red-500">{errors.email.message}</p>}
+
+      <button type="submit">Daftar</button>
+    </form>
+  );
+}
+```

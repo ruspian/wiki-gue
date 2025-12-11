@@ -1,0 +1,124 @@
+import { Callout } from "nextra/components";
+
+# Optimization: SEO & Image 🚀
+
+Bikin website bagus itu percuma kalau:
+
+1.  Gak muncul di Google (SEO Buruk).
+2.  Loadingnya lemot gara-gara gambar kegedean.
+
+Next.js punya jurus jitu buat ngatasin ini.
+
+---
+
+## 1. Metadata (SEO) 🏷️
+
+Dulu di HTML biasa, kita sibuk ngedit tag `<head>` dan `<title>`.
+Di Next.js App Router, kita cukup export object bernama **`metadata`**.
+
+### A. Metadata Statis (Global)
+
+Biasanya ditaruh di `src/app/layout.tsx` biar berlaku ke semua halaman.
+
+```tsx
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Wiki Pian",
+  description: "Belajar Next.js dari nol sampai jago",
+  icons: "/favicon.ico",
+};
+```
+
+### B. Metadata Dinamis (Per Halaman)
+
+Gimana kalau judul halamannya harus sesuai nama produk? Kita pake `function generateMetadata`.
+
+```tsx
+// src/app/produk/[slug]/page.tsx
+
+export async function generateMetadata({ params }) {
+  // 1. Ambil data produk (misal dari API)
+  const produk = await ambilDataProduk(params.slug);
+
+  // 2. Return metadata sesuai data
+  return {
+    title: `${produk.nama} | Toko Pian`,
+    description: `Beli ${produk.nama} murah meriah!`,
+  };
+}
+```
+
+## 2. Image Optimization (next/image) 🖼️
+
+Jangan pernah pake tag `<img>` biasa di Next.js! Kenapa? Karena tag `<img>` itu bodoh. Dia bakal download gambar ukuran asli (misal 5MB) walaupun user cuma buka pake HP layar kecil.
+
+Next.js punya komponen `<Image />` yang pinter:
+
+    * **Auto Resize:** Otomatis ngecilin ukuran file sesuai layar user.
+
+    * **Lazy Load:** Gambar gak didownload kalau belum di-scroll (Hemat kuota).
+
+    * **Format Modern:** Otomatis ubah format jadi WebP/AVIF (lebih ringan).
+
+**Cara Pakai:**
+
+```tsx
+import Image from "next/image";
+import fotoProfil from "/public/foto.jpg"; // Gambar lokal
+
+export default function Home() {
+  return (
+    <div>
+      <h1>Profil Saya</h1>
+
+      {/* 1. Gambar Lokal (Di folder public) */}
+      <Image src={fotoProfil} alt="Foto Pian Ganteng" />
+
+      {/* 2. Gambar dari Internet (Remote) */}
+      <Image
+        src="[https://images.unsplash.com/photo-123](https://images.unsplash.com/photo-123)..."
+        alt="Pemandangan"
+        width={500} // Wajib diisi kalau gambar remote!
+        height={300}
+        className="rounded-lg object-cover"
+      />
+    </div>
+  );
+}
+```
+
+## 3. Konfigurasi Gambar Remote ⚙️
+
+Kalau lo pake gambar dari link luar (misal: unsplash.com, imgur.com), Next.js bakal NOLAK demi keamanan. Lo harus daftarin domainnya dulu.
+
+Buka file `next.config.js` (atau `next.config.mjs`) di `root` folder:
+
+```js
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com", // Izinkan domain ini
+      },
+      {
+        protocol: "https",
+        hostname: "i.imgur.com", // Izinkan domain ini
+      },
+    ],
+  },
+};
+
+export default nextConfig;
+```
+
+Jangan lupa restart server (`Ctrl + C` -> `npm run dev`) setelah ngedit file config ini.
+
+<Callout type="warning" emoji="🚧">
+  {" "}
+  **Peringatan:** Selalu tentukan `width` dan `height` kalau pake gambar remote.
+  Ini biar layout website lo gak "bergeser" (Layout Shift) pas gambar lagi loading.
+  Google benci banget Layout Shift.{" "}
+</Callout>

@@ -1,0 +1,80 @@
+import { Callout } from "nextra/components";
+
+# Middleware: Satpam & Proxy 👮
+
+Middleware adalah kode yang dieksekusi **SEBELUM** sebuah halaman selesai dimuat.
+File wajibnya bernama: **`middleware.ts`** di root project.
+
+Dia punya dua kekuatan utama:
+
+1.  **Satpam (Redirect):** Nendang user ke halaman lain.
+2.  **Proxy (Rewrite):** Nampilin konten dari URL lain tanpa ganti URL di browser.
+
+---
+
+## 1. Mode Satpam (Redirect) 🚧
+
+Ini dipake buat proteksi halaman (Authentication).
+URL browser **BERUBAH** (misal dari `/dashboard` jadi `/login`).
+
+```ts
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+
+export function middleware(request: NextRequest) {
+  const token = request.cookies.get("token");
+
+  // Kalau gak ada token, tendang ke login
+  if (!token) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+}
+```
+
+## 2. Mode Proxy (Rewrite) 🎭
+
+Ini fitur canggihnya. Lo bisa bikin URL `/blog` di website lo, padahal aslinya ngambil data dari https://medium.com/@username. URL browser TETAP `/blog`. User gak tau kalau itu sebenernya Medium.
+
+```tsx
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+
+export function middleware(request: NextRequest) {
+  // Kalau user buka /blog-luar
+  if (request.nextUrl.pathname.startsWith("/blog-luar")) {
+    // Tampilkan isi dari website lain (Proxy)
+    // Browser user tetep nampilin domain lo, padahal isinya dari luar
+    return NextResponse.rewrite(
+      new URL(
+        "[https://landing-page-lain.com](https://landing-page-lain.com)",
+        request.url
+      )
+    );
+  }
+}
+```
+
+**Kegunaan Proxy Mode:**
+
+    * **Multi-Tenant:** Bikin user1.website.com sebenernya ngakses /user/1.
+
+    * **Legacy Support:** Nampilin halaman dari website lama lo di domain baru secara diam-diam.
+
+    * **Masking API:** Sembunyiin URL API asli biar gak ketahuan user.
+
+## 3. Konfigurasi Matcher 🎯
+
+Biar middleware gak jalan di semua request (bikin lemot), atur matcher.
+
+```ts
+export const config = {
+  // Middleware cuma jalan di rute ini aja:
+  matcher: ["/dashboard/:path*", "/blog-luar/:path*"],
+};
+```
+
+<Callout type="info" emoji="💡">
+  {" "}
+  **Kesimpulan:** Middleware itu file `middleware.ts`. Tapi di dalamnya, lo bisa
+  milih mau jadi Satpam (Redirect) atau Joki (Rewrite/Proxy).{" "}
+</Callout>

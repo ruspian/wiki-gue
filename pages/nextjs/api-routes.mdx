@@ -1,0 +1,76 @@
+import { Callout } from "nextra/components";
+
+# API Routes: Bikin Backend Sendiri ⚙️
+
+Salah satu keajaiban Next.js adalah dia **Fullstack**.
+Selain bikin Tampilan (Frontend), dia juga bisa bikin **API (Backend)** di project yang sama.
+
+Di App Router (versi terbaru), fitur ini disebut **Route Handlers**.
+
+---
+
+## 1. Aturan Main 🛠️
+
+Kalau bikin Halaman, nama filenya `page.tsx`.
+Kalau bikin API, nama filenya **`route.ts`**.
+
+**Struktur Folder:**
+
+- `src/app/api/users/route.ts` -> URL: `localhost:3000/api/users`
+- `src/app/api/auth/login/route.ts` -> URL: `localhost:3000/api/auth/login`
+
+---
+
+## 2. Cara Bikin API (GET & POST) 📨
+
+Di dalam file `route.ts`, lo harus export function dengan nama HTTP Method-nya (`GET`, `POST`, `PUT`, `DELETE`).
+
+```ts
+import { NextResponse } from "next/server";
+
+// 1. Menangani Request GET (Ambil Data)
+export async function GET() {
+  const data = [
+    { id: 1, nama: "Pian", role: "Admin" },
+    { id: 2, nama: "Budi", role: "Member" },
+  ];
+
+  // Return JSON
+  return NextResponse.json(data);
+}
+
+// 2. Menangani Request POST (Terima/Kirim Data)
+export async function POST(request: Request) {
+  // Baca data yang dikirim user (Body)
+  const body = await request.json();
+
+  // Contoh: Simpan ke database (pura-pura)
+  console.log("Data diterima:", body);
+
+  return NextResponse.json({
+    message: "Data berhasil disimpan!",
+    data: body,
+  });
+}
+```
+
+Coba buka browser: http://localhost:3000/api/users. Boom! Muncul data `JSON`. Lo baru aja bikin REST API tanpa backend terpisah.
+
+## 3. Kapan Pake API Routes? 🤔
+
+Mungkin lo nanya: _"Bang, kan kita bisa fetch database langsung di page.tsx? Buat apa bikin API lagi?"_
+
+Bener. Tapi API Routes wajib dipake kalau:
+
+    * **Dipake Aplikasi Lain:** Misal lo punya aplikasi Android/iOS yang butuh data dari database lo.
+
+    * **Webhook:** Nerima notifikasi dari pihak ketiga (misal: Notifikasi pembayaran Midtrans/Stripe).
+
+    * **Client Component Fetching:** Lo butuh ambil data pas user klik tombol (di Client Component), jadi lo nembak ke API sendiri biar aman.
+
+<Callout type="warning" emoji="🔐">
+  {" "}
+  **Tips Keamanan:** Jangan pernah taruh Password Database atau API Key Rahasia di
+  Client Component (`page.tsx` dengan `'use client'`). Taruh logika rahasia itu di
+  dalam API Routes ini, karena file ini jalan di Server (Aman dari intip user).{" "}
+</Callout>
