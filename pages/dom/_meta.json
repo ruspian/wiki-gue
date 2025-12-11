@@ -1,0 +1,9 @@
+{
+  "intro": "Apa itu DOM?",
+  "selecting": "Selecting",
+  "manipulation": "Manipulation",
+  "events": "Event Listener",
+  "create": "Creating",
+  "traversal": "Navigasi / Traversal",
+  "bubbling": "Event Bubbling"
+}

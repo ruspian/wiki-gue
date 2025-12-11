@@ -1,0 +1,111 @@
+import { Callout } from "nextra/components";
+
+# Manipulation 💅
+
+Udah dapet elemennya? Sekarang saatnya kita jadi penata rias.
+Kita bisa ubah apapun yang tampil di layar user.
+
+Anggap kita udah nangkep elemen ini:
+
+```js
+const judul = document.querySelector("h1");
+```
+
+## 1. Ganti Tulisan (Text Content) 📝
+
+Ada dua cara utama buat ganti isi teks.
+
+### A. innerText (Aman & Biasa)
+
+Cuma ganti teks biasa. Kalau lo masukin tag HTML, bakal dianggap tulisan biasa.
+
+```js
+judul.innerText = "Selamat Datang, Bos!";
+// Output di layar: Selamat Datang, Bos!
+```
+
+### B. innerHTML (Sakti tapi Bahaya)
+
+Bisa masukin tag HTML (kayak bold, italic, span).
+
+```js
+judul.innerHTML = "Selamat <b>Datang</b>, <span style='color:red'>Bos!</span>";
+// Output: "Datang" jadi tebal, "Bos!" jadi merah.
+```
+
+<Callout type="error" emoji="💣">
+  {" "}
+  **Bahaya XSS (Cross Site Scripting):** Jangan pernah pake `innerHTML` buat nampilin
+  inputan dari user! Hacker bisa nyisipin script jahat &lt;script&gt;curiPassword()&lt;/script&gt;.
+  Selalu pake `innerText` kalau datanya dari user.{" "}
+</Callout>
+
+## 2. Ganti Gaya (Inline CSS) 🎨
+
+Kita bisa ubah CSS langsung lewat JS pake properti `.style.`
+
+**Aturan Penting:** Di CSS kita pake strip (background-color). Di JS, strip itu artinya "kurang" (matematika). Jadi kita ganti pake CamelCase.
+
+    * `background-color` -> `backgroundColor`
+
+    * `font-size` -> `fontSize`
+
+    * `margin-top` -> `marginTop`
+
+```js
+const kotak = document.querySelector(".kotak");
+
+kotak.style.backgroundColor = "blue"; // Jadi Biru
+kotak.style.fontSize = "50px"; // Jadi Gede
+kotak.style.display = "none"; // Ngilang (Hidden)
+```
+
+## 3. Ganti Atribut (Gambar & Link) 🔗
+
+Mau ganti gambar profil? Atau ganti link tujuan? Akses propertinya langsung.
+
+```js
+const gambar = document.querySelector("img");
+const link = document.querySelector("a");
+
+// Ganti sumber gambar
+gambar.src =
+  "[https://i.imgur.com/foto-baru.jpg](https://i.imgur.com/foto-baru.jpg)";
+
+// Ganti tujuan link
+link.href = "[https://google.com](https://google.com)";
+
+// Ganti ID atau Placeholder input
+const input = document.querySelector("input");
+input.placeholder = "Ketik password woy...";
+```
+
+## 4. Mainan Class ✨
+
+Daripada ganti style satu-satu pake `.style` (bikin kodingan kotor), mending kita ganti Class-nya aja. Biar **CSS** yang kerja.
+
+Pake properti `classList`.
+
+```js
+const body = document.querySelector("body");
+
+// 1. Nambah Class (.add)
+body.classList.add("dark-mode");
+
+// 2. Hapus Class (.remove)
+body.classList.remove("dark-mode");
+
+// 3. Saklar On/Off (.toggle) -> Paling Sering Dipake
+// Kalau belum ada, ditambahin. Kalau udah ada, dihapus.
+body.classList.toggle("dark-mode");
+```
+
+**Contoh Kasus Tombol Dark Mode:**
+
+```js
+const tombol = document.querySelector("#btn-dark");
+
+tombol.addEventListener("click", function () {
+  document.body.classList.toggle("mode-gelap");
+});
+```

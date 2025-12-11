@@ -3,6 +3,7 @@
   "javascript": "JavaScript",
   "typescript": "TypeScript",
   "cpp": "C++",
+  "dom": "DOM Manipulation",
   "contact": {
     "title": "Hubungi Gue",
     "type": "page"

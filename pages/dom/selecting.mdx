@@ -1,0 +1,81 @@
+import { Callout } from "nextra/components";
+
+# Selecting (Nangkep Elemen) 🕵️‍♂️
+
+Prinsip utama DOM: **"Select dulu, baru Manipulate."**
+Jangan harap lo bisa ngubah teks di layar kalau lo belum "megang" elemennya di kodingan JS.
+
+Ada banyak cara nangkep elemen, tapi lo cuma perlu hafal 2 jurus utama ini.
+
+## 1. `querySelector` ⚡
+
+Ini adalah cara paling modern, fleksibel, dan paling sering dipake.
+Cara nulis targetnya **SAMA PERSIS** kayak lo nulis selector di CSS.
+
+- Pake `#` buat ID.
+- Pake `.` buat Class.
+- Langsung nama tag buat Tag HTML.
+
+```js
+// 1. Nangkep berdasarkan ID
+const judul = document.querySelector("#judul-utama");
+
+// 2. Nangkep berdasarkan Class (Cuma ambil yg PERTAMA ketemu)
+const tombol = document.querySelector(".btn-login");
+
+// 3. Nangkep berdasarkan Tag
+const paragraf = document.querySelector("p");
+
+// 4. Nangkep yang spesifik (Nestor)
+// "Cari tombol type submit yang ada di dalam form"
+const submitBtn = document.querySelector("form button[type='submit']");
+```
+
+<Callout type="info">
+  {" "}
+  **Catatan:** `querySelector` cuma nangkep SATU elemen (yang paling atas/pertama
+  ketemu).{" "}
+</Callout>
+
+## 2. `querySelectorAll` 📦
+
+Gimana kalau lo mau nangkep **SEMUA** tombol di halaman web? Pake versi All.
+
+Hasilnya bukan satu `elemen`, tapi `NodeList` (mirip Array).
+
+```js
+// Nangkep SEMUA elemen yang punya class .kartu
+const semuaKartu = document.querySelectorAll(".kartu");
+
+// Kalo mau diubah, HARUS di-looping!
+// Gak bisa langsung: semuaKartu.style.color = "red" (ERROR!)
+
+semuaKartu.forEach((kartu) => {
+  kartu.style.color = "red"; // Ubah satu-satu
+});
+```
+
+## 3. getElementById 👴
+
+Ini cara jaman dulu sebelum ada `querySelector`. Dia cuma bisa nangkep `ID`. Kelebihannya? Performanya sedikit lebih ngebut (nano detik) dibanding `querySelector`.
+
+```js
+// Gak perlu pake tanda pagar (#) lagi
+const header = document.getElementById("header-utama");
+```
+
+## ☠️ Error Paling Sering: `Cannot read properties of null`
+
+Lo pasti bakal sering ketemu error ini. **Artinya:** JS Gagal Nangkep.
+
+```js
+const hantu = document.querySelector("#elemen-gaib");
+
+// Kalau #elemen-gaib gak ada di HTML, variabel 'hantu' isinya NULL.
+
+// Pas lo coba akses...
+hantu.style.color = "red";
+// ❌ ERROR MELEDAK! "Cannot read properties of null (reading 'style')"
+```
+
+**Solusinya:** Pastikan **ID/Class** di **HTML** sama persis dengan yang di JS (Hati-hati Typo!).

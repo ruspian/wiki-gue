@@ -1,0 +1,102 @@
+import { Callout } from "nextra/components";
+
+# Event Listener: Pasang Kuping 👂
+
+Website yang diem aja itu ngebosenin (kayak baca koran).
+Biar interaktif, kita harus pasang **Event Listener**.
+
+Logikanya gini:
+**"Eh Tombol, tolong dengerin ya. Kalau ada yang KLIK elo, jalanin fungsi ini."**
+
+## 1. Rumus Dasar 📐
+
+```js
+// 1. Tangkep elemennya
+const tombol = document.querySelector("#btn-sakti");
+
+// 2. Pasang kuping
+// elemen.addEventListener("kejadian", fungsi);
+
+tombol.addEventListener("click", function () {
+  alert("Woy! Jangan dipencet!");
+  document.body.style.backgroundColor = "red";
+});
+```
+
+## 2. Event yang Sering Dipake 📅
+
+Ada ratusan `event`, tapi lo cuma perlu hafal 4 ini buat bertahan hidup.
+
+### A. Click (Klik Mouse) 🖱️
+
+Paling umum. Buat tombol, link, atau gambar.
+
+```js
+const btn = document.querySelector("button");
+
+btn.addEventListener("click", () => {
+  console.log("Tombol diklik!");
+});
+```
+
+### B. Input (Ngetik Real-time) ⌨️
+
+Kejadian setiap kali user nekan tombol keyboard di dalam form. Cocok buat fitur Live Preview.
+
+```js
+const inputNama = document.querySelector("#input-nama");
+const teksPreview = document.querySelector("#hasil");
+
+inputNama.addEventListener("input", function () {
+  // Ambil apa yang diketik (value)
+  const isi = inputNama.value;
+
+  // Tampilin langsung
+  teksPreview.innerText = isi;
+});
+```
+
+### C. Submit (Kirim Form) 📩
+
+Khusus buat elemen `<form>`. **PENTING:** Form itu punya sifat alami mau me-refresh halaman (Reload). Kita harus cegah itu.
+
+```js
+const formLogin = document.querySelector("#form-login");
+
+formLogin.addEventListener("submit", function (e) {
+  e.preventDefault(); // 🛑 MANTRA SAKTI: Cegah refresh halaman!
+
+  console.log("Form dikirim, tapi halaman gak reload. Aman.");
+});
+```
+
+### D. Scroll (Gulung Layar) 📜
+
+Biasanya buat animasi Navbar yang berubah warna pas di-scroll.
+
+```js
+window.addEventListener("scroll", function () {
+  console.log("Lagi scrolling nih...");
+});
+```
+
+## 3. Parameter e (Event Object) 🕵️‍♂️
+
+Pernah liat kodingan kayak `function(e)` atau `function(event)`? `e` adalah Laporan Kejadian. Isinya detail tentang event yang baru aja terjadi.
+
+```js
+document.addEventListener("click", function (e) {
+  // e.target = Elemen apa yang diklik?
+  console.log("Lo baru aja ngeklik:", e.target);
+
+  // e.clientX = Posisi mouse di koordinat X
+  // e.clientY = Posisi mouse di koordinat Y
+  console.log(`Posisi Mouse: ${e.clientX}, ${e.clientY}`);
+});
+```
+
+<Callout type="info" emoji="💡">
+  {" "}
+  **Tips:** Selalu biasain pake `e.preventDefault()` kalau mainan sama Form atau
+  Link (&lt;a&gt;), biar browser gak ngelakuin aksi default-nya (pindah halaman/refresh).{" "}
+</Callout>

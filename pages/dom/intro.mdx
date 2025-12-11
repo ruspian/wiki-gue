@@ -1,0 +1,57 @@
+import { Callout } from "nextra/components";
+
+# Apa itu DOM? 🤔
+
+JavaScript tanpa DOM itu kayak **Otak tanpa Badan**. 🧠
+Dia pinter ngitung matematika di console, tapi **gak bisa ngapa-ngapain** di layar website (gak bisa ubah warna, gak bisa munculin popup, gak bisa gerakin animasi).
+
+**DOM (Document Object Model)** adalah jembatan yang bikin JavaScript bisa "ngobrol" dan "ngacak-ngacak" HTML.
+
+## Analogi Pohon Keluarga 🌳
+
+Saat browser loading website lo, dia mengubah HTML menjadi **Pohon Objek**.
+
+- **`document`**: Ini adalah akarnya (Root). Pintu gerbang utama.
+- **`<body>`**: Anak dari document.
+- **`<h1>`**, **`<p>`**, **`<button>`**: Cucu-cucunya.
+
+Tugas JavaScript lewat DOM adalah:
+
+1.  **Nangkep Anak/Cucu** (Selecting).
+2.  **Dandanin Mereka** (Manipulation).
+3.  **Dengerin Curhatan Mereka** (Event Listening).
+
+---
+
+## Contoh Bedanya
+
+### Tanpa DOM (Logic Doang)
+
+```js
+const nama = "Pian";
+const umur = 20;
+console.log(nama + " umurnya " + umur);
+// Hasilnya cuma teks di Console hitam. User gak liat apa-apa.
+```
+
+### Dengan DOM (Visual)
+
+```js
+// 1. Nangkep elemen <h1>
+const judul = document.querySelector("h1");
+
+// 2. Ubah isinya biar tampil di layar
+judul.innerText = "Halo Pian, Selamat Datang!";
+judul.style.color = "blue";
+```
+
+<Callout type="warning" emoji="⚛️"> 
+**Peringatan buat Next.js/React User:**
+
+Materi ini adalah Vanilla JavaScript (JS Murni).
+
+Kalau lo pake React/Next.js, lo **JARANG BANGET** nyentuh **DOM** secara manual kayak gini (pake `querySelector` dkk). React punya cara sendiri buat update tampilan (pake `State`).
+
+Tapi lo tetep **WAJIB** paham ini. Kenapa? Karena di balik layar, React itu sebenernya mainan **DOM** juga. Kalau lo paham **DOM**, lo bakal lebih jago nge-debug React.
+
+</Callout>

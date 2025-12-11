@@ -1,0 +1,96 @@
+import { Callout } from "nextra/components";
+
+# DOM Traversal: Jalan-jalan 🧭
+
+Kadang kita gak bisa nangkep elemen langsung pake ID atau Class.
+Kadang kita cuma punya **"Si Anak"** (tombol), dan kita butuh nemuin **"Si Bapak"** (container) buat diubah.
+
+Ini namanya **Traversal** (Navigasi Pohon DOM).
+
+## 1. Parent 👨‍👦
+
+Mencari elemen pembungkus (Ortu).
+
+```js
+const tombol = document.querySelector(".btn-delete");
+
+// Mencari bapak kandung (Satu tingkat di atas)
+const bapaknya = tombol.parentElement;
+
+// Mencari leluhur spesifik (Naik terus sampe ketemu)
+// Misal: Cari <div> pembungkus terdekat yang punya class "kartu"
+const kartu = tombol.closest(".kartu");
+```
+
+<Callout type="info" emoji="💡">
+  {" "}
+  **Pro Tip:** `closest()` itu sakti banget. Dia bakal nyari ke atas terus sampe
+  nemu selector yang cocok. Paling sering dipake buat fitur "Hapus Item".{" "}
+</Callout>
+
+## 2. Children 👶
+
+Mencari elemen di dalamnya.
+
+```js
+const list = document.querySelector("ul");
+
+// Mengambil semua anak (HTML Collection)
+const anakAnak = list.children;
+
+// Mengambil anak pertama & terakhir
+const sulung = list.firstElementChild;
+const bungsu = list.lastElementChild;
+
+// Ubah warna anak pertama
+sulung.style.color = "red";
+```
+
+## 3. Sibling 🤝
+
+Mencari tetangga (elemen yang sejajar).
+
+```js
+const saya = document.querySelector(".active");
+
+// Tetangga sebelah kanan (Selanjutnya)
+const adik = saya.nextElementSibling;
+
+// Tetangga sebelah kiri (Sebelumnnya)
+const kakak = saya.previousElementSibling;
+```
+
+## 4. Studi Kasus: Tombol Hapus 🗑️
+
+Ini kasus paling nyata. Lo punya banyak list. Tiap list ada tombol hapusnya. Pas tombol diklik, cuma list ITU aja yang kehapus.
+
+HTML:
+
+```html
+<div class="item">
+  <span>Telur</span>
+  <button class="hapus">X</button>
+</div>
+<div class="item">
+  <span>Susu</span>
+  <button class="hapus">X</button>
+</div>
+```
+
+JavaScript:
+
+```js
+const semuaTombol = document.querySelectorAll(".hapus");
+
+semuaTombol.forEach((btn) => {
+  btn.addEventListener("click", function (e) {
+    // e.target = tombol yang diklik
+    // Kita cari bapaknya (div .item), terus kita hapus
+    const bapaknya = e.target.parentElement;
+
+    bapaknya.remove();
+  });
+});
+```
+
+Tanpa Traversal (`parentElement`), lo gak bakal tau tombol mana yang ngehapus item mana.

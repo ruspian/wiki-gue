@@ -1,0 +1,69 @@
+import { Callout } from "nextra/components";
+
+# Event Bubbling & Delegation 🫧
+
+Ini adalah teknik rahasia buat **Hemat Memori** dan ngatasin masalah **Elemen Dinamis**.
+
+## 1. Konsep Bubbling (Gelembung) 🛁
+
+Bayangin lo ngelempar batu ke dasar kolam. Gelembung udaranya bakal naik ke atas, kan?
+Event di JS juga gitu.
+
+Kalau lo klik sebuah tombol:
+
+1.  Event `click` kena ke **Tombol** dulu.
+2.  Terus naik ke **Bapaknya** (Container).
+3.  Terus naik ke **Kakeknya** (Body).
+4.  Sampe ke paling atas (Document).
+
+Jadi, kalau Bapaknya dipasang `addEventListener`, dia **BISA TAU** kalau anaknya diklik.
+
+---
+
+## 2. Masalah Cara Lama 😫
+
+Biasanya kita pasang listener di tiap tombol kayak gini:
+
+```js
+const semuaTombol = document.querySelectorAll(".hapus");
+
+// Kalau ada 1000 tombol, lo bikin 1000 Event Listener di memori.
+// BOROS BANGET!
+semuaTombol.forEach((btn) => {
+  btn.addEventListener("click", hapusItem);
+});
+```
+
+**Masalah Fatal:** Kalau lo nambahin item baru pake JS (`createElement`), item baru itu **GAK PUNYA** `event listener` (karena dia lahir belakangan). Jadi tombol hapusnya gak bakal jalan.
+
+## 3. Solusi: Event Delegation (Titip ke Bapak) 🤝
+
+Daripada pasang di tombol satu-satu, mending pasang SATU AJA di bapaknya (misal `<ul>` atau `container`).
+
+```js
+const container = document.querySelector("#list-belanja");
+
+// Pasang kuping di BAPAKNYA
+container.addEventListener("click", function (e) {
+  // Cek: Apakah yang diklik itu tombol hapus?
+  if (e.target.className == "btn-hapus") {
+    // Ya! Hapus bapak dari tombol itu (si <li>)
+    e.target.parentElement.remove();
+
+    console.log("Tombol hapus diklik!");
+  }
+});
+```
+
+Keuntungan Delegation:
+
+    * **Hemat Memori:** Cuma 1 Event Listener buat ribuan tombol.
+
+    * **Anti Ribet:** Item baru yang ditambahkan belakangan **OTOMATIS** bisa diklik juga. Gak perlu pasang listener ulang.
+
+<Callout type="info" emoji="💡">
+  {" "}
+  **Analogi:** Daripada HRD nyuruh 100 karyawan lapor satu-satu (capek), mending
+  HRD bilang ke Ketua Divisi: _"Eh, kalau ada anak buah lo yang mau cuti, lapor ke
+  gue ya."_ Lebih efisien kan?{" "}
+</Callout>

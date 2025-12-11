@@ -1,0 +1,86 @@
+import { Callout } from "nextra/components";
+
+# Bikin & Hapus Elemen (God Mode) 🏗️
+
+Kadang kita butuh nambahin elemen secara dinamis.
+Contoh: Pas user klik "Tambah Barang", muncul kotak baru di keranjang belanja. Gak mungkin kan kita tulis HTML-nya manual satu-satu?
+
+Kita pake JS buat generatenya.
+
+## 1. Langkah Pembuatan (3 Tahap Wajib) 🧬
+
+Jangan kebalik urutannya!
+
+### Tahap 1: Create Element (Bikin Wadahnya)
+
+Elemen ini masih melayang di memori (dunia gaib), belum tampil di layar.
+
+```js
+// Bikin tag <p> baru
+const paragrafBaru = document.createElement("p");
+
+// Bikin tag <div> baru
+const kotakBaru = document.createElement("div");
+```
+
+### Tahap 2: Isi Konten & Style
+
+Masa wadahnya kosong? Kita isi dulu teks atau class-nya.
+
+```js
+paragrafBaru.innerText = "Halo, saya elemen baru!";
+paragrafBaru.classList.add("teks-merah"); // Kasih style biar ganteng
+```
+
+### Tahap 3: Append 🌍
+
+Ini langkah terpenting. Tempelkan elemen gaib tadi ke dalam HTML biar kelihatan sama user.
+
+```js
+// Tempel ke dalam <body> (Paling bawah)
+document.body.appendChild(paragrafBaru);
+
+// Atau tempel ke dalam elemen khusus
+const wadah = document.querySelector("#container-barang");
+wadah.appendChild(kotakBaru);
+```
+
+## 2. Menghapus Elemen 🗑️
+
+Kalau ada pembuatan, ada juga penghapusan. Caranya gampang, tangkep elemennya, terus panggil `.remove()`.
+
+```
+const iklan = document.querySelector(".iklan-mengganggu");
+
+// Hapus dari muka bumi selamanya
+iklan.remove();
+```
+
+### 3. Studi Kasus: Tombol Tambah List ✅
+
+Gabungan dari Event Listener + Create Element. Bikin fitur To-Do List sederhana.
+
+```js
+const btnTambah = document.querySelector("#btn-add");
+const listWadah = document.querySelector("ul"); // Wadah <ul>
+
+btnTambah.addEventListener("click", function () {
+  // 1. Bikin elemen <li>
+  const itemBaru = document.createElement("li");
+
+  // 2. Isi teksnya
+  itemBaru.innerText = "Tugas Baru (Belajar JS)";
+
+  // 3. Masukin ke dalam <ul>
+  listWadah.appendChild(itemBaru);
+});
+```
+
+<Callout type="warning" emoji="⚛️"> 
+**Peringatan Keras buat React Dev:**
+
+Di React / Next.js, kita **DILARANG** pake cara appendChild kayak gini buat nampilin list data.
+
+Kenapa? Karena React punya cara yang jauh lebih efisien pake Mapping Array (`map`). Jadi, pelajari konsep DOM ini buat pengetahuan dasar aja, tapi jangan dipake mentah-mentah pas lo udah masuk materi React nanti.
+
+ </Callout>
