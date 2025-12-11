@@ -1,0 +1,83 @@
+import { Callout } from "nextra/components";
+
+# Custom Hooks: Bikin Senjata Sendiri 🛠️
+
+Prinsip programmer malas: **DRY (Don't Repeat Yourself).**
+Jangan mengulang kodingan yang sama.
+
+Kalau lo punya logika yang dipake di banyak tempat (misal: tombol Toggle, Fetch Data, Cek Online/Offline), jangan dicopas.
+Bikin **Custom Hook**.
+
+## Syarat Custom Hook
+
+1.  Harus berupa **Function**.
+2.  Namanya **WAJIB** diawali kata **`use`** (misal: `useToggle`, `useFetch`).
+3.  Boleh manggil Hooks lain di dalemnya (`useState`, `useEffect`).
+
+---
+
+## Studi Kasus: `useToggle` 🔘
+
+Lo sering kan bikin state buat buka/tutup Modal, Menu, atau Spoiler?
+Logikanya selalu sama: `true` -> `false` -> `true`.
+
+### Sebelum (Repetitive 😫)
+
+```jsx
+// Di Component A
+const [isModalOpen, setIsModalOpen] = useState(false);
+const toggleModal = () => setIsModalOpen(!isModalOpen);
+
+// Di Component B
+const [isMenuOpen, setIsMenuOpen] = useState(false);
+const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+```
+
+### Sesudah (Pake Custom Hook 😎)
+
+#### Langkah 1: Bikin Hook-nya (biasanya di file hooks/useToggle.js)
+
+```jsx
+import { useState } from "react";
+
+// Ini dia Custom Hook kita
+export function useToggle(initialValue = false) {
+  const [state, setState] = useState(initialValue);
+
+  // Fungsi buat nuker nilai (True <-> False)
+  const toggle = () => setState(!state);
+
+  // Return data & fungsinya biar bisa dipake orang lain
+  return [state, toggle];
+}
+```
+
+#### Langkah 2: Pake di Component mana aja
+
+```jsx
+import { useToggle } from "./hooks/useToggle";
+
+export default function App() {
+  // Pake senjatanya!
+  const [isModalOpen, toggleModal] = useToggle(false);
+  const [isMenuOpen, toggleMenu] = useToggle(true);
+
+  return (
+    <div>
+      <button onClick={toggleModal}>
+        {isModalOpen ? "Tutup Modal" : "Buka Modal"}
+      </button>
+
+      <button onClick={toggleMenu}>
+        {isMenuOpen ? "Tutup Menu" : "Buka Menu"}
+      </button>
+    </div>
+  );
+}
+```
+
+<Callout type="info" emoji="💡">
+  {" "}
+  **Intinya:** Custom Hook itu cara kita ngekstrak LOGIKA (bukan Tampilan/JSX) biar
+  bisa dipake rame-rame.{" "}
+</Callout>

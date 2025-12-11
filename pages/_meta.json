@@ -4,6 +4,7 @@
   "typescript": "TypeScript",
   "cpp": "C++",
   "dom": "DOM Manipulation",
+  "react": "React",
   "contact": {
     "title": "Hubungi Gue",
     "type": "page"

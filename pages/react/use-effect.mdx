@@ -1,0 +1,157 @@
+import { Callout } from "nextra/components";
+
+# useEffect: Efek Samping ⚡
+
+Tugas utama Component itu simpel: **Tampilin UI ke Layar (Render).**
+
+Tapi kadang, kita butuh ngelakuin hal di luar urusan tampilan, misalnya:
+
+- Ngambil data dari API (Fetch).
+- Ganti judul tab browser (`document.title`).
+- Pasang timer / interval.
+
+Hal-hal "kotor" di luar rendering ini disebut **Side Effect** (Efek Samping).
+React nyediain tempat khusus buat ngerjain ini biar gak ganggu proses render utama, namanya **`useEffect`**.
+
+---
+
+## 1. Rumus Dasar 📐
+
+`useEffect` menerima dua parameter:
+
+1.  **Fungsi Eksekusi:** Apa yang mau dilakuin?
+2.  **Dependency Array (`[]`):** Kapan mau dilakuin? (Ini Kuncinya!)
+
+```jsx
+import { useEffect } from "react";
+
+useEffect(() => {
+  // 1. Kode yang mau dijalankan
+  console.log("Efek samping jalan!");
+}, []); // 2. Array pemicu (Dependency)
+```
+
+## 2. Tiga Mode useEffect (Wajib Hafal) 🧠
+
+Perilaku useEffect berubah drastis tergantung isi Array-nya.
+
+#### Mode 1: Array Kosong [] (Sekali Seumur Hidup)
+
+**Artinya:** _"Jalanin CUMA SATU KALI pas komponen pertama kali muncul (Mount)."_ **Cocok buat:** Ambil Data API.
+
+```jsx
+useEffect(() => {
+  console.log("Halo! Aku baru lahir.");
+
+  // Ambil data dari server
+  fetch(
+    "[https://api.github.com/users/ruspian](https://api.github.com/users/ruspian)"
+  )
+    .then((res) => res.json())
+    .then((data) => console.log(data));
+}, []); // <--- KOSONG = Cuma sekali
+```
+
+#### Mode 2: Array Berisi [data] (Si Pemantau)
+
+**Artinya:** _"Jalanin pas pertama kali, DAN setiap kali variabel data berubah."_ **Cocok buat:** Autosave atau Validasi Input.
+
+```jsx
+const [count, setCount] = useState(0);
+
+useEffect(() => {
+  console.log(`Angka berubah jadi: ${count}`);
+
+  // Misal: Update judul tab browser
+  document.title = `Klik ke-${count}`;
+}, [count]); // <--- Pantau si 'count'
+```
+
+#### Mode 3: Gak Ada Array (Mode Spam) 🚫
+
+**Artinya:** _"Jalanin SETIAP KALI ada perubahan APAPUN di komponen ini."_ Ini **BAHAYA** dan jarang dipake. Bisa bikin lemot.
+
+```jsx
+useEffect(() => {
+  console.log("Aku jalan terus woy!");
+}); // <--- Gak ada kurung siku []
+```
+
+## 3. Studi Kasus: Fetch Data API 🌐
+
+Ini template yang bakal lo pake 90% di kerjaan.
+
+```jsx
+import { useState, useEffect } from "react";
+
+export default function UserList() {
+  const [users, setUsers] = useState([]); // Wadah data
+  const [loading, setLoading] = useState(true); // Status loading
+
+  useEffect(() => {
+    // 1. Ambil data
+    fetch(
+      "[https://jsonplaceholder.typicode.com/users](https://jsonplaceholder.typicode.com/users)"
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        setUsers(data); // 2. Simpen ke State
+        setLoading(false); // 3. Matiin loading
+      });
+  }, []); // <--- PENTING: Pake [] biar gak looping fetch terus menerus!
+
+  if (loading) return <p>Sabar ya, lagi loading...</p>;
+
+  return (
+    <ul>
+      {users.map((user) => (
+        <li key={user.id}>{user.name}</li>
+      ))}
+    </ul>
+  );
+}
+```
+
+## 4. Cleanup Function (Bersih-bersih) 🧹
+
+Kadang efek samping kita ninggalin "sampah". **Contoh:** `setInterval (Timer)` atau `Event Listener`. Kalau komponennya dihapus (pindah halaman), sampahnya harus dibuang, kalau enggak memori bocor (Memory Leak).
+
+**Caranya:** `Return` sebuah function di dalam `useEffect`.
+
+```jsx
+useEffect(() => {
+  // 1. Mulai Timer
+  const timer = setInterval(() => {
+    console.log("Detik berlalu...");
+  }, 1000);
+
+  // 2. Fungsi Pembersih (Dijalankan pas komponen mati/unmount)
+  return () => {
+    clearInterval(timer); // Matiin timer
+    console.log("Timer dimatiin, bye!");
+  };
+}, []);
+```
+
+## ☠️ Peringatan Maut: Infinite Loop
+
+Hati-hati kalau lo ngubah State di dalam `useEffect`, terus `State` itu lo jadiin Dependency juga.
+
+```jsx
+// ❌ JANGAN DITIRU
+const [angka, setAngka] = useState(0);
+
+useEffect(() => {
+  setAngka(angka + 1); // Ubah state...
+}, [angka]); // ...yang mentrigger useEffect ini lagi.
+```
+
+**Akibatnya:**
+
+    * Effect jalan -> Ubah Angka.
+
+    * Angka berubah -> Trigger Effect lagi.
+
+    * Effect jalan -> Ubah Angka lagi.
+
+    * **LOOPING SAMPE KIAMAT / BROWSER CRASH.**

@@ -1,0 +1,80 @@
+import { Callout } from "nextra/components";
+
+# Optimization: useMemo & useCallback 🚀
+
+Secara default, React itu **Paranoid**.
+Setiap kali ada perubahan kecil di Parent, dia bakal nge-render ulang **SEMUA** anaknya, walaupun si anak gak berubah datanya.
+
+Buat aplikasi kecil, ini gak masalah.
+Tapi buat aplikasi gede yang datanya ribuan, ini bikin **Lemot**.
+
+Solusinya: **Memoization** (Nyontek hasil sebelumnya).
+
+---
+
+## 1. `useMemo` (Cache Hasil Hitungan) 🧮
+
+Bayangin lo punya fungsi matematika yang berat banget (butuh 5 detik buat ngitung).
+Lo gak mau fungsi itu jalan tiap kali lo ngetik di input form kan?
+
+`useMemo` gunanya buat: **"Inget hasil hitungan ini. Jangan ngitung ulang KECUALI bahan bakunya berubah."**
+
+```jsx
+import { useState, useMemo } from "react";
+
+export default function BeratBanget() {
+  const [angka, setAngka] = useState(0);
+  const [text, setText] = useState("");
+
+  // Fungsi berat (simulasi)
+  const hasilKuadrat = useMemo(() => {
+    console.log("Lagi mikir keras..."); // Cek console
+    return angka * angka * 1000;
+  }, [angka]); // <--- Dependency: Cuma hitung ulang kalau 'angka' berubah
+
+  return (
+    <div>
+      <h1>Hasil: {hasilKuadrat}</h1>
+
+      <button onClick={() => setAngka(angka + 1)}>Tambah Angka</button>
+
+      {/* Kalau lo ngetik di sini, 'hasilKuadrat' GAK BAKAL dihitung ulang */}
+      {/* Karena 'angka' gak berubah. React nyontek hasil lama. */}
+      <input value={text} onChange={(e) => setText(e.target.value)} />
+    </div>
+  );
+}
+```
+
+## 2. useCallback (Cache Fungsi) 🎣
+
+Setiap kali komponen di-render ulang, semua function di dalemnya DIBUAT ULANG (alamat memorinya beda). Ini bikin anak-anak komponen ngira: _"Eh, fungsi dari Bapak berubah nih, gue harus render ulang!"_
+
+`useCallback` gunanya buat: _"Kunci fungsi ini biar gak dibuat ulang terus menerus."_
+
+```jsx
+import { useCallback } from "react";
+
+// Fungsi ini gak bakal "re-created" setiap render
+// Kecuali dependency-nya berubah
+const handleClick = useCallback(() => {
+  console.log("Tombol diklik");
+}, []); // [] artinya fungsi ini abadi, gak pernah berubah
+```
+
+## Kapan Harus Pake? 🤔
+
+<Callout type="warning" emoji="🛑"> 
+**Jangan Over-Optimization!**
+
+Jangan pake `useMemo` dan `useCallback` di SEMUA tempat. Memoization itu sendiri butuh memori.
+
+**Pake Cuma Kalau:**
+
+    * Aplikasinya terasa nge-lag/berat.
+
+    * Ada perhitungan matematika yang kompleks.
+
+    * Ada komponen anak yang sering re-render gak jelas (React.memo).
+
+</Callout>

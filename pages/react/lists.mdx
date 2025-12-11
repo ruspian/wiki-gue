@@ -1,0 +1,136 @@
+import { Callout } from "nextra/components";
+
+# Lists & Keys: Looping Data 📝
+
+Di HTML biasa, kalau mau bikin list, kita copas `<li>` berkali-kali.
+Di React, data kita biasanya bentuknya **Array of Objects**.
+
+Gimana cara ngubah Array Data jadi Tampilan HTML?
+Jawabannya: **Mapping (`.map`)**.
+
+---
+
+## 1. Cara Looping (The React Way) 🔄
+
+Misal kita punya data mahasiswa:
+
+```js
+const mahasiswa = [
+  { id: 1, nama: "Otong" },
+  { id: 2, nama: "Sentot" },
+  { id: 3, nama: "Siti" },
+];
+```
+
+Kita mau ubah jadi list `<li>`. Ingat, di dalem JSX `{}` kita gak bisa pake for loop. Kita harus pake `.map()`.
+
+```jsx
+export default function AbsenKelas() {
+  const mahasiswa = [
+    { id: 1, nama: "Otong" },
+    { id: 2, nama: "Sentot" },
+    { id: 3, nama: "Siti" },
+  ];
+
+  return (
+    <ul>
+      {/* Loop setiap item, ubah jadi <li> */}
+      {mahasiswa.map((maba) => (
+        <li key={maba.id}>{maba.nama}</li>
+      ))}
+    </ul>
+  );
+}
+```
+
+## 2. Masalah "Key Prop" 🔑
+
+Coba lo apus `key={maba.id}` di kodingan atas. React bakal teriak di Console browser (F12):
+
+    > **Warning:** `Each child in a list should have a unique "key" prop.`
+
+Kenapa React Bawel? React butuh "KTP" (Identitas Unik) buat setiap item di list. **Tujuannya:** Biar React tau item mana yang berubah, ditambah, atau dihapus.
+**Analogi Absen Kelas 👨‍🏫**
+
+Guru (React) mau ngecek murid.
+
+    * Kalau murid pindah tempat duduk, Guru bingung kalau cuma ngafalin posisi duduknya.
+
+    * Tapi kalau Guru ngecek NIS (Nomor Induk Siswa), mau duduk di mana aja tetep ketauan siapa dia.
+
+`key` adalah NIS itu.
+
+## 3. Aturan Memilih Key 📜
+
+    * **Wajib Unik:** Gak boleh ada dua item punya Key yang sama di satu list.
+
+    * **Pake ID dari Database:** Ini paling aman (misal `user.id`, `product.sku`).
+
+## ☠️ WORO-WORO: Pake Index sebagai Key
+
+Banyak tutorial sesat ngajarin gini:
+
+```jsx
+// ❌ JANGAN LAKUKAN INI (Kecuali kepepet banget)
+{
+  mahasiswa.map((maba, index) => <li key={index}>{maba.nama}</li>);
+}
+```
+
+Kenapa Bahaya? Bayangin lo punya `list: [A, B, C]`.
+
+    * A (Index 0)
+
+    * B (Index 1)
+
+    * C (Index 2)
+
+Kalau lo hapus A (si Index 0), maka si B tiba-tiba jadi Index 0. React bakal ngira: _"Oh, si A berubah jadi B"_, padahal aslinya si A ilang. Ini bisa bikin bug parah di input form atau animasi.
+
+<Callout type="error" emoji="🚫">
+  {" "}
+  **AWAS!!!:** Selalu usahakan pake ID Unik dari data (`maba.id`). Pake `Index (i)`
+  cuma boleh kalau list-nya STATIS (gak bakal nambah/kurang/diurutkan ulang).{" "}
+</Callout>
+## 4. Studi Kasus: List Komentar 💬
+
+Gabungan `useState`, `map`, dan `key`.
+
+```jsx
+import { useState } from "react";
+
+export default function Komentar() {
+  const [komen, setKomen] = useState([
+    { id: 1, text: "Mantap bang!" },
+    { id: 2, text: "Tutorialnya daging semua." },
+  ]);
+
+  const [input, setInput] = useState("");
+
+  function tambahKomen() {
+    // Bikin object baru dengan ID acak (biar unik)
+    const baru = {
+      id: Math.random(),
+      text: input,
+    };
+
+    // Masukin ke array (Spread Operator)
+    setKomen([...komen, baru]);
+    setInput(""); // Kosongin input
+  }
+
+  return (
+    <div>
+      <input value={input} onChange={(e) => setInput(e.target.value)} />
+      <button onClick={tambahKomen}>Kirim</button>
+
+      <ul>
+        {komen.map((item) => (
+          // Key pake ID, jangan pake index!
+          <li key={item.id}>{item.text}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+```

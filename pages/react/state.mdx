@@ -1,0 +1,153 @@
+import { Callout } from "nextra/components";
+
+# State: Ingatan Komponen 🧠
+
+Apa bedanya **Props** dan **State**?
+
+- **Props:** Data dari luar (dikirim Bapak). Sifatnya **Read-Only** (gak bisa diubah).
+- **State:** Data pribadi komponen itu sendiri. Sifatnya **Bisa Berubah**.
+
+## Analogi Ingatan Manusia 🙇‍♂️
+
+- **Props:** Nama lo (Otong). Lo gak bisa ubah nama lo sendiri sembarangan (itu pemberian ortu).
+- **State:** Perasaan lo (Lapar / Kenyang). Lo bisa ubah perasaan lo (makan -> kenyang).
+
+---
+
+## 1. Masalah Variabel Biasa 🤦‍♂️
+
+Kenapa gak pake variabel biasa (`let`) aja?
+
+```jsx
+// ❌ JANGAN DITIRU
+export default function Counter() {
+  let angka = 0; // Variabel biasa
+
+  function tambah() {
+    angka = angka + 1;
+    console.log(angka); // Di console nambah: 1, 2, 3...
+  }
+
+  return (
+    <div>
+      <h1>Skor: {angka}</h1> {/* TAPI DI LAYAR TETEP 0! */}
+      <button onClick={tambah}>Tambah</button>
+    </div>
+  );
+}
+```
+
+**Kenapa Gagal?** Karena React **GAK TAU** kalau angka berubah. React itu buta sama variabel biasa. Dia gak bakal nge-render ulang layar.
+
+## 2. Solusi: useState (Hook Sakti) 🎣
+
+Biar React tau ada data yang berubah, kita harus lapor pake function khusus namanya `Hook`. `Hook` buat bikin state namanya `useState`.
+**Rumus Wajib Hafal:**
+
+**`const [data, ubahData] = useState(nilaiAwal);`**
+
+    * **data:** Variabel buat nyimpen nilai (misal: skor).
+
+    * **ubahData:** Tombol remote buat ngubah nilai (misal: setSkor).
+
+    * **nilaiAwal:** Start dari berapa? (misal: 0).
+
+**Contoh Benar:**
+
+```jsx
+// 1. Import dulu dari React
+import { useState } from "react";
+
+export default function Counter() {
+  // 2. Deklarasi State (Mulai dari 0)
+  const [skor, setSkor] = useState(0);
+
+  function tambah() {
+    // 3. JANGAN ubah langsung (skor = skor + 1) -> HARAM!
+    // Pake fungsi pengubahnya
+    setSkor(skor + 1);
+  }
+
+  return (
+    <div>
+      {/* 4. Tampilkan state */}
+      <h1>Skor saat ini: {skor}</h1>
+      <button onClick={tambah}>Tambah Skor</button>
+    </div>
+  );
+}
+```
+
+**Apa yang terjadi di belakang layar?**
+
+    * User klik tombol.
+
+    * setSkor(skor + 1) dipanggil.
+
+    * React sadar: "Woy, State berubah nih!"
+
+    * React MENGHAPUS tampilan lama, dan MENGGAMBAR ULANG (Re-render) tampilan baru dengan skor yang udah nambah.
+
+    * Angka di layar berubah jadi 1.
+
+## 3. Aturan Emas State 📜
+
+<Callout type="error" emoji="🚫">
+ **JANGAN PERNAH MENGUBAH STATE SECARA LANGSUNG!**
+
+`skor = 10;` -- GAK BOLEH. React gak bakal tau, layar gak bakal berubah. `setSkor(10);` -- GASLAH. Ini cara sopan minta React update data.
+
+</Callout>
+## 4. Studi Kasus: Tombol Like (Toggle) 👍
+
+Gimana cara bikin tombol yang bisa berubah warna (Like / Unlike)? Pake tipe data `Boolean` (true/false).
+
+```jsx
+import { useState } from "react";
+
+export default function LikeButton() {
+  // Awalnya belum di-like (false)
+  const [isLiked, setIsLiked] = useState(false);
+
+  function pencetTombol() {
+    // Ubah jadi kebalikannya (Kalau true jadi false, false jadi true)
+    setIsLiked(!isLiked);
+  }
+
+  return (
+    <div>
+      {/* Ubah teks dan warna berdasarkan state */}
+      <button
+        onClick={pencetTombol}
+        style={{ backgroundColor: isLiked ? "blue" : "gray" }}
+      >
+        {isLiked ? "Sudah di-Like 👍" : "Like Dong 👎"}
+      </button>
+    </div>
+  );
+}
+```
+
+## 5. Input Form 📝
+
+Gimana cara nangkep apa yang diketik user? Kita "ikat" inputan user ke State.
+
+```jsx
+import { useState } from "react";
+export default function FormNama() {
+  const [nama, setNama] = useState(""); // Awalnya kosong
+
+  return (
+    <div>
+      <input
+        type="text"
+        value={nama} // 1. Input menampilkan isi state
+        onChange={(e) => setNama(e.target.value)} // 2. Kalau ngetik, update state
+        placeholder="Ketik nama lo..."
+      />
+
+      <p>Halo, {nama}!</p>
+    </div>
+  );
+}
+```

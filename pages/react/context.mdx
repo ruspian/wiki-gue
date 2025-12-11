@@ -1,0 +1,87 @@
+import { Callout } from "nextra/components";
+
+# Context API: Anti Props Drilling 📡
+
+Pernah denger istilah **Props Drilling**?
+Itu adalah kondisi nyebelin di mana lo harus ngoper data dari Komponen A ke Komponen Z, ngelewatin B, C, D, E... padahal B, C, D, E gak butuh data itu.
+
+Mereka cuma jadi kurir doang.
+
+## Analogi TOA Masjid 📢
+
+- **Props:** Lo bisikin pesan berantai dari orang ke orang. Lama & rawan salah.
+- **Context:** Lo ngomong pake TOA Masjid. Semua orang di kampung (Component Tree) bisa denger langsung tanpa perantara.
+
+---
+
+## 3 Langkah Pake Context 🦶
+
+Kita butuh 3 hal:
+
+1.  **Wadah (Context):** Tempat nyimpen data.
+2.  **Penyiar (Provider):** Yang nyebarin data (biasanya di paling atas/App).
+3.  **Pendengar (Consumer/useContext):** Yang butuh data.
+
+### 1. Bikin Wadahnya
+
+```jsx
+import { createContext } from "react";
+
+// Bikin wadah kosong (bisa diisi default value kalau mau)
+export const UserContext = createContext(null);
+```
+
+## 2. Pasang Penyiar (Provider)
+
+Bungkus semua komponen yang berhak nerima data pake `<UserContext.Provider>`.
+
+```jsx
+import { useState } from "react";
+import { UserContext } from "./UserContext"; // Import wadah tadi
+
+export default function App() {
+  const [user, setUser] = useState("Pian");
+
+  return (
+    // Semua yang ada di dalam Provider ini bisa akses 'user'
+    // Value = data yang mau disebar
+    <UserContext.Provider value={user}>
+      <Navbar />
+      <MainContent />
+      <Footer />
+    </UserContext.Provider>
+  );
+}
+```
+
+## 3. Si Pendengar (useContext)
+
+Misal ada komponen Profile yang ada jauh di dalem Navbar. Dia bisa langsung akses data tanpa lewat Navbar.
+
+```jsx
+import { useContext } from "react";
+import { UserContext } from "./UserContext"; // Import wadah tadi
+
+export default function Profile() {
+  // Ambil data langsung dari udara!
+  const user = useContext(UserContext);
+
+  return <div>Halo, {user}</div>;
+}
+```
+
+## Kapan Pake Context? 🤔
+
+Gunakan kalau data itu bersifat Global (Dibutuhin banyak komponen di tempat beda-beda). Contoh:
+
+    * Tema (Dark/Light Mode).
+
+    * Data User Login (Auth).
+
+    * Bahasa (Indo/Inggris).
+
+<Callout type="warning" emoji="⚠️">
+  {" "}
+  **Jangan Overdosis:** Jangan simpen **SEMUA** data di `Context`. Kalau datanya
+  cuma dipake Bapak & Anak, tetep pake Props aja. `Context` itu buat data keroyokan.{" "}
+</Callout>

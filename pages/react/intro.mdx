@@ -1,0 +1,54 @@
+import { Callout } from "nextra/components";
+
+# Kenapa React? (Bye DOM Manual) 👋
+
+Jujur, lo capek kan nulis `document.createElement`, `innerText`, `appendChild` berkali-kali cuma buat bikin satu tombol?
+
+Itu namanya **Imperative Programming** (Lo suruh langkah per langkah kayak kuli).
+React pake gaya **Declarative Programming** (Lo pesen hasil akhirnya kayak bos, React yang kerjain).
+
+## Analogi Restoran 🍳
+
+- **DOM Manual (JS Biasa):**
+  Lo masuk dapur, potong bawang sendiri, nyalain kompor sendiri, masak nasi sendiri, taruh di piring sendiri. Ribet, lama, dan rawan salah garem.
+- **React:**
+  Lo duduk manis, panggil pelayan: _"Mbak, pesen Nasi Goreng satu."_
+  Lo gak peduli gimana cara masaknya, yang penting Nasi Goreng dateng di meja.
+
+## Perbandingan Kodingan
+
+Coba liat bedanya, kita mau bikin tombol merah yang kalau diklik muncul alert.
+
+### Cara Lama (DOM JS Biasa) 😫
+
+Lo harus manual banget ngurusin elemennya.
+
+```js
+const btn = document.createElement("button");
+btn.className = "btn-merah";
+btn.innerText = "Klik Saya";
+btn.addEventListener("click", () => alert("Dor!"));
+
+// Masukin ke body (jangan lupa ini, kalau lupa gak muncul)
+document.body.appendChild(btn);
+```
+
+### Cara Modern (React) 😎
+
+Lo cuma tulis apa yang lo mau (mirip HTML).
+
+```jsx
+<button className="btn-merah" onClick={() => alert("Dor!")}>
+  Klik Saya
+</button>
+```
+
+**Kesimpulan**
+
+React itu ibarat "Mandor Proyek". Lo gak perlu lagi kotor-kotoran ngurusin semen dan batu bata (`DOM API`). Lo cukup kasih gambar desainnya (`JSX`), biarin React yang bangun gedungnya buat lo.
+
+<Callout type="info" emoji="⚛️">
+  {" "}
+  **Fakta:** React menggunakan sesuatu yang disebut Virtual DOM. Dia ngecek bagian
+  mana yang berubah, dan cuma ngupdate bagian itu aja. Makanya React itu Cepat.{" "}
+</Callout>

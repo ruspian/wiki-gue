@@ -1,0 +1,106 @@
+import { Callout } from "nextra/components";
+
+# Lifting State Up: Berbagi Data Antar Saudara 🤝
+
+Di React, data (Props) cuma bisa ngalir **KE BAWAH** (Parent -> Child).
+Komponen Kakak **GAK BISA** ngoper data langsung ke Komponen Adik. Mereka itu terisolasi.
+
+## Analogi Rebutan Mainan 🧸
+
+Ada dua anak (Kakak & Adik) mau main game yang sama.
+
+- Kalau PS-nya ada di kamar Kakak, Adik gak bisa main.
+- Kalau PS-nya ada di kamar Adik, Kakak gak bisa main.
+
+**Solusinya:** PS-nya taruh di **Ruang Tengah (Parent)**.
+Bapaknya yang megang stik, anak-anaknya tinggal request main.
+
+---
+
+## 1. Masalah: State Terpisah 💔
+
+Misal lo punya 2 komponen:
+
+1.  `InputRupiah`: Buat ngetik angka.
+2.  `DisplayDolar`: Buat nampilin hasil konversi.
+
+Kalau `state`-nya ada di dalam `InputRupiah`, si `DisplayDolar` gak bakal tau angkanya berapa. Dia buta.
+
+---
+
+## 2. Solusi: Angkat ke Parent (Bapaknya) 🚀
+
+Kita pindahin `useState` dari anak, ke komponen pembungkus (Parent).
+
+### Langkah 1: Siapkan Parent (Pemegang Kuasa)
+
+```jsx
+import { useState } from "react";
+
+// Parent Component
+export default function KonverterUang() {
+  // State ditaruh di sini, biar bisa dibagi ke anak-anak
+  const [rupiah, setRupiah] = useState(0);
+
+  return (
+    <div style={{ padding: 20, border: "1px solid black" }}>
+      <h1>Konverter Uang</h1>
+
+      {/* Oper Data & Fungsi Pengubah ke Anak 1 */}
+      <InputRupiah uang={rupiah} ubahUang={setRupiah} />
+
+      {/* Oper Data doang ke Anak 2 */}
+      <DisplayDolar uang={rupiah} />
+    </div>
+  );
+}
+```
+
+### Langkah 2: Anak 1 (Input)
+
+Dia gak punya state sendiri. Dia cuma Numpang state bapaknya.
+
+```jsx
+function InputRupiah({ uang, ubahUang }) {
+  return (
+    <div>
+      <label>Rupiah: </label>
+      <input
+        type="number"
+        value={uang}
+        // Pas ngetik, lapor ke Bapak (pake fungsi dari props)
+        onChange={(e) => ubahUang(e.target.value)}
+      />
+    </div>
+  );
+}
+```
+
+### Langkah 3: Anak 2 (Display)
+
+Dia cuma nerima data mateng dari Bapaknya.
+
+```jsx
+function DisplayDolar({ uang }) {
+  const dolar = uang / 15000; // Kurs 15.000
+  return (
+    <div style={{ marginTop: 10, fontWeight: "bold" }}>
+      Hasil: ${dolar.toFixed(2)}
+    </div>
+  );
+}
+```
+
+## 3. Kapan Harus "Lift Up"? 🤔
+
+Gunakan teknik ini kalau:
+
+    * Ada dua komponen atau lebih yang butuh Data yang Sama.
+
+    * Data di satu komponen mempengaruhi tampilan komponen lain.
+
+<Callout type="info" emoji="💡">
+  {" "}
+  **Intinya:** Cari "Leluhur Persekutuan Terdekat" (Closest Common Ancestor) dari
+  kedua komponen itu, terus taruh useState-nya di sana.{" "}
+</Callout>

@@ -1,0 +1,79 @@
+import { Callout } from "nextra/components";
+
+# useRef: Akses DOM & Variabel Abadi 📍
+
+Di React, kita jarang banget pake `document.querySelector(".kelas")`.
+Kenapa? Karena React punya cara sendiri buat nandain elemen, namanya **Ref**.
+
+`useRef` punya dua kegunaan sakti:
+
+---
+
+## 1. Mengakses Elemen DOM (Pengganti querySelector) 🎯
+
+Misal lo mau bikin tombol: **"Pas diklik, kursor langsung fokus ke input username"**.
+
+```jsx
+import { useRef } from "react";
+
+export default function FormLogin() {
+  // 1. Bikin Ref (Awalnya null)
+  const inputRef = useRef(null);
+
+  function fokuskanInput() {
+    // 3. Akses elemen aslinya pake .current
+    // Ini sama kayak document.querySelector(...)
+    inputRef.current.focus();
+    inputRef.current.style.backgroundColor = "yellow"; // Bisa ubah style juga
+  }
+
+  return (
+    <div>
+      {/* 2. Tempel Ref ke elemen HTML */}
+      <input ref={inputRef} type="text" placeholder="Username" />
+      <button onClick={fokuskanInput}>Fokus!</button>
+    </div>
+  );
+}
+```
+
+## 2. Variabel yang Gak Memicu Re-render 👻
+
+Ingat `useState`? Kalau nilainya berubah, layar digambar ulang (Render). `useRef` itu beda. Kalau nilainya berubah, Layar GAK digambar ulang.
+
+Cocok buat nyimpen data di belakang layar, kayak Interval ID atau status tracking.
+
+```jsx
+import { useRef } from "react";
+
+export default function StopWatch() {
+  // Nyimpen ID Timer biar bisa distop nanti
+  // Kita gak butuh nampilin ID ini ke layar, jadi pake Ref aja
+  const timerId = useRef(null);
+
+  function start() {
+    timerId.current = setInterval(() => {
+      console.log("Tik Tok...");
+    }, 1000);
+  }
+
+  function stop() {
+    clearInterval(timerId.current); // Ambil ID dari Ref
+  }
+
+  return (
+    <>
+      <button onClick={start}>Start</button>
+      <button onClick={stop}>Stop</button>
+    </>
+  );
+}
+```
+
+## Bedanya State vs Ref 🥊
+
+| Fitur        | useState                  | useRef                          |
+| :----------- | :------------------------ | :------------------------------ |
+| Tujuan       | Data yang tampil di layar | Akses DOM / Data belakang layar |
+| Jika Berubah | Re-render (Layar update)  | Diam aja (Layar gak update)     |
+| Cara Akses   | Langsung nama variabel    | Pake `.current`                 |

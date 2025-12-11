@@ -1,0 +1,64 @@
+import { Callout } from "nextra/components";
+
+# Components 🧱
+
+Prinsip utama React: **Jangan bikin website sebagai satu halaman raksasa.**
+Pecahlah website lo jadi potongan-potongan kecil yang disebut **Component**.
+
+Bayangin lo main **Lego**.
+
+- Ada Lego "Kepala".
+- Ada Lego "Tangan".
+- Ada Lego "Kaki".
+- Lo gabungin semuanya jadi satu "Robot" (Website).
+
+Di React, Header, Sidebar, Tombol, Footer, itu semua adalah Lego (Component) yang terpisah.
+
+## Cara Bikin Component
+
+Di React modern, Component itu cuma **Function JavaScript Biasa** yang mengembalikan (return) tampilan UI.
+
+### Syarat Wajib Component:
+
+1.  Nama Function **HARUS Huruf Besar** di awal (`Tombol`, bukan `tombol`).
+2.  Harus me-return **JSX** (HTML ala React).
+
+```jsx
+// 1. Ini Component Kecil (Lego)
+function TombolLogin() {
+  return <button>Login Sekarang</button>;
+}
+
+// 2. Ini Component Header (Lego)
+function Header() {
+  return <h1>Selamat Datang di Website Gue</h1>;
+}
+
+// 3. Ini Component Utama (Robot Gabungan)
+// Biasanya bernama 'App' atau 'Page'
+export default function HomePage() {
+  return (
+    <div>
+      <Header />
+      <p>Silakan masuk dulu bos.</p>
+
+      {/* Kita pasang Component Tombol di sini */}
+      <TombolLogin />
+
+      {/* Bisa dipake berkali-kali (Reusable) */}
+      <TombolLogin />
+    </div>
+  );
+}
+```
+
+### Kenapa Harus Gini?
+
+Biar **Re-usable** (Bisa dipake ulang). Kalau lo mau ganti warna tombol Login, lo cukup ganti di `function TombolLogin` aja. Otomatis **SEMUA** tombol login di website lo bakal berubah warnanya. Gak perlu cari satu-satu.
+
+<Callout type="warning" emoji="⚠️">
+  {" "}
+  **Ingat:** Kalau lo nulis nama `component` pake huruf kecil (misal &lt;header /&gt;),
+  React bakal bingung dan ngira itu tag HTML biasa. Jadi Pastikan Huruf Besar (&lt;Header
+  /&gt;).{" "}
+</Callout>

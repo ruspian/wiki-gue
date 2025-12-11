@@ -1,0 +1,126 @@
+import { Callout } from "nextra/components";
+
+# JSX: HTML Oplosan 🧪
+
+JSX (JavaScript XML) adalah syntax "Ajaib" yang bikin kita bisa nulis struktur UI (mirip HTML) langsung di dalam file JavaScript.
+
+Tapi ingat: **JSX ITU BUKAN HTML.**
+Dia cuma "menyamar" jadi HTML biar kita gampang nulisnya. Di belakang layar, dia bakal berubah jadi JavaScript murni.
+
+Karena dia aslinya JavaScript, ada **Hukum Alam** yang harus lo patuhi.
+
+---
+
+## 1. Hukum Satu Bungkus (Parent) 🥡
+
+Di JavaScript, sebuah function cuma boleh me-return **SATU** nilai.
+Gak boleh me-return dua barang sekaligus tanpa wadah.
+
+**❌ Salah (Ambyar):**
+React bingung, ini mau return `h1` atau `p`?
+
+```jsx
+return (
+  <h1>Judul</h1>
+  <p>Paragraf</p>
+);
+```
+
+#### ✅ **Benar (Dibungkus Div):** Masukin ke dalam satu wadah (Div).
+
+```jsx
+return (
+  <div>
+    <h1>Judul</h1>
+    <p>Paragraf</p>
+  </div>
+);
+```
+
+#### ✅ **Benar (Fragment - Wadah Gaib):** Kalau lo males nambahin `<div>` sampah yang ngotorin kodingan, pake Fragment `<> ... </>`.
+
+```jsx
+return (
+  <>
+    <h1>Judul</h1>
+    <p>Paragraf</p>
+  </>
+);
+```
+
+## 2. Hukum className (Bukan class) 🏷️
+
+Di **HTML** biasa, kita pake `class="kotak"`. Di React, itu **HARAM**.
+
+Kenapa? Karena kata `class` udah dipake sama `JavaScript` buat bikin **Class OOP**. React ngalah dan ganti nama jadi `className`.
+
+```jsx
+// ❌ Salah
+<div class="header">...</div>
+
+// ✅ Benar
+<div className="header">...</div>
+```
+
+## 3. Hukum Tag Penutup (Self-Closing) 🚪
+
+`HTML` itu pemaaf. Lo lupa nutup tag `<br>` atau `<img>`, dia tetep jalan. `JSX` itu GALAK. Semua tag harus ditutup.
+
+```jsx
+// ❌ Salah (HTML Biasa)
+<img src="foto.jpg">
+<br>
+<input type="text">
+
+// ✅ Benar (JSX)
+<img src="foto.jpg" />  {/* Pake garis miring di akhir */}
+<br />
+<input type="text" />
+```
+
+## 4. Kurung Kurawal {} 💪
+
+Ini fitur paling sakti. Lo bisa nyelipin `Variabel` JavaScript ke dalam HTML pake tanda `{}`.
+
+Apapun yang ada di dalam `{ ... }` akan dieksekusi sebagai kode JavaScript.
+
+```jsx
+export default function Profil() {
+  const nama = "Pian";
+  const gaji = 5000000;
+  const foto =
+    "[https://i.imgur.com/kucing.jpg](https://i.imgur.com/kucing.jpg)";
+
+  return (
+    <div className="kartu">
+      <img src={foto} />
+
+      {/* Panggil variabel string */}
+      <h2>Halo, {nama}</h2>
+
+      {/* Panggil variabel number & Matematika */}
+      <p>Gaji setahun: {gaji * 12}</p>
+
+      {/* Logic sederhana (Ternary) */}
+      <p>Status: {gaji > 3000000 ? "Kaya" : "Miskin"}</p>
+    </div>
+  );
+}
+```
+
+<Callout type="warning" emoji="⚠️"> **Batasan `{}`:** Lo cuma bisa masukin `Expression` (sesuatu yang menghasilkan nilai). Lo GAK BISA masukin statement kayak `if (bla) { ... }` atau `for loop` langsung di dalam `{}`. </Callout>
+## 5. Inline Style (CSS dalam JS) 🎨
+
+**Di HTML biasa:** `style="color: red; background-color: black;"`. Di JSX, style itu adalah Object JavaScript.
+
+    * Pake dua kurung kurawal `{{ ... }}`.
+
+    * Propertinya pake camelCase.
+
+```jsx
+// color: red (String)
+// backgroundColor: black (CamelCase)
+<h1 style={{ color: "red", backgroundColor: "black" }}>
+  Judul Merah Background Hitam
+</h1>
+```

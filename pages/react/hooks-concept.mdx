@@ -1,0 +1,98 @@
+import { Callout } from "nextra/components";
+
+# Konsep Hooks & Aturan Main 🪝
+
+Sering liat kodingan React yang depannya pake kata **`use`**?
+`useState`, `useEffect`, `useRef`...
+
+Itu namanya **React Hooks**.
+Secara harfiah, _"Hook"_ artinya **Cantolan** atau **Kail**.
+
+## 1. Filosofi: Superpower buat Function 🦸‍♂️
+
+Dulu (sebelum tahun 2019), React itu terbagi dua kasta:
+
+1.  **Function Component:** Kasta sudra. Cuma bisa nampilin HTML doang. Gak punya ingatan (State), gak bisa ngambil data API.
+2.  **Class Component:** Kasta bangsawan. Punya semua fitur canggih, tapi kodingannya **RIBET BANGET** (pake `this`, `constructor`, `bind`).
+
+**Hooks hadir sebagai Revolusi.**
+Hooks adalah "Senjata" atau "Superpower" yang bisa **dicantolkan** ke Function Component biasa, biar dia jadi sakti setara Class Component.
+
+- Mau punya ingatan? **Pake (use) State.**
+- Mau punya efek samping? **Pake (use) Effect.**
+- Mau akses DOM? **Pake (use) Ref.**
+
+Sekarang, kita hampir gak pernah lagi pake Class Component. _Function + Hooks is King._
+
+---
+
+## 2. Koleksi Senjata (Hooks Bawaan) 🎒
+
+React udah nyediain banyak senjata standar. Ini yang paling sering dipake:
+
+| Nama Hook        | Fungsi                                                        | Analogi                                                  |
+| :--------------- | :------------------------------------------------------------ | :------------------------------------------------------- |
+| **`useState`**   | Nyimpen data yang bisa berubah.                               | **Otak/Ingatan**. Biar inget skor, input user, dll.      |
+| **`useEffect`**  | Jalanin kode pas ada kejadian tertentu (loading, update).     | **Refleks/Indera**. Pas halaman kebuka, lakuin X.        |
+| **`useRef`**     | Nangkep elemen DOM atau nyimpen nilai tanpa re-render.        | **Sticky Note**. Catatan kecil yang gak ganggu tampilan. |
+| **`useContext`** | Ngoper data ke cucu cicit tanpa lewat bapak (Props Drilling). | **Teleportasi**. Kirim paket langsung ke tujuan.         |
+
+Lo juga bisa bikin senjata sendiri alias **Custom Hooks** (misal: `useOnlineStatus` buat ngecek internet).
+
+---
+
+## 3. The Rules of Hooks (Hukum Alam) ⚖️
+
+Hooks itu sakti, tapi dia punya **2 Aturan Keramat**.
+Kalau lo langgar, React bakal marah besar dan ngasih Error Merah: _"Rendered fewer hooks than expected"_.
+
+### Aturan 1: Hanya di Paling Atas (Top Level) 🔝
+
+Lo **GAK BOLEH** manggil Hooks di dalam:
+
+- `if` (Percabangan)
+- `for` (Looping)
+- Function biasa yang bukan Component.
+
+**❌ Salah (Haram):**
+
+```jsx
+function App() {
+  const [login, setLogin] = useState(false);
+
+  if (login) {
+    // 🛑 GAK BOLEH! Hook di dalam IF
+    const [nama, setNama] = useState("Pian");
+  }
+}
+```
+
+✅ **Benar (JOS):** Taruh semua Hooks di baris-baris awal function, sebelum logika apapun.
+
+```jsx
+function App() {
+  const [login, setLogin] = useState(false);
+  const [nama, setNama] = useState("Pian"); // Aman, taruh di atas
+
+  if (login) {
+    // Lakukan sesuatu...
+  }
+}
+```
+
+### Aturan 2: Cuma di React Function ⚛️
+
+Jangan panggil Hooks di file JavaScript biasa (utils.js). Hooks cuma boleh dipanggil di:
+
+    * React Component (Function yang depannya Huruf Besar).
+
+    * Custom Hooks lain (Function yang depannya use).
+
+<Callout type="error" emoji="💣"> 
+**Kenapa Aturannya Ketat Banget?**
+
+React itu ngandelin Urutan. Dia nyatet: _"Hook ke-1 itu useState nama, Hook ke-2 itu useEffect"_.
+
+Kalau lo taruh di dalem if, terus kondisinya false, urutannya jadi kacau. React bakal bingung: _"Loh, kemaren ada Hook di sini, kok sekarang ilang?_" -> CRASH.
+
+</Callout>

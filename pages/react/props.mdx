@@ -1,0 +1,145 @@
+import { Callout } from "nextra/components";
+
+# Props: Kirim Paket Data 📦
+
+**Props** (singkatan dari _Properties_) adalah cara Component saling ngobrol.
+Lebih tepatnya: Cara **Parent** (Induk) ngirim data ke **Child** (Anak).
+
+## Analogi GoFood 🛵
+
+Bayangin lo mesen GoFood.
+Lo (Parent) pesen ke Driver (Child):
+
+1.  "Bang, beli Nasi Goreng."
+2.  "Pedesnya Level 5."
+3.  "Jangan pake timun."
+
+Instruksi itu adalah **Props**.
+Driver (Component) cuma jalanin tugas sesuai instruksi yang lo kasih.
+
+---
+
+## 1. Masalah Tanpa Props (Hardcode) 😫
+
+Misal lo mau bikin Kartu Nama.
+Kalau lo tulis namanya langsung di dalem component, lo harus bikin banyak component buat orang yang beda-beda.
+
+```jsx
+// Component A
+function KartuOtong() {
+  return <h1>Halo, saya Otong</h1>;
+}
+
+// Component B
+function KartuSentot() {
+  return <h1>Halo, saya Sentot</h1>;
+}
+```
+
+**BOROS KODINGAN!** Bayangin kalau ada 1000 karyawan. Masa bikin 1000 function?
+
+## 2. Solusi Pake Props (Dinamis) 😎
+
+Kita bikin Satu Cetakan aja, tapi isinya bisa berubah tergantung data yang dikirim.
+
+#### Langkah 1: Child Menerima Data
+
+Di function component, tambahin parameter props.
+
+```jsx
+// Menerima paket bernama 'props'
+function Kartu(props) {
+  // props itu bentuknya Object: { nama: "...", job: "..." }
+  return (
+    <div className="card">
+      <h1>Halo, saya {props.nama}</h1>
+      <p>Pekerjaan: {props.job}</p>
+    </div>
+  );
+}
+```
+
+#### Langkah 2: Parrent Mengirim Data
+
+Pas make component-nya, kita kasih `"Atribut"` HTML (ini yang disebut ngirim props).
+
+```jsx
+export default function App() {
+  return (
+    <div>
+      {/* Kirim data Otong */}
+      <Kartu nama="Otong" job="Programmer" />
+
+      {/* Kirim data Sentot (Pake cetakan yang sama!) */}
+      <Kartu nama="Sentot" job="Kang Bakso" />
+
+      {/* Kirim data Siti */}
+      <Kartu nama="Siti" job="HRD Galak" />
+    </div>
+  );
+}
+```
+
+## 3. Destructuring (Cara Gaul) ✨
+
+Nulis `props.nama`, `props.job`, `props.hobi` itu capek. Programmer React biasanya langsung bongkar paketnya di pintu masuk.
+
+```jsx
+// ✅ Cara Modern (Langsung ambil isinya)
+function Kartu({ nama, job }) {
+  return (
+    <div className="card">
+      {/* Gak perlu nulis 'props.' lagi */}
+      <h1>Halo, saya {nama}</h1>
+      <p>Pekerjaan: {job}</p>
+    </div>
+  );
+}
+```
+
+## 4. Aturan Suci Props 📜
+
+<Callout type="error" emoji="🚫">
+ Props itu **READ-ONLY** (Gak Boleh Diubah Anak).
+
+Child cuma boleh **TERIMA** dan **TAMPILKAN**. Child **GAK BOLEH** ngubah data yang dikirim parrentnya.
+
+</Callout>
+
+❌ **Salah (Durhaka):**
+
+```jsx
+function Kartu({ nama }) {
+  nama = "Joko"; // ERROR! Gak boleh ngubah props.
+  return <h1>{nama}</h1>;
+}
+```
+
+Kalau mau data yang bisa berubah (misal: skor game, isi form), jangan pake `Props`. Pake `State` (Materi selanjutnya).
+
+## 5. Props Spesial: children 👶
+
+Pernah mikir kenapa kita nulis tombol kayak gini:` <button>Klik Saya</button>` Bukan kayak gini: `<button text="Klik Saya" />` ?
+
+Itu karena React punya props spesial bernama `children`. Isi apapun yang ada di Antara Tag Pembuka dan Penutup akan masuk ke props.`children`.
+
+```jsx
+// Komponen Pembungkus (Wrapper)
+function KotakSpesial({ children }) {
+  return (
+    <div style={{ border: "5px solid red", padding: "20px" }}>
+      {children} {/* Konten yang diselipin bakal muncul di sini */}
+    </div>
+  );
+}
+
+// Cara Pakai
+export default function App() {
+  return (
+    <KotakSpesial>
+      <h1>Judul ini dibungkus kotak merah!</h1>
+      <p>Paragraf ini juga kena.</p>
+    </KotakSpesial>
+  );
+}
+```

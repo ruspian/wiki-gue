@@ -1,0 +1,146 @@
+import { Callout } from "nextra/components";
+
+# Forms: Input & Submit 📝
+
+Di HTML biasa, elemen `<input>` itu mandiri. Dia nyimpen apa yang lo ketik di dalam dirinya sendiri.
+Di React, kita gak percaya sama HTML. Kita mau **React State** yang megang kendali penuh.
+
+Ini disebut **Controlled Component**.
+
+## 1. Konsep "Boneka Tali" 🎎
+
+Bayangin Input itu boneka.
+
+- **Tali 1 (`value`)**: React nyuruh Input: _"Woy, tampilin teks ini!"_
+- **Tali 2 (`onChange`)**: Input lapor React: _"Bos, user lagi ngetik huruf 'A' nih!"_
+
+### Rumus Wajib:
+
+```jsx
+<input
+  value={state}                {/* Tali 1: Input disuruh nampilin State */}
+  onChange={e => setState(...)} {/* Tali 2: Kalau ngetik, update State */}
+/>
+```
+
+## 2. Single Input (Satu Lawan Satu) 🥊
+
+Buat form sederhana (cuma nama).
+
+```jsx
+import { useState } from "react";
+
+export default function FormNama() {
+  const [nama, setNama] = useState("");
+
+  function gantiNama(e) {
+    // e.target.value = Apa yang diketik user
+    setNama(e.target.value);
+  }
+
+  return (
+    <form>
+      <label>Nama Lengkap:</label>
+      <input
+        type="text"
+        value={nama} // 1. Sumber kebenaran dari State
+        onChange={gantiNama} // 2. Update state pas ngetik
+      />
+      <p>Preview: {nama}</p>
+    </form>
+  );
+}
+```
+
+## 3. Multiple Inputs (Jurus Object) 📦
+
+Gimana kalau form-nya ada Nama, Email, Umur, Alamat? Masak bikin 4 useState? Capek bos.
+
+Mending pake Satu State Object.
+
+```jsx
+export default function FormDaftar() {
+  // Satu State buat rame-rame
+  const [form, setForm] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+
+  function handleChange(e) {
+    // Ambil nama field (misal: "email") dan isinya
+    const { name, value } = e.target;
+
+    setForm({
+      ...form, // 1. Copy data lama (Spread Operator) - PENTING!
+      [name]: value, // 2. Update field yang berubah doang
+    });
+  }
+
+  return (
+    <form>
+      {/* Jangan lupa kasih atribut 'name' yang sama dengan key state */}
+      <input
+        name="username"
+        value={form.username}
+        onChange={handleChange}
+        placeholder="Username"
+      />
+
+      <input
+        name="email"
+        value={form.email}
+        onChange={handleChange}
+        placeholder="Email"
+      />
+
+      <input
+        name="password"
+        type="password"
+        value={form.password}
+        onChange={handleChange}
+        placeholder="Password"
+      />
+    </form>
+  );
+}
+```
+
+<Callout type="warning" emoji="⚠️">
+  {" "}
+  Jangan Lupa `...form` (Spread Operator)! Kalau lo lupa nulis `...form`, data lama
+  bakal KEHAPUS semua. Lo cuma nyisain data yang baru diketik. **Jadi:** Copy dulu
+  yang lama, baru timpa yang baru.{" "}
+</Callout>
+## 4. Submit Form (Cegah Reload) 🛑
+
+**HTML punya kebiasaan buruk:** Kalau tombol Submit diklik, dia bakal Reload Halaman. Di React (SPA), kita dilarang reload halaman.
+
+Pake `e.preventDefault()`.
+
+```jsx
+function handleSubmit(e) {
+  e.preventDefault(); // MANTRA SAKTI: "Browser, jangan reload ya!"
+
+  // Kirim data ke API
+  console.log("Data dikirim:", form);
+  alert("Pendaftaran Berhasil!");
+}
+
+return (
+  <form onSubmit={handleSubmit}>
+    {/* Input-input di sini... */}
+    <button type="submit">Daftar</button>
+  </form>
+);
+```
+
+## Rangkuman Form React 📝
+
+    * **Controlled:** Input nilainya dikontrol State.
+
+    * **Two-Way:** value nampilin state, onChange ngubah state.
+
+    * **Object State:** Pake `...spread` buat handle banyak input sekaligus.
+
+    * **Prevent Default:** Biar gak reload pas submit.

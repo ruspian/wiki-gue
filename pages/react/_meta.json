@@ -1,0 +1,16 @@
+{
+  "intro": "Kenapa React?",
+  "components": "Components",
+  "jsx": "JSX",
+  "props": "Props",
+  "hooks-concept": "Konsep Hooks & Aturan Main",
+  "state": "State & useState",
+  "use-effect": "useEffect",
+  "lists": "Lists & Keys",
+  "forms": "Forms",
+  "lifting-state": "Lifting State Up",
+  "context": "Context API",
+  "use-ref": "useRef",
+  "custom-hooks": "Custom Hooks",
+  "performance": "Optimization"
+}
