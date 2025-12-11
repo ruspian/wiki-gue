@@ -1,5 +1,6 @@
 {
   "intro": "Kenapa React?",
+  "setup": "Install & Setup Project",
   "components": "Components",
   "jsx": "JSX",
   "props": "Props",
@@ -12,5 +13,7 @@
   "context": "Context API",
   "use-ref": "useRef",
   "custom-hooks": "Custom Hooks",
-  "performance": "Optimization"
+  "performance": "Optimization",
+  "router": "React Router",
+  "tailwind": "Tailwind Styling"
 }

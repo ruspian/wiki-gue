@@ -1,0 +1,119 @@
+import { Callout } from "nextra/components";
+
+# React Router: Pindah Halaman 🚦
+
+Secara bawaan, React itu cuma **Single Page Application (SPA)**.
+Artinya, dia cuma punya SATU file HTML (`index.html`).
+
+Terus gimana caranya kita bikin halaman `/about`, `/contact`, atau `/login`?
+Kita pake **Ilusi Optik** bernama **Routing**.
+
+Saat user klik link "About", browser **GAK** request halaman baru ke server.
+React cuma **MENGGANTI** komponen yang tampil di layar. Header tetep, Footer tetep, isinya doang ganti.
+
+## 1. Install Library 📦
+
+Karena React pelit fitur, kita harus install library pihak ketiga paling populer:
+
+```bash
+npm install react-router-dom
+```
+
+## 2. Setup Router 🎁
+
+Buka file `main.jsx` (Gerbang aplikasi lo). Kita harus bungkus `<App />` dengan `<BrowserRouter>`.
+
+```js
+// src/main.jsx
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter } from "react-router-dom"; // 1. Import ini
+import App from "./App";
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
+    {/* 2. Bungkus App di sini */}
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </React.StrictMode>
+);
+```
+
+## 3. Bikin Rute 🛣️
+
+Sekarang buka `App.jsx`. Kita tentukan: _"Kalau URL-nya ini, munculin Komponen apa?"_
+
+```jsx
+// src/App.jsx
+import { Routes, Route, Link } from "react-router-dom";
+
+// Anggap ini komponen halaman (biasanya di file terpisah)
+function Home() {
+  return <h1>Halaman Depan</h1>;
+}
+function About() {
+  return <h1>Tentang Kami</h1>;
+}
+function NotFound() {
+  return <h1>404 Nyasar Bos!</h1>;
+}
+
+export default function App() {
+  return (
+    <div>
+      {/* MENU NAVIGASI (Jangan pake tag <a> biasa!) */}
+      <nav>
+        <Link to="/">Home</Link> | <Link to="/about">About</Link>
+      </nav>
+
+      <hr />
+
+      {/* KONTAINER KONTEN YANG BERUBAH-UBAH */}
+      <Routes>
+        {/* Kalau buka path "/", tampilkan Home */}
+        <Route path="/" element={<Home />} />
+
+        {/* Kalau buka path "/about", tampilkan About */}
+        <Route path="/about" element={<About />} />
+
+        {/* Kalau path ngawur (gak ada di list), tampilkan NotFound */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </div>
+  );
+}
+```
+
+## 4. Kenapa Gak Boleh Pake `<a>`? ⚓
+
+**Di HTML biasa:** `<a href="/about">About</a>`.  
+**Di React Router:** `<Link to="/about">About</Link>`.
+
+**Bedanya:**
+
+    * Tag `<a>` akan memicu Refresh Halaman (Layar putih sebentar). State hilang.
+
+    * Tag `<Link>` cuma Mengganti URL & Komponen tanpa refresh. State aman, transisi instan.
+
+<Callout type="warning" emoji="⚛️">
+  {" "}
+  **Disclaimer:** Nanti pas lo belajar Next.js, cara routingnya beda lagi (pake Folder/File
+  System). Tapi konsep &lt;Link&gt;-nya tetep sama: Jangan Refresh Halaman.{" "}
+</Callout>
+## 5. Dynamic Route (Parameter) 🆔
+
+Gimana kalau mau bikin halaman detail user? `/user/1`, `/user/2`, dst? Pake titik dua `:`.
+
+```jsx
+// Di App.jsx
+<Route path="/user/:id" element={<UserDetail />} />;
+
+// Di Component UserDetail
+import { useParams } from "react-router-dom";
+
+function UserDetail() {
+  const { id } = useParams(); // Nangkep angka di URL
+  return <h1>Ini Profil User ID: {id}</h1>;
+}
+```

@@ -1,0 +1,154 @@
+import { Callout } from "nextra/components";
+
+# Install & Setup Project (Vite) 🛠️
+
+Lo gak bisa bikin file `index.html` terus tulis kodingan React di situ. Browser gak bakal ngerti.
+React butuh **"Dapur"** (Build Tool) buat ngolah kodingan lo jadi website beneran.
+
+Dulu orang pake _Create React App (CRA)_, tapi itu lambat kayak siput.
+Sekarang standarnya pake **Vite** (Ngebut kayak roket 🚀).
+
+---
+
+## 1. Syarat Mutlak: Node.js 🟢
+
+React gak bisa jalan tanpa Node.js.
+Cek dulu di terminal lo:
+
+```bash
+node -v
+```
+
+Kalau muncul `v18.xx.xx` (atau lebih baru), aman. Kalau muncul `"Command not found"`, download dulu di [nodejs.org](https://nodejs.org). Pilih yang **LTS**.
+
+## 2. Langkah Instalasi ⏱️
+
+Buka terminal di folder tempat lo mau nyimpen project, terus ketik:
+
+#### Step 1: Bikin Project
+
+```bash
+npm create vite@latest nama-project-lo
+```
+
+    * Nanti ditanya Framework? Pilih React.
+
+    * Ditanya Variant? Pilih JavaScript (atau TypeScript kalau udah jago).
+
+#### Step 2: Buka Project
+
+```bash
+cd nama-project-lo
+```
+
+#### Step 3: Install Library (Wajib!)
+
+Pas baru dibuat, folder `node_modules` itu masih kosong biar ringan downloadnya. Kita harus isi dulu.
+
+```bash
+
+npm install
+```
+
+Tungguin loading bar-nya muter-muter.
+
+#### Step 4: Jalankan Project
+
+```bash
+
+npm run dev
+```
+
+Kalau sukses, bakal muncul link: http://localhost:5173. Klik link itu!
+
+## 3. Bedah Struktur Folder 📂
+
+Jangan pusing liat banyak file. Fokus ke sini aja:
+
+    * **src/App.jsx:** Ini Jantungnya. Kodingan utama lo di sini.
+
+    * **src/main.jsx:** Pintu gerbang (Jarang disentuh).
+
+    * **index.html:** Kerangka HTML (Jarang disentuh).
+
+    * **package.json:** Daftar belanjaan (library apa aja yang dipake).
+
+<Callout type="info" emoji="💡">
+  {" "}
+  **Tips:** Hapus semua isi file `App.jsx` dan `App.css` bawaan Vite biar bersih,
+  sisain kerangka dasarnya aja.{" "}
+</Callout>
+## 4. Error yang Sering Bikin Nangis 😭
+
+Ini kumpulan masalah klasik pas install React.
+
+#### Kasus 1: "Vite is not recognized" ❌
+
+**Gejala:** Pas ngetik `npm create vite...` error merah.  
+**Penyebab:** Node.js belum keinstall bener atau NPM error.  
+**Solusi:** Install ulang Node.js.
+
+#### Kasus 2: "Langsung Error pas npm run dev" 🔴
+
+**Gejala:**
+
+```bash
+
+sh: vite: command not found
+```
+
+**Penyebab:** Lo **LUPA** langkah Step 3 (`npm install`).  
+**Solusi:** Ketik `npm install` dulu bos, baru `npm run dev`.
+
+#### Kasus 3: Layar Putih (Blank Screen) 🏳️
+
+**Gejala:** Website dibuka, tapi putih doang. Gak ada error di terminal.  
+**Penyebab:** Error Logika JavaScript.  
+**Solusi:**
+
+    * Klik Kanan di browser -> Inspect Element.
+
+    * Buka tab Console.
+
+    * Lihat tulisan merahnya. Biasanya: `"Uncaught ReferenceError: x is not defined"` (Typo variabel).
+
+#### Kasus 4: Import Error
+
+**Gejala:**
+
+```bash
+Module not found: Error: Can't resolve './Header'
+```
+
+**Penyebab:**
+
+    * Lo lupa bikin filenya.
+
+    * Salah nulis path (kurang titik `./`).
+
+    * LUPA EKSPOR! (`export default function...`).
+
+#### Kasus 5: Port Already in Use 🚧
+
+**Gejala:**
+
+```bash
+Error: listen EADDRINUSE: address already in use :::5173
+```
+
+**Penyebab:** Lo udah jalanin project lain di terminal sebelah dan lupa dimatiin.  
+**Solusi:** Vite biasanya pinter, dia bakal otomatis pindah ke port 5174. Kalau enggak, matikan terminal sebelah (`Ctrl + C`).
+
+## Rangkuman Ritual 🕯️
+
+Setiap kali lo mau ngoding React:
+
+    * Buka VS Code.
+
+    * Terminal: `npm run dev`.
+
+    * Buka Browser.
+
+    * Coding di `App.jsx`.
+
+    * Save (Otomatis berubah di browser).

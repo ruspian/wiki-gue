@@ -1,0 +1,86 @@
+import { Callout } from "nextra/components";
+
+# Setup Tailwind CSS di Vite 💅
+
+Selamat tinggal file `App.css` yang isinya ribuan baris.
+Dengan Tailwind, kita ngestyle langsung di `className` pake bahasa manusia.
+
+- Mau teks merah? `text-red-500`
+- Mau padding gede? `p-10`
+- Mau flexbox? `flex justify-center`
+
+## 1. Install Bumbu Dapur 🌶️
+
+Matikan dulu terminal (`Ctrl + C`), lalu install Tailwind dan kawan-kawannya (PostCSS & Autoprefixer).
+
+```bash
+npm install -D tailwindcss postcss autoprefixer
+```
+
+Terus, kita bikin file konfigurasinya dengan perintah ini:
+
+```bash
+npx tailwindcss init -p
+```
+
+Perintah ini bakal bikin 2 file baru: `tailwind.config.js` dan `postcss.config.js`.
+
+## 2. Kasih Tau Lokasi File 📍
+
+Buka file `tailwind.config.js`. Kita harus kasih tau Tailwind: _"Eh, tolong scan file-file di folder src ya."_
+
+Ganti bagian content jadi kayak gini:
+
+```js
+/** @type {import('tailwindcss').Config} */
+export default {
+  // 👇 BAGIAN INI YANG PENTING
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
+```
+
+## 3. Masukin Mantra ke CSS Utama 🔮
+
+Buka file `src/index.css` (hapus semua isinya gapapa). Ganti dengan 3 baris suci ini di paling atas:
+
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+## 4. Test Drive (Wajib Coba) 🏎️
+
+Jalanin lagi servernya: `npm run dev`.
+
+Buka `App.jsx`, coba bikin teks yang Gede, Tebal, dan Underline buat ngetes apakah Tailwind udah nyala.
+
+```jsx
+export default function App() {
+  return (
+    <div className="flex justify-center items-center h-screen bg-gray-100">
+      <h1 className="text-3xl font-bold text-blue-600 underline">
+        Halo Tailwind! 🚀
+      </h1>
+    </div>
+  );
+}
+```
+
+Kalau teksnya berubah jadi Biru, Gede, dan ada di Tengah Layar, selamat! Setup lo berhasil.
+
+## 5. Ekstensi Wajib: Tailwind CSS IntelliSense 🧠
+
+Ngafalin ribuan class Tailwind itu mustahil. Buka VS Code Extensions, cari **"Tailwind CSS IntelliSense"**, terus install.
+
+**Gunanya:** Pas lo ngetik text-, dia bakal ngasih bocoran warna apa aja yang tersedia. Tanpa ini, ngoding Tailwind itu neraka.
+
+<Callout type="info" emoji="💡">
+  {" "}
+  **Tips:** Kalau Intellisense gak muncul, coba spasi (`Ctrl + Spasi`) di dalam kutip
+  className=&quot;...&quot;.{" "}
+</Callout>
