@@ -1,0 +1,94 @@
+import { Callout } from "nextra/components";
+
+# Branching: Dunia Paralel 🌿
+
+Branching adalah fitur terkuat di Git.
+Ini membiarkan lo bikin **Copy** dari kodingan utama, ngacak-ngacak copy-an itu sepuasnya, tanpa ganggu kodingan asli.
+
+Ibarat lo punya dokumen Word, terus lo "Save As" jadi `Revisi-1.docx`. Dokumen asli aman, dokumen revisi bebas dicoret-coret.
+
+---
+
+## 1. Konsep Utama: `main` 🌳
+
+Secara default, lo ada di branch bernama **`main`** (dulu namanya `master`).
+Ini adalah **Jalur Suci**. Kodingan di sini harus selalu bersih, bebas error, dan siap dipakai user.
+
+**JANGAN PERNAH** ngoding fitur baru langsung di `main`. Haram hukumnya.
+
+---
+
+## 2. Membuat Branch Baru (`checkout -b`) 🌱
+
+Mau bikin fitur Login? Bikin dunia baru dulu.
+
+```bash
+# Rumus: git checkout -b nama-branch-baru
+git checkout -b fitur-login
+```
+
+- `-b` artinya Branch Baru.
+
+- Sekarang lo udah pindah ke dunia fitur-login.
+
+- Apapun file yang lo hapus atau edit di sini, **GAK BAKAL** ngerubah apa-apa di main.
+
+## 3. Pindah Antar Dunia (checkout) 🔀
+
+Misal fitur login belum kelar, tapi lo mau balik ngecek kondisi di main.
+
+```bash
+# Balik ke main
+git checkout main
+```
+
+Pas lo ketik ini, liat file di VS Code lo. File-file fitur login tadi bakal HILANG sejenak. Jangan panik, itu disimpan di dimensi lain.
+
+Mau lanjut ngerjain login?
+
+```bash
+# Balik ke fitur-login (Gak pake -b karena udah dibuat)
+git checkout fitur-login
+```
+
+## 4. Menggabungkan (Merge) 🤝
+
+Oke, fitur Login udah kelar, udah di-test, dan aman. Sekarang saatnya masukin perubahan di fitur-login ke dalam main.
+
+Langkahnya:
+
+    1. Balik dulu ke tujuan (main):
+
+```bash
+git checkout main
+```
+
+2. Tarik kodingan dari branch lain:
+
+```bash
+git merge fitur-login
+```
+
+Sekarang main lo udah punya fitur login terbaru. Branch fitur-login boleh dihapus kalau udah gak kepake.
+
+## 5. Pull Request (Cara Kerja Tim) 🏢
+
+Di dunia kerja, kita jarang pake git merge manual di laptop kayak di atas. Kita pake Pull Request (PR) di GitHub.
+
+    1. Lo push branch `fitur-login` ke GitHub.
+
+```bash
+    git push origin fitur-login
+```
+
+    2. Buka website GitHub repo lo.
+
+    3. Klik tombol **"Compare & Pull Request"**.
+
+    4. Minta temen lo review. Kalau oke, klik tombol hijau **"Merge Pull Request"** di website.
+
+<Callout type="info" emoji="💡">
+  {" "}
+  Kenapa lewat GitHub? Biar ada yang ngecek kodingan lo sebelum masuk ke main. Siapa
+  tau lo lupa hapus console.log atau ninggalin bug fatal.{" "}
+</Callout>

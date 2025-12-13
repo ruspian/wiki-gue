@@ -1,0 +1,77 @@
+import { Callout } from "nextra/components";
+
+# Intro & Setup Git 🛠️
+
+Sebelum kita masuk ke perintah-perintah ajaib, kita harus paham dulu apa yang mau kita pake dan cara pasangnya.
+
+## 1. Git vs GitHub: Apa Bedanya? 🤔
+
+Banyak pemula yang ngira Git dan GitHub itu sama, padahal **BEDA**.
+
+| Fitur       | Git 💻                    | GitHub ☁️                 |
+| :---------- | :------------------------ | :------------------------ |
+| **Lokasi**  | Di Laptop Lo (Offline)    | Di Internet (Cloud)       |
+| **Fungsi**  | Mencatat Perubahan (Save) | Menyimpan Project (Share) |
+| **Analogi** | Microsoft Word            | Google Drive              |
+
+---
+
+## 2. Cara Install Git ⬇️
+
+Cek dulu, jangan-jangan laptop lo udah ada Git-nya.
+Buka terminal/CMD, ketik:
+
+```bash
+git --version
+```
+
+Kalau muncul angka (misal `git version 2.30.x`), berarti aman. Kalau error, ikuti cara install di bawah:
+
+### 🪟 Windows
+
+    * Buka website resmi: [git-scm.com](https://git-scm.com).
+
+    * Download versi **"64-bit Git for Windows Setup"**.
+
+    * Install file .exe-nya.
+
+    * **PENTING:** Pas install, kalau ditanya macem-macem, klik "Next" terus aja (Default settings udah paling aman).
+
+### 🍎 Mac (macOS)
+
+Biasanya udah ada bawaan. Kalau belum, cara paling gampang pake `Homebrew`:
+
+```bash
+brew install git
+```
+
+Atau install **Xcode Command Line Tools** (bakal muncul popup otomatis pas lo ketik git di terminal).
+
+### 🐧 Linux (Ubuntu/Debian)
+
+```bash
+sudo apt update
+sudo apt install git
+```
+
+## 3. Konfigurasi Awal (Wajib) ⚙️
+
+Setelah install, lo harus kenalan dulu sama Git. Ini cuma perlu dilakuin **SEKALI SEUMUR HIDUP** di laptop yang sama.
+
+Buka terminal (Git Bash di Windows / Terminal di Mac), ketik:
+
+```bash
+# 1. Kasih tau nama lo (Bebas)
+git config --global user.name "Otong Keren"
+
+# 2. Kasih tau email lo (WAJIB SAMA dengan akun GitHub lo nanti)
+git config --global user.email "email.lo@gmail.com"
+```
+
+Cek apakah udah kesimpen:
+
+```bash
+git config --list
+```
+
+Kalau nama dan email lo muncul di situ, berarti setup **BERHASIL**. 🎉

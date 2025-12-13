@@ -1,0 +1,76 @@
+import { Callout } from "nextra/components";
+
+# Merge Conflict: Kodingan Bentrok 💥
+
+Ini adalah momen paling bikin panik di Git.
+**Merge Conflict** terjadi ketika **dua orang** (atau lo sendiri di dua branch berbeda) **mengubah baris kode yang SAMA** di waktu yang berbeda, dan Git bingung, perubahan mana yang harus dipakai.
+
+## 1. Kapan Konflik Terjadi? 🧐
+
+Konflik hanya terjadi ketika lo mencoba:
+
+1.  **Merge:** Menggabungkan Branch A ke Branch B.
+2.  **Pull:** Mengambil perubahan dari GitHub, tapi lo juga udah ngedit file itu.
+
+**Skenario Konflik:**
+
+- **Branch A** (`main`) punya kode: `const warna = "merah";`
+- **Branch B** (`fitur-baru`) punya kode: `const warna = "biru";`
+
+Pas lo `git merge fitur-baru`, Git akan bingung milih "merah" atau "biru".
+
+## 2. Tanda-tanda Konflik 🚨
+
+Git bakal teriak di terminal: `Auto-merging [nama file] CONFLICT (content): Merge conflict in [nama file]`.
+
+Kalau lo buka file yang konflik (misal `index.js`), isinya bakal jadi kayak gini:
+
+```javascript
+const user = {
+<<<<<<< HEAD
+  role: "admin", // Kodingan di Branch LO (HEAD)
+  theme: "dark"
+=======
+  role: "member", // Kodingan di Branch yang mau digabung
+  theme: "light"
+>>>>>>> fitur-baru
+}
+```
+
+## 3. Cara Menyelesaikan (Resolution) ✅
+
+Langkah-langkahnya di VS Code lebih gampang daripada di terminal:
+
+    * **Lihat Tanda:** Lo bakal liat 4 tombol kecil muncul di atas area konflik.
+
+    * **Pilih Solusi:** Lo harus jadi hakim, putuskan kodingan mana yang mau dipertahankan.
+
+| Tombol VS Code         | Aksi                                 | Hasil                                          |
+| :--------------------- | :----------------------------------- | :--------------------------------------------- |
+| Accept Current Change  | Pakai kodingan di HEAD (kodingan lo) | Baris role: "member" hilang                    |
+| Accept Incoming Change | Pakai kodingan dari branch lain      | Baris role: "admin" hilang                     |
+| Accept Both            | Simpan dua-duanya (Biasanya salah)   | Keduanya disimpan, tapi lo harus rapiin manual |
+
+<Callout type="warning" emoji="🛠️">
+  {" "}
+  The Hard Way: Cara paling aman: Hapus manual semua baris yang ada &lt;&lt;&lt;&lt;&lt;&lt;&lt;,
+  =======, dan &gt;&gt;&gt;&gt;&gt;&gt;&gt;. Tinggalkan hanya baris kode yang lo
+  mau (Misal: role: &quot;admin&quot;, tapi theme: &quot;light&quot;).{" "}
+</Callout>
+## 4. Finalisasi Setelah Konflik 🏁
+
+Setelah lo selesai ngedit dan baris-baris `<<<` sudah hilang, Git harus dikasih tau kalau konflik sudah selesai.
+
+    1. Add lagi file yang udah diedit:
+
+```bash
+git add nama-file-yang-konflik.js
+```
+
+2. Commit lagi (Git otomatis bikin commit khusus):
+
+```bash
+git commit -m "Merge branch 'fitur-baru' - Conflict resolved"
+```
+
+Selesai! Branch lo sudah aman tergabung.

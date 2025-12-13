@@ -1,0 +1,78 @@
+import { Callout } from "nextra/components";
+
+# Perintah Wajib: Add, Commit, Push 💻
+
+Alur kerja Git itu selalu sama. Kalau lo mau nyimpen kodingan, ada 3 langkah yang harus dilalui.
+Gak bisa langsung "Save" kayak di Word.
+
+Kita pakai analogi **Jualan Online (Kirim Paket)**:
+
+1.  **`git add`**: Masukin barang ke dalam kardus (Staging Area).
+2.  **`git commit`**: Lakban kardusnya dan tempel resi pengiriman (Local Repo).
+3.  **`git push`**: Serahin paket ke kurir JNE/J&T (Remote Repo / GitHub).
+
+---
+
+## 1. `git init` 🎥
+
+Ini cuma diketik **SEKALI** pas lo baru bikin folder project baru.
+Gunanya buat ngasih tau Git: _"Woy, tolong pantau folder ini!"_
+
+```bash
+git init
+```
+
+_Kalau berhasil, bakal muncul folder tersembunyi `.git`. Jangan dihapus!_
+
+## 2. git add 📦
+
+Misal lo abis ngedit file index.html dan style.css. Git tau ada file berubah, tapi dia belum mau nyatet sebelum lo suruh.
+
+```bash
+# Cara 1: Pilih file tertentu aja
+git add index.html
+
+# Cara 2: Masukin SEMUA file yang berubah (Paling sering dipake) 🌟
+git add .
+```
+
+## 3. git commit 🏷️
+
+Barang udah di kotak, sekarang harus dilakban dan dikasih catetan: _"Ini paket isinya apa?"_
+
+```bash
+git commit -m "Ganti warna navbar jadi merah"
+```
+
+    * `-m` artinya Message (Pesan).
+
+    * Pesan harus jelas! Jangan tulis _"update"_ doang. Tulis _"benerin` tombol login"_, "nambah fitur chat", dll.
+
+<Callout type="warning" emoji="⚠️">
+  {" "}
+  **Penting:** Setelah di-commit, perubahan lo udah aman tersimpan di "Mesin Waktu"
+  (di laptop lo). Walaupun laptop mati, history-nya tetep ada.{" "}
+</Callout>
+## 3. git push 🚀
+
+Kodingan udah aman di laptop, tapi temen lo belum bisa liat. Kita harus upload ke "Gudang Online" (GitHub).
+
+```bash
+git push origin main
+```
+
+(Kadang origin master tergantung settingan awal, tapi jaman sekarang standarnya main).
+
+## Bonus: git status 🧐
+
+Kalau lo lupa _"Tadi gue udah add belum ya?"_, ketik ini:
+
+```bash
+git status
+```
+
+- **Warna Merah:** File berubah tapi belum di-add (Masih di luar kotak).
+
+- **Warna Hijau:** File udah di-add, siap di-commit (Udah di dalem kotak).
+
+- **"Nothing to commit":** Semua aman, gak ada perubahan baru.
