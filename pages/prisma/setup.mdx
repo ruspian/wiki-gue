@@ -1,0 +1,130 @@
+import { Callout } from "nextra/components";
+
+# Setup & Koneksi DB 🔌
+
+Kita bakal install Prisma dan nyiapin database-nya.
+Pastikan lo udah punya project Next.js ya.
+
+## 1. Install Prisma 📦
+
+Buka terminal di project Next.js lo, ketik:
+
+```bash
+# 1. Install Prisma CLI (buat ngatur database)
+npm install prisma --save-dev
+
+# 2. Install Prisma Client (buat kodingan di Next.js)
+npm install @prisma/client
+
+# 3. Inisialisasi Prisma
+npx prisma init
+```
+
+Setelah perintah `init`, lo bakal dapet:
+
+    * Folder baru bernama `prisma/` (isinya `schema.prisma`).
+
+    * File `.env` (buat naruh URL database).
+
+## 2. Koneksi Database (.env) 🔗
+
+Buka file `.env`. Cari bagian `DATABASE_URL`. Isi dengan URL database lo (bisa MySQL, PostgreSQL, atau MongoDB).
+
+**Contoh kalau pake PostgreSQL (lokal):**
+
+```bash
+DATABASE_URL="postgresql://johndoe:password@localhost:5432/mydb?schema=public"
+```
+
+<Callout type="info" emoji="💡">
+  {" "}
+  **Tips:** Kalau lo belum punya database terinstall dan cuma mau belajar, lo bisa
+  ganti provider jadi **"sqlite"** di langkah berikutnya. SQLite gak butuh install
+  server, datanya cuma file biasa.{" "}
+</Callout>
+## 3. Bikin Skema (schema.prisma) 📝
+
+Buka file `prisma/schema.prisma`. Di sini kita mendefinisikan bentuk tabel kita.
+
+Misal kita mau bikin website User & Post.
+
+```prisma
+// 1. Tentukan jenis Database (postgresql, mysql, atau sqlite)
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// 2. Bikin Model (Tabel)
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String?
+  posts     Post[]   // Relasi: Satu user punya banyak post
+  createdAt DateTime @default(now())
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String?
+  published Boolean  @default(false)
+  authorId  Int
+  author    User     @relation(fields: [authorId], references: [id]) // Relasi balik ke User
+}
+```
+
+## 4. Push ke Database (Migrate) 🚀
+
+Skema di atas baru tulisan doang. Database aslinya belum punya tabel User dan Post. Kita harus suruh Prisma bikin tabelnya.
+
+**Ketik di terminal:**
+
+```bash
+npx prisma migrate dev --name init
+```
+
+    * `migrate dev:` Sinkronisasi skema prisma ke database.
+
+    * `--name init:` Ngasih nama history migrasinya `"init"`.
+
+Kalau sukses, database lo sekarang udah punya tabel User dan Post!
+
+## 5. Best Practice di Next.js (Singleton) ⚠️
+
+**INI PENTING BANGET**. Di Next.js, fitur Hot Reload sering bikin koneksi database jadi double-double sampai error **"Too many connections"**.
+
+Kita harus bikin satu file khusus buat koneksi Prisma biar aman.
+
+**Buat file baru:** `src/lib/prisma.ts`(atau `lib/prisma.ts`).
+
+```ts
+import { PrismaClient } from "@prisma/client";
+
+const prismaClientSingleton = () => {
+  return new PrismaClient();
+};
+
+type PrismaClientSingleton = ReturnType<typeof prismaClientSingleton>;
+
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClientSingleton | undefined;
+};
+
+export const prisma = globalForPrisma.prisma ?? prismaClientSingleton();
+
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+```
+
+**Cara Pakai:** Nanti di halaman lain, lo tinggal import dari file ini: `import { prisma } from '@/lib/prisma'`
+
+<Callout type="warning" emoji="🚫">
+  {" "}
+  **Jangan Lakukan Ini:** `const prisma = new PrismaClient()` langsung di dalam `component/page`.
+  Itu bakal bikin koneksi baru tiap kali halaman direfresh. Pake file `lib/prisma.ts`
+  di atas!{" "}
+</Callout>

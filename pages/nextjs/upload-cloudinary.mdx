@@ -1,0 +1,149 @@
+import { Callout } from "nextra/components";
+
+# Upload Image: Cloudinary (Lengkap) 📸
+
+Cloudinary adalah solusi terbaik buat manajemen gambar (Resize, Crop, Format).
+Ada dua cara upload di sini:
+
+1.  **Unsigned (Gampang):** Gak butuh coding backend, tapi kurang aman (siapapun yang tau preset lo bisa upload).
+2.  **Signed (Aman):** Butuh backend buat tanda tangan digital, tapi aman dan terkontrol.
+
+---
+
+## Persiapan Awal (Wajib) ⚙️
+
+1.  Install Paket:
+
+    ```bash
+    npm install next-cloudinary cloudinary
+    ```
+
+    _(Perhatikan: kita butuh paket `cloudinary` biasa juga buat fitur Signed)._
+
+2.  Setup `.env`:
+    Masukin data dari Dashboard Cloudinary.
+
+    ```env
+    # Public (Buat Frontend)
+    NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME="nama-cloud-lo"
+    NEXT_PUBLIC_CLOUDINARY_API_KEY="api-key-lo"
+
+    # Private (Buat Backend - Cuma butuh kalau pake SIGNED)
+    CLOUDINARY_API_SECRET="api-secret-rahasia"
+    ```
+
+---
+
+## OPSI 1: Unsigned Upload (Cara Cepat) ⚡
+
+Cocok buat: Project hobi, belajar, prototype.
+
+### 1. Bikin Preset Unsigned
+
+1.  Buka Settings Cloudinary -> **Upload**.
+2.  Add Upload Preset.
+3.  **Signing Mode:** Pilih **Unsigned**.
+4.  Copy nama preset (misal: `preset_hura_hura`).
+
+### 2. Kodingan Frontend
+
+Langsung pake komponen tanpa backend.
+
+```tsx
+"use client";
+import { CldUploadButton } from "next-cloudinary";
+
+export default function UnsignedPage() {
+  return (
+    <CldUploadButton
+      uploadPreset="preset_hura_hura" // 👈 Preset Unsigned
+      onSuccess={(result) => console.log(result)}
+      className="btn-upload"
+    >
+      Upload Santuy (Unsigned)
+    </CldUploadButton>
+  );
+}
+```
+
+## OPSI 2: Signed Upload (Cara Pro) 🛡️
+
+**Cocok buat:** Aplikasi serius, E-commerce, User Profile. User gak bisa upload sembarangan. Browser harus minta **"Tanda Tangan"** (Signature) ke server dulu sebelum diizinkan upload.
+
+1. Bikin Preset Signed
+
+   - Buka Settings Cloudinary -> Upload.
+
+   - Add Upload Preset.
+
+   - Signing Mode: Pilih Signed.
+
+   - Copy nama preset (misal: `preset_rahasia`).
+
+2. Bikin Backend (Penanda Tangan) ✍️
+
+Kita butuh API Route buat generate signature.
+
+Buat file: `src/app/api/sign-cloudinary/route.ts`
+
+```ts
+import { v2 as cloudinary } from "cloudinary";
+
+// Konfigurasi Cloudinary di Backend
+cloudinary.config({
+  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET, // 👈 Wajib ada Secret
+});
+
+export async function POST(request: Request) {
+  const body = await request.json();
+  const { paramsToSign } = body;
+
+  // Generate Tanda Tangan Digital
+  const signature = cloudinary.utils.api_sign_request(
+    paramsToSign,
+    process.env.CLOUDINARY_API_SECRET as string
+  );
+
+  // Balikin tanda tangan ke frontend
+  return Response.json({ signature });
+}
+```
+
+## 3. Kodingan Frontend (Signed)
+
+Komponennya sama, tapi kita tambah properti `signatureEndpoint`.
+
+```tsx
+"use client";
+import { CldUploadButton } from "next-cloudinary";
+
+export default function SignedPage() {
+  return (
+    <CldUploadButton
+      uploadPreset="preset_rahasia" // 👈 Preset Signed
+      signatureEndpoint="/api/sign-cloudinary" // 👈 Minta ttd ke sini
+      onSuccess={(result) => console.log(result)}
+      className="btn-secure"
+    >
+      Upload Aman (Signed)
+    </CldUploadButton>
+  );
+}
+```
+
+## Perbandingan: Kapan Pake Mana? 🤔
+
+| Fitur      | Unsigned ⚡                           | Signed 🛡️                                                  |
+| :--------- | :------------------------------------ | :--------------------------------------------------------- |
+| Keamanan   | Rendah (Asal tau preset, bisa upload) | Tinggi (Divalidasi Server)                                 |
+| Setup      | Frontend doang (1 menit)              | Butuh API Route & Secret Key                               |
+| Kontrol    | Terbatas settingan preset             | Bisa custom logic (misal: cuma member VIP yg boleh upload) |
+| Cocok Buat | Hobi, Internal Tools                  | Production, User Uploads                                   |
+
+<Callout type="warning" emoji="💡">
+  {" "}
+  **Saran:** Mulai dulu pake Unsigned biar fitur jalan. Kalau udah mau rilis ke publik,
+  luangkan waktu 10 menit buat ubah jadi Signed.{" "}
+</Callout>

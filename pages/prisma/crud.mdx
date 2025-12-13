@@ -1,0 +1,115 @@
+import { Callout } from "nextra/components";
+
+# CRUD Dasar (Create, Read, Update, Delete) 📝
+
+Di sini kita akan memanipulasi data database menggunakan variable `prisma` yang sudah kita buat di `src/lib/prisma.ts`.
+
+Ingat: Semua kodingan Prisma bersifat **Asynchronous** (harus pake `await`).
+
+---
+
+## 1. Create (Nambah Data) ➕
+
+Kita pake `.create()`.
+Kerennya Prisma, kita bisa nambah data ke **dua tabel sekaligus** kalau ada relasi.
+
+```ts
+import { prisma } from "@/lib/prisma";
+
+async function main() {
+  const user = await prisma.user.create({
+    data: {
+      name: "Pian",
+      email: "pian@example.com",
+      // Kita bisa langsung bikin Post buat user ini!
+      posts: {
+        create: {
+          title: "Hello World",
+          content: "Ini postingan pertamaku pake Prisma.",
+        },
+      },
+    },
+  });
+
+  console.log("User berhasil dibuat:", user);
+}
+```
+
+## 2. Read (Baca Data) 📖
+
+**Ambil Banyak Data (`findMany`)**
+
+Mirip `SELECT *` di SQL, tapi lebih canggih.
+
+```ts
+const allUsers = await prisma.user.findMany({
+  // Filter: Cuma ambil yang emailnya gmail
+  where: {
+    email: { endsWith: "@gmail.com" },
+  },
+  // Include: Sekalian ambil data postingannya (JOIN)
+  include: {
+    posts: true,
+  },
+});
+```
+
+**Ambil Satu Data (findUnique)**
+
+Cuma bisa dipake untuk mencari kolom yang sifatnya `Unique` (ID atau Email).
+
+```ts
+const specificUser = await prisma.user.findUnique({
+  where: {
+    id: 1,
+  },
+});
+```
+
+## 3. Update (Edit Data) ✏️
+
+Pake `.update()`. Wajib kasih tau `where` (siapa yang mau diedit) dan data (data barunya apa).
+
+```ts
+const updatedUser = await prisma.user.update({
+  where: {
+    email: "pian@example.com",
+  },
+  data: {
+    name: "Pian Programmer", // Ganti namanya
+    posts: {
+      create: {
+        title: "Postingan Baru lagi", // Nambah post pas update user? Bisa!
+      },
+    },
+  },
+});
+```
+
+## 4. Delete (Hapus Data) 🗑️
+
+Pake `.delete()`. Hati-hati, data ilang selamanya.
+
+```ts
+const deletedUser = await prisma.user.delete({
+  where: {
+    email: "pian@example.com",
+  },
+});
+```
+
+<Callout type="error" emoji="🚧"> 
+**PENTING:**  
+Di mana naruh kodingan ini?
+
+Prisma itu library Server-Side. Lo GAK BISA pake `import { prisma }` di dalam file yang ada `'use client'`-nya (Client Component). Browser gak boleh akses database langsung!
+
+Gunakan Prisma di:
+
+    * Server Components (`app/page.tsx`, `app/layout.tsx`).
+
+    * Server Actions (Function dengan `'use server'`).
+
+    * API Routes (`app/api/...`).
+
+</Callout>

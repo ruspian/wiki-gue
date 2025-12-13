@@ -1,0 +1,108 @@
+import { Callout } from "nextra/components";
+
+# File Upload: UploadThing ☁️
+
+Jangan pernah simpan gambar di Database (berat).
+Jangan pernah simpan gambar di folder project Next.js saat di Vercel (bakal ilang).
+
+Simpanlah gambar di **Cloud Storage**.
+Kita pakai **UploadThing** karena setup-nya paling gampang buat Next.js.
+
+## 1. Persiapan (Dapet API Key) 🔑
+
+1.  Buka [uploadthing.com](https://uploadthing.com) -> Login (pake GitHub aja).
+2.  Bikin app baru (misal: "my-app").
+3.  Masuk ke dashboard, copy **API Keys** lo.
+4.  Paste di file **`.env`** project lo:
+
+```env
+UPLOADTHING_SECRET=sk_live_xxxxxx
+UPLOADTHING_APP_ID=xxxxxxxx
+```
+
+## 2. Install Paket 📦
+
+```bash
+npm install uploadthing @uploadthing/react
+```
+
+## 3. Siapin Jalur Belakang (Backend) ⚙️
+
+Kita butuh 2 file di folder API.
+
+**File A:** Aturan Upload (`src/app/api/uploadthing/core.ts`) Di sini kita ngatur: Siapa yang boleh upload? File apa yang boleh?
+
+```ts
+import { createUploadthing, type FileRouter } from "uploadthing/next";
+
+const f = createUploadthing();
+
+export const ourFileRouter = {
+  // Bikin rute upload gambar
+  imageUploader: f({ image: { maxFileSize: "4MB" } }).onUploadComplete(
+    async ({ metadata, file }) => {
+      // Ini jalan SETELAH upload selesai
+      console.log("Upload berhasil! URL file:", file.url);
+
+      // DI SINI LO BIASANYA SIMPAN URL KE DATABASE (PRISMA)
+      // await prisma.user.update(...)
+    }
+  ),
+} satisfies FileRouter;
+
+export type OurFileRouter = typeof ourFileRouter;
+```
+
+**File B:** Pintu Masuk API (`src/app/api/uploadthing/route.ts`) Biar Next.js kenal sama file router di atas.
+
+```ts
+import { createRouteHandler } from "uploadthing/next";
+import { ourFileRouter } from "./core";
+
+export const { GET, POST } = createRouteHandler({
+  router: ourFileRouter,
+});
+```
+
+## 4. Bikin Tombol Upload (Frontend) 🖼️
+
+UploadThing udah nyediain komponen tombol siap pakai. Kita tinggal import.
+
+Buat file: `src/app/upload/page.tsx`
+
+```tsx
+"use client"; // Wajib Client Component
+
+// Import tombol ajaib
+import { UploadButton } from "@uploadthing/react";
+// Import tipe router kita tadi (biar TypeScript gak marah)
+import { OurFileRouter } from "../api/uploadthing/core";
+
+export default function UploadPage() {
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+      <h1>Upload Foto Profil</h1>
+
+      <UploadButton<OurFileRouter>
+        endpoint="imageUploader" // Sesuai nama di core.ts
+        onClientUploadComplete={(res) => {
+          // Upload Selesai!
+          console.log("Files: ", res);
+          alert("Upload Berhasil! URL: " + res[0].url);
+        }}
+        onUploadError={(error: Error) => {
+          // Kalau gagal
+          alert(`ERROR! ${error.message}`);
+        }}
+      />
+    </main>
+  );
+}
+```
+
+<Callout type="success" emoji="🎉"> 
+Selesai! Saat lo klik tombol itu dan pilih gambar, gambar akan terbang ke server UploadThing. Lo bakal dapet balasan berupa URL (contoh: https://utfs.io/f/xyz.jpg).
+
+Nah, URL itulah yang lo simpan ke database Prisma di kolom profileImage.
+
+ </Callout>

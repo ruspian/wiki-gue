@@ -7,6 +7,7 @@
   "dom": "DOM Manipulation",
   "react": "React",
   "nextjs": "Next.js",
+  "prisma": "Prisma ORM",
   "contact": {
     "title": "Hubungi Gue",
     "type": "page"

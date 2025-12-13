@@ -1,0 +1,112 @@
+import { Callout } from "nextra/components";
+
+# Authentication: NextAuth.js 🔐
+
+Bikin fitur login manual (simpan password, enkripsi, session, cookie) itu **SUSAH** dan **BERBAHAYA**. Salah dikit, data user bocor.
+
+Solusi standar industri: **NextAuth.js**.
+Dia ngurusin semua kerumitan itu. Kita tinggal pilih mau login pake apa (Google, GitHub, Email, dll).
+
+## 1. Install 📦
+
+```bash
+npm install next-auth
+```
+
+## 2. Setup API Route ⚙️
+
+NextAuth butuh jalur khusus buat komunikasi sama `provider` (GitHub/Google). Buat file di lokasi keramat ini: `src/app/api/auth/[...nextauth]/route.ts`
+
+(Perhatikan nama foldernya harus persis [...nextauth]).
+
+```ts
+import NextAuth from "next-auth";
+import GithubProvider from "next-auth/providers/github";
+
+const handler = NextAuth({
+  providers: [
+    GithubProvider({
+      clientId: process.env.GITHUB_ID!,
+      clientSecret: process.env.GITHUB_SECRET!,
+    }),
+    // Bisa tambah GoogleProvider, CredentialsProvider, dll di sini
+  ],
+});
+
+export { handler as GET, handler as POST };
+```
+
+## 3. Dapet ID & Secret dari GitHub 🔑
+
+Supaya website lo boleh pake login GitHub, lo harus izin dulu.
+
+    1. Buka GitHub Developer Settings.
+
+    2. Klik "New OAuth App".
+
+    3. Isi data:
+
+        - Homepage URL: http://localhost:3000
+
+        - Callback URL: http://localhost:3000/api/auth/callback/github
+
+    4. Copy Client ID dan Client Secret.
+
+    5. Masukin ke file `.env` di project lo:
+
+```bash
+GITHUB_ID="masukkan-id-disini"
+GITHUB_SECRET="masukkan-secret-disini"
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="kunci-rahasia-bebas-acak-aja"
+```
+
+## 4. Cara Pakai (Tombol Login) 🚪
+
+Sekarang lo bisa bikin tombol login di komponen mana aja.
+
+```tsx
+// src/components/LoginButton.tsx
+"use client";
+import { signIn, signOut, useSession } from "next-auth/react";
+
+export default function LoginButton() {
+  const { data: session } = useSession();
+
+  if (session) {
+    return (
+      <div>
+        <p>Halo, {session.user?.name}!</p>
+        <button onClick={() => signOut()}>Logout</button>
+      </div>
+    );
+  }
+
+  return <button onClick={() => signIn("github")}>Login with GitHub</button>;
+}
+```
+
+## 5. Bungkus Aplikasi (Provider) 🎁
+
+Supaya `useSession` bisa jalan, kita harus bungkus aplikasi kita pake `SessionProvider`. Biasanya di `layout.tsx.`
+
+```tsx
+// src/app/layout.tsx
+import { SessionProvider } from "next-auth/react";
+
+export default function RootLayout({ children }) {
+  return (
+    <html>
+      <body>
+        <SessionProvider>{children}</SessionProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+<Callout type="info" emoji="🚀">
+  {" "}
+  Siap Dipakai! Sekarang coba klik tombol Login. Lo bakal diarahkan ke halaman izin
+  GitHub, terus balik lagi ke website lo dengan status Sudah Login. Ajaib kan?{" "}
+</Callout>

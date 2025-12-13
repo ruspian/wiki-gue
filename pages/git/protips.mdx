@@ -1,0 +1,79 @@
+import { Callout } from "nextra/components";
+
+# Tips Pro: Ignore & Undo 🛡️
+
+Git itu pinter, tapi kita harus ngatur dia biar gak "kepinteran" (nyimpen file sampah) dan tau cara "mundur" kalau salah langkah.
+
+---
+
+## 1. `.gitignore` (Filter Sampah) 🗑️
+
+Ada file-file yang **HARAM** di-upload ke GitHub:
+
+1.  **`node_modules`**: Isinya ribuan file sampah library, berat banget (bisa ratusan MB).
+2.  **`.env`**: Isinya password database atau API Key rahasia. Kalau ke-upload, bisa dicolong hacker.
+3.  **`.DS_Store`**: File sampah dari Mac.
+
+**Caranya:**
+Buat file bernama **`.gitignore`** (pake titik di depan) di folder paling luar. Tulis nama file/folder yang mau dicuekin.
+
+```text
+# .gitignore
+
+node_modules/
+.env
+.DS_Store
+dist/
+.next/
+```
+
+Sekarang, coba ketik `git status`. File-file di atas gak bakal muncul lagi. Git bakal pura-pura gak liat.
+
+<Callout type="error" emoji="⚠️">
+  {" "}
+  **Peringatan:** Kalau file-nya **TERLANJUR** di-add sebelum bikin `.gitignore`,
+  dia bakal tetep ke-track. Lo harus hapus dari cache dulu: `git rm -r --cached`
+  . lalu add ulang.{" "}
+</Callout>
+## 2. git stash (Tombol Pause) ⏸️
+
+**Skenario:** Lo lagi asik ngoding fitur A (belum kelar, berantakan). Tiba-tiba Bos nyuruh benerin Bug B di branch lain **SEKARANG JUGA**.
+
+Lo gak bisa pindah branch (`checkout`) kalau kodingan masih berantakan. Tapi lo juga belum mau `commit` karena belum selesai.
+
+**Solusi:** Masukin ke kantong ajaib (`Stash`).
+
+```bash
+
+# 1. Simpan sementara (Meja kerja jadi bersih)
+git stash
+
+# 2. Pindah branch, benerin bug, balik lagi
+git checkout main
+...
+git checkout fitur-A
+
+# 3. Keluarin lagi dari kantong (Lanjut kerja)
+git stash pop
+```
+
+## 3. git reset (Tombol Undo) 🔙
+
+**Skenario:** Lo udah terlanjur ketik `git commit -m "update"`, eh baru sadar ada file yang ketinggalan atau salah pesannya.
+
+**Solusi:** Batalkan commit terakhir (tapi file kodingan jangan dihapus).
+
+```bash
+# Undo commit terakhir, tapi file kodingan TETAP ADA (Soft Reset)
+git reset --soft HEAD~1
+```
+
+    * **`HEAD~1`:** Mundur 1 langkah ke belakang.
+
+    * **`--soft`**: Commit-nya ilang, tapi kodingannya balik ke status hijau (Staged).
+
+<Callout type="error" emoji="💣">
+  {" "}
+  **Bahaya:** Hard Reset `git reset --hard HEAD~1` Ini bakal **MENGHAPUS** `commit`
+  DAN kodingan lo. Hati-hati make ini, kodingan lo ilang selamanya.{" "}
+</Callout>

@@ -1,0 +1,43 @@
+import { Callout } from "nextra/components";
+
+# Apa itu Prisma? 💎
+
+Dulu, kalau mau ngobrol sama database (MySQL/PostgreSQL), kita harus pake bahasa alien bernama **SQL**:
+`SELECT * FROM users WHERE active = 1;`
+
+Ribet. Rawan Typo. Gak ada Autocomplete.
+
+**Prisma datang sebagai penyelamat.**
+Prisma adalah **ORM (Object-Relational Mapper)**.
+Singkatnya: Dia adalah "Penerjemah". Kita ngomong pake JavaScript/TypeScript, Prisma yang nerjemahin ke SQL buat database.
+
+## Bedanya SQL vs Prisma
+
+**SQL Biasa:**
+
+```sql
+INSERT INTO User (email, name) VALUES ('otong@gmail.com', 'Otong');
+```
+
+**Prisma (TypeScript):**
+
+```ts
+await prisma.user.create({
+  data: {
+    email: "otong@gmail.com",
+    name: "Otong",
+  },
+});
+```
+
+Keliatan kan bedanya?
+
+    * Pake Prisma lebih enak dibaca.
+
+    * Kalau lo salah ketik nama kolom (misal nmae), TypeScript bakal langsung teriak error SEBELUM lo jalanin aplikasinya.
+
+<Callout type="info" emoji="🚀">
+  {" "}
+  **Kenapa Wajib?** Di dunia kerja Next.js modern, hampir semua pake Prisma karena
+  integrasinya sama TypeScript itu perfect banget.{" "}
+</Callout>

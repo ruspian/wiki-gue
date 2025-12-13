@@ -7,9 +7,12 @@
   "api-routes": "API Routes",
   "optimization": "SEO & Image",
   "server-actions": "Server Actions",
+  "upload": "Upload File",
+  "upload-cloudinary": "Cloudinary",
   "middleware": "Middleware",
-  "zustand": "Global State",
-  "form-validation": "Validasi Form",
-  "shadcn": "UI Library",
+  "zustand": "Zustand Global State",
+  "nextauth": "NextAuth",
+  "form-validation": "ZOD Validasi Form",
+  "shadcn": "Shadcn UI Library",
   "deployment": "Deployment"
 }
