@@ -1,0 +1,14 @@
+{
+  "intro": "SQL vs NoSQL",
+  "sql": "MySQL vs PostgreSQL",
+  "nosql": "MongoDB",
+  "---": {
+    "type": "separator"
+  },
+  "mysql": "MySQL",
+  "mysql-advance": "MySQL Lanjutan",
+  "postgres": "PostgreSQL",
+  "postgres-advance": "Postgres Lanjutan",
+  "mongodb": "MongoDB",
+  "mongodb-advance": "Mongo Lanjutan"
+}

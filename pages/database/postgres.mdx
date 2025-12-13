@@ -1,0 +1,131 @@
+import { Callout } from "nextra/components";
+
+# Praktek: PostgreSQL 🐘
+
+PostgreSQL (Postgres) berjalan di port **`5432`**.
+Ini adalah database relasional paling canggih saat ini.
+
+---
+
+## 1. Login ke Terminal (psql) 💻
+
+Di MySQL kita login pake `root`, tapi di Postgres kita login pake user spesial bernama `postgres`.
+
+```bash
+# Login sebagai user 'postgres' dan langsung buka shell 'psql'
+sudo -u postgres psql
+```
+
+Kalau prompt berubah jadi `postgres=#`, berarti lo berhasil masuk.
+
+## 2. Navigasi (Jurus Backslash) ⚡
+
+Postgres punya perintah khusus yang diawali tanda `\` (Backslash). Ini gak ada di MySQL.
+
+| Perintah   | Fungsi              | MySQL-nya apa?  |
+| :--------- | :------------------ | :-------------- |
+| \l         | List Database       | SHOW DATABASES; |
+| \c nama_db | Connect (Pindah DB) | USE nama_db;    |
+| \dt        | List Tabel          | SHOW TABLES;    |
+| \du        | List User           | -               |
+| \q         | Quit (Keluar)       | exit;           |
+
+## 3. Studi Kasus: Aplikasi Absensi SMK 🏫
+
+Karena lo lagi bikin project Absensi, kita pake kasus nyata. Kita butuh database yang bisa nyimpen data siswa dan Data Wali yang strukturnya ribet (ada nama ayah, ibu, no hp, alamat).
+
+Di MySQL, lo mungkin butuh tabel terpisah buat Wali. Di Postgres, kita bisa simpan sebagai JSON di dalam satu sel.
+**Langkah 1: Bikin Database**
+
+```sql
+CREATE DATABASE absensi_smk;
+
+-- Pindah ke database (Pake slash!)
+\c absensi_smk
+```
+
+Prompt berubah jadi `absensi_smk=#`
+**Langkah 2: Bikin Tabel (Perhatikan Bedanya!)**
+
+Perbedaan sintaks MySQL vs Postgres:
+
+    * AUTO_INCREMENT diganti jadi SERIAL.
+
+    * Kita pake tipe data JSONB buat data wali.
+
+```sql
+CREATE TABLE siswa (
+    id SERIAL PRIMARY KEY,    -- ID otomatis nambah
+    nis VARCHAR(20) UNIQUE,
+    nama VARCHAR(100),
+    kelas VARCHAR(10),
+    data_wali JSONB           -- FITUR SULTAN: Bisa simpan JSON!
+);
+```
+
+**Langkah 3: Insert Data (SQL + JSON) 📝**
+
+Liat cara kita masukin data wali. Persis kayak JavaScript Object.
+
+```sql
+INSERT INTO siswa (nis, nama, kelas, data_wali)
+VALUES (
+    '10112',
+    'Pian Programmer',
+    '12 RPL 1',
+    '{ "ayah": "Budi", "ibu": "Siti", "telp": "08123456789" }'
+);
+
+INSERT INTO siswa (nis, nama, kelas, data_wali)
+VALUES (
+    '10113',
+    'Udin',
+    '12 TKJ 2',
+    '{ "ayah": "Joko", "alamat_rumah": "Jl. Merdeka No 1" }'
+);
+```
+
+Liat kan? Struktur JSON-nya bisa beda-beda tiap siswa. Fleksibel banget!
+**Langkah 4: Query Data (Magic JSON) 🪄**
+
+Gimana cara nyari siswa yang bapaknya bernama "Budi"? Postgres punya operator panah ->> buat gali isi JSON.
+
+```sql
+-- Cari semua siswa
+SELECT * FROM siswa;
+
+-- Cari siswa yang Ayahnya bernama 'Budi'
+SELECT nama, kelas
+FROM siswa
+WHERE data_wali->>'ayah' = 'Budi';
+```
+
+Gila gak tuh? Lo bisa query ke dalem JSON pake SQL.
+
+## 4. Reset ID (Penyakit Umum Postgres) 🚑
+
+Kalau di MySQL, abis hapus data terakhir, ID otomatis lanjut. Di Postgres, kadang urutan ID (SERIAL) jadi kacau kalau lo sering hapus-hapus data manual.
+
+Kalau error **"Duplicate Key Value Violates Unique Constraint"**, ini obatnya:
+
+```sql
+-- Reset counter ID ke angka tertinggi yang ada sekarang
+SELECT setval('siswa_id_seq', (SELECT MAX(id) FROM siswa));
+```
+
+## 5. Tools GUI 🖥️
+
+Terminal psql itu keren, tapi buat liat data JSON enakan pake GUI.
+
+    * **PgAdmin 4:** (Official, tapi agak berat/lemot).
+
+    * **DBeaver:** (Sama kayak MySQL tadi, support Postgres juga).
+
+    * **TablePlus:** (Paling ganteng buat Postgres).
+
+<Callout type="success" emoji="🎉">
+  {" "}
+  **Kesimpulan:** Gunakan PostgreSQL kalau lo butuh fitur Relasional (SQL) tapi pengen
+  fleksibilitas kayak NoSQL (JSON) di beberapa kolom tertentu. Ini Database Terbaik
+  buat aplikasi modern Next.js.{" "}
+</Callout>

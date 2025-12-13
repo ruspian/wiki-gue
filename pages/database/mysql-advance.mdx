@@ -1,0 +1,136 @@
+import { Callout } from "nextra/components";
+
+# MySQL Lanjutan: Relasi & Join 🔗
+
+Database Relasional itu ibarat Puzzle. Data dipecah-pecah ke banyak tabel biar rapi, terus "disatukan" lagi pas mau dibaca.
+
+Kita lanjutin studi kasus **Warung Pian**.
+Tabel `produk` sudah ada. Sekarang kita butuh tabel `transaksi`.
+
+## 1. Foreign Key (Kunci Asing) 🔑
+
+Kita gak boleh nulis nama barang ("Indomie") di tabel transaksi.
+Kita harus nulis **ID**-nya saja (`product_id`).
+
+Ini biar hemat memori dan datanya konsisten.
+
+```sql
+-- Bikin Tabel Transaksi
+CREATE TABLE transaksi (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    tanggal DATETIME DEFAULT CURRENT_TIMESTAMP,
+    jumlah INT,
+
+    -- Ini kolom penghubung
+    product_id INT,
+
+    -- Aturan Kunci Asing (Foreign Key)
+    FOREIGN KEY (product_id) REFERENCES produk(id)
+);
+```
+
+**Artinya:** Kolom `product_id` di tabel transaksi harus nyambung ke kolom id di tabel produk. Lo gak bisa masukin ID barang yang gak ada di gudang.
+
+## 2. Input Data Transaksi (Simulasi) 🛒
+
+Misal tadi di tabel produk:
+
+    * ID 1: Indomie (Harga 3500)
+
+    * ID 2: Kopi (Harga 1500)
+
+Ada pembeli datang:
+
+    * Beli 2 Indomie.
+
+    * Beli 5 Kopi.
+
+```sql
+-- Transaksi 1: Beli Indomie (ID 1) sebanyak 2
+INSERT INTO transaksi (product_id, jumlah) VALUES (1, 2);
+
+-- Transaksi 2: Beli Kopi (ID 2) sebanyak 5
+INSERT INTO transaksi (product_id, jumlah) VALUES (2, 5);
+
+Coba cek tabel transaksi:
+SQL
+
+SELECT * FROM transaksi;
+```
+
+Hasilnya cuma angka-angka doang (`product_id: 1, product_id: 2`). Bingung kan?
+
+## 3. JOIN (Jurus Penggabungan) 🤝
+
+Nah, biar angka-angka tadi berubah jadi teks yang bisa dibaca manusia, kita pake **JOIN**.
+
+Kita mau gabungin tabel transaksi dan produk.
+
+```sql
+SELECT
+    transaksi.id,
+    transaksi.tanggal,
+    produk.nama,      -- Ambil nama dari tabel produk
+    produk.harga,     -- Ambil harga dari tabel produk
+    transaksi.jumlah,
+    (produk.harga * transaksi.jumlah) AS total_bayar -- Hitung total otomatis
+FROM
+    transaksi
+JOIN
+    produk ON transaksi.product_id = produk.id; -- Syarat penyatuan
+```
+
+**Hasilnya nanti bakal cakep:**  
+| id | tanggal | nama | harga | jumlah | total_bayar | | :--- | :--- | :--- | :--- | :--- | :--- | | 1 | 2025-12-13... | Indomie | 3500 | 2 | 7000 | | 2 | 2025-12-13... | Kopi | 1500 | 5 | 7500 |
+
+<Callout type="info" emoji="💡"> Konsep Next.js: Nanti di Prisma, lo gak perlu ngetik JOIN panjang kayak gini. Prisma punya fitur `include: { produk: true }` yang otomatis ngelakuin ini. Tapi lo **WAJIB** paham konsep aslinya biar tau cara kerjanya. </Callout>
+## 4. Aggregation (Hitung Omzet) 💰
+
+Bos Otong mau tau: _"Hari ini dapet duit berapa?"_ Kita gak perlu kalkulator. SQL bisa ngitungin.
+
+Fungsi sakti:
+
+    * **`SUM():`** Menjumlahkan.
+
+    * **`COUNT():`** Menghitung baris.
+
+    * **`AVG():`** Rata-rata.
+
+    * **`MAX() / MIN():`** Nilai tertinggi/terendah.
+
+Total Pendapatan Warung:
+
+```sql
+SELECT
+    SUM(produk.harga * transaksi.jumlah) AS total_omzet
+FROM
+    transaksi
+JOIN
+    produk ON transaksi.product_id = produk.id;
+```
+
+Barang Apa yang Paling Laris?
+
+```sql
+SELECT
+    produk.nama,
+    SUM(transaksi.jumlah) AS total_terjual
+FROM
+    transaksi
+JOIN
+    produk ON transaksi.product_id = produk.id
+GROUP BY
+    produk.nama;
+```
+
+## 5. Indexing (Biar Ngebut) ⚡
+
+Kalau data lo udah jutaan, nyari data pake `WHERE nama = 'Indomie'` itu bakal lambat karena database baca baris satu-satu (Full Table Scan).
+
+Biar cepet, kita kasih "Daftar Isi" (`Index`).
+
+```sql
+CREATE INDEX idx_nama_produk ON produk(nama);
+```
+
+Sekarang kalau lo cari nama produk, kecepatannya bakal naik drastis.

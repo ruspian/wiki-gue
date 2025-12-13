@@ -1,0 +1,98 @@
+import { Callout } from "nextra/components";
+
+# PostgreSQL Lanjutan: Fitur Sultan 🏰
+
+Inilah alasan kenapa startup unicorn memilih PostgreSQL.
+Kita bisa melakukan hal-hal kompleks langsung di database tanpa memberatkan kodingan Backend (Next.js).
+
+## 1. Array Column (List Data) 📋
+
+Di MySQL, kalau satu user punya banyak hobi, lo harus bikin tabel terpisah `user_hobbies`.
+Di Postgres? Masukin aja ke dalam kolom tipe **ARRAY**.
+
+**Contoh:** Tabel Siswa dengan kolom `hobi` dan `tags`.
+
+```sql
+CREATE TABLE siswa_keren (
+    id SERIAL PRIMARY KEY,
+    nama VARCHAR(100),
+    hobi TEXT[], -- Tipe data Array of Text
+    nilai INT[]  -- Tipe data Array of Integer
+);
+
+-- Input Data (Pake kurung kurawal)
+INSERT INTO siswa_keren (nama, hobi, nilai)
+VALUES ('Pian', '{"Coding", "Gaming"}', '{80, 90, 100}');
+```
+
+Cara Query (Cari siswa yang suka "Gaming"):
+
+```sql
+SELECT * FROM siswa_keren
+WHERE 'Gaming' = ANY(hobi);
+```
+
+## 2. Geo-Spatial 📍
+
+Ini fitur paling dicari buat Aplikasi Absensi. Gimana caranya tau siswa absen di sekolah atau di warkop? Kita hitung jarak koordinatnya.
+
+Postgres punya ekstensi bernama earthdistance.
+
+#### A. Aktifkan Ekstensi (Cukup sekali)
+
+```sql
+CREATE EXTENSION IF NOT EXISTS cube;
+CREATE EXTENSION IF NOT EXISTS earthdistance;
+```
+
+#### B. Bikin Tabel Lokasi
+
+```sql
+CREATE TABLE lokasi_sekolah (
+    nama VARCHAR(100),
+    lat FLOAT, -- Garis Lintang
+    lng FLOAT  -- Garis Bujur
+);
+
+INSERT INTO lokasi_sekolah VALUES ('SMK Coding', -6.175110, 106.865039);
+```
+
+#### C. Cek Jarak (Magic Query) 🪄
+
+Misal siswa absen dari koordinat -6.1755, 106.8655. Jaraknya berapa meter dari sekolah?
+
+```sql
+SELECT
+    nama,
+    -- Rumus hitung jarak (hasil dalam Meter)
+    (point(lng, lat) <@> point(106.8655, -6.1755)) * 1609.34 AS jarak_meter
+FROM
+    lokasi_sekolah;
+```
+
+Kalau hasilnya < 100 meter, berarti boleh absen. Kalau > 100 meter, tolak!
+
+## 3. Full Text Search (Pencarian Canggih) 🔍
+
+Di MySQL, lo biasa pake LIKE '%buku%'. Itu lambat dan bodoh. Kalau user ngetik "bukunya", data "buku" gak ketemu.
+
+Postgres punya mesin pencari pintar (tsvector).
+
+Contoh: Kita punya judul artikel: "Belajar Next.js itu menyenangkan"
+
+```sql
+-- Coba cari kata 'belajar' (Case Insensitive & Cepat)
+SELECT * FROM artikel
+WHERE to_tsvector(judul) @@ to_tsquery('belajar');
+
+-- Cari 'js' DAN 'senang'
+SELECT * FROM artikel
+WHERE to_tsvector(judul) @@ to_tsquery('js & senang');
+```
+
+<Callout type="info" emoji="🚀">
+  {" "}
+  Kenapa ini penting? Bayangin aplikasi Marketplace Desa lo nanti. User mau cari
+  "Beras", tapi dia ngetik "Bras" atau "Baras". Postgres bisa di-setting buat nanganin
+  Fuzzy Search (typo correction) kayak Google.{" "}
+</Callout>

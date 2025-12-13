@@ -1,0 +1,138 @@
+import { Callout } from "nextra/components";
+
+# Praktek: MongoDB 🍃
+
+MongoDB adalah database NoSQL. Data disimpan dalam bentuk **BSON** (Binary JSON).
+Port default: **`27017`**.
+
+Istilahnya beda sama SQL:
+
+- **Database** -> Tetap Database.
+- **Table** -> **Collection**.
+- **Row** -> **Document**.
+- **Column** -> **Field**.
+
+---
+
+## 1. Setup & Koneksi 🔌
+
+### Opsi A: MongoDB Atlas (Cloud) - _Disarankan_
+
+Paling gampang, gak menuhin laptop.
+
+1.  Daftar di [MongoDB Atlas](https://www.mongodb.com/atlas).
+2.  Bikin Cluster Gratis (M0).
+3.  Dapetin _Connection String_ (URL).
+
+### Opsi B: Lokal (Docker)
+
+Buat pengguna Linux/Mac yang suka Docker:
+
+```bash
+docker run -d -p 27017:27017 --name mongo-pian mongo:latest
+```
+
+**Masuk ke Shell (mongosh)**
+
+Kalau sudah install, ketik di terminal:
+
+```bash
+mongosh
+# Atau kalau pake docker:
+# docker exec -it mongo-pian mongosh
+```
+
+## 2. Operasi CRUD (Basis JSON) 📝
+
+Studi Kasus: Log Aktivitas User. Data log itu strukturnya berantakan (kadang ada error, kadang info doang), jadi cocok banget pake MongoDB.
+
+#### A. Pilih Database
+
+Gak perlu `CREATE DATABASE`. Langsung `use` aja. Kalau belum ada, otomatis dibuatkan pas isi data.
+
+```js
+use app_log
+```
+
+#### B. Create (Insert Data)
+
+Kita masukin data dalam format `JSON`. Perhatikan strukturnya beda-beda!
+
+```js
+// Data 1: Log Login Berhasil
+db.logs.insertOne({
+  user: "Otong",
+  action: "Login",
+  status: "Success",
+  timestamp: new Date(),
+});
+
+// Data 2: Log Error (Strukturnya beda, ada field 'error_code')
+db.logs.insertOne({
+  user: "Sentot",
+  action: "Upload Foto",
+  status: "Failed",
+  error_code: 500,
+  details: {
+    msg: "Server Error",
+    file: "foto_mantan.jpg",
+  },
+});
+```
+
+Enak kan? Gak perlu `ALTER TABLE` buat nambah kolom baru.
+
+#### C. Read (Cari Data) 🔍
+
+```js
+// 1. Tampilkan semua data (diformat rapi pake .pretty() kalo di shell lama)
+db.logs.find();
+
+// 2. Cari yang statusnya 'Failed'
+db.logs.find({ status: "Failed" });
+
+// 3. Cari yang user 'Pian' DAN action 'Login'
+db.logs.find({
+  user: "Otong",
+  action: "Login",
+});
+```
+
+#### D. Update (Edit Data) ✏️
+
+Mengubah data Udin biar gak error lagi.
+
+```js
+// $set adalah operator untuk update field tertentu
+db.logs.updateOne(
+  { user: "Sentot" }, // Syarat (WHERE)
+  { $set: { status: "Retried", error_code: 200 } } // Data Baru
+);
+```
+
+#### E. Delete (Hapus Data) 🗑️
+
+```js
+// Hapus semua log milik Pian
+db.logs.deleteMany({ user: "Pian" });
+```
+
+## 3. Kapan Pake MongoDB di Next.js? 🤔
+
+Di Next.js, kita biasanya pake library Mongoose atau Prisma (yep, Prisma support MongoDB juga!).
+
+Pilihlah MongoDB jika:
+
+    * Data Log/History: Nyatet siapa ngapain aja di aplikasi.
+
+    * Katalog Produk Kompleks: E-commerce yang spek barangnya beda-beda (Baju vs Elektronik).
+
+    * Content Management (CMS): Bikin blog yang struktur artikelnya dinamis.
+
+    * Chat App: Nyimpen history chat yang mengalir deras.
+
+<Callout type="warning" emoji="⚠️">
+  {" "}
+  **Kelemahan:** Jangan pake MongoDB buat data yang butuh relasi rumit (JOIN sana-sini).
+  Misal: Sistem Akuntansi atau Penggajian. Pake PostgreSQL aja kalau itu.{" "}
+</Callout>

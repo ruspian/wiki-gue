@@ -1,0 +1,34 @@
+import { Callout } from "nextra/components";
+
+# SQL vs NoSQL: Apa Bedanya? 🗃️
+
+Sebelum milih database, lo harus tau dulu data lo bentuknya kayak gimana.
+Di dunia database, ada dua aliran besar: **SQL** dan **NoSQL**.
+
+## 1. SQL (Relational Database) 📊
+
+Ini adalah tipe database paling tua dan paling stabil.
+Datanya disimpan dalam bentuk **TABEL** (mirip Excel).
+
+- **Struktur:** Baris (Row) dan Kolom (Column).
+- **Sifat:** Kaku (Strict). Kalau tabel user cuma punya kolom `Nama` dan `Email`, lo gak bisa tiba-tiba masukin `Hobi` tanpa ubah struktur tabelnya dulu.
+- **Relasi:** Jagonya menghubungkan data. Tabel `User` nyambung ke tabel `Transaksi`.
+- **Contoh:** MySQL, PostgreSQL, SQLite.
+
+## 2. NoSQL (Non-Relational) 📄
+
+Ini tipe database modern yang lebih fleksibel.
+Datanya disimpan dalam bentuk **DOKUMEN** (mirip file JSON).
+
+- **Struktur:** Key-Value Pair (JSON).
+- **Sifat:** Fleksibel. User A punya data `Hobi`, User B gak punya, gak masalah. Gak perlu skema yang kaku.
+- **Skalabilitas:** Lebih gampang diperbesar (Scale Out) kalau data udah jutaan.
+- **Contoh:** MongoDB, Firebase, Redis.
+
+## Mana yang Harus Dipilih?
+
+| Pilih SQL Jika...                              | Pilih NoSQL Jika...                              |
+| :--------------------------------------------- | :----------------------------------------------- |
+| Data lo terstruktur rapi (User, Order, Produk) | Data lo berantakan/berubah-ubah (Log user, Chat) |
+| Butuh konsistensi tinggi (Urusan Duit/Bank)    | Butuh kecepatan tulis data yang sangat tinggi    |
+| Relasi antar data sangat kompleks              | Data berdiri sendiri-sendiri                     |

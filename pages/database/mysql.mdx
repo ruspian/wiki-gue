@@ -1,0 +1,160 @@
+import { Callout } from "nextra/components";
+
+# MySQL: Setup & Praktek 🐬
+
+MySQL adalah database relasional (```sql) yang paling populer.
+Server berjalan di port default **`3306`\*\*.
+
+[Image of relational database table structure with rows and columns]
+
+---
+
+## 1. Instalasi & Cek Status 🛠️
+
+Pastikan MySQL sudah jalan di laptop lo.
+
+### 🐧 Linux (Ubuntu/Deepin)
+
+```bash
+# Cek apakah sudah running?
+sudo systemctl status mysql
+
+# Kalau mati/belum install:
+sudo apt update
+sudo apt install mysql-server
+sudo systemctl start mysql
+```
+
+### 🍎 Mac (macOS)
+
+```bash
+# Cek status
+brew services list
+
+# Kalau mati/belum install:
+brew install mysql
+brew services start mysql
+```
+
+## 2. Login ke Terminal MySQL 💻
+
+Buka terminal lo, terus ketik perintah sakti ini:
+
+```bash
+sudo mysql -u root
+```
+
+(Kalau lo udah setting password root, tambah `-p` di belakang jadi `sudo mysql -u root -p`, lalu ketik `password`).
+
+Kalau berhasil, terminal lo bakal berubah jadi: `mysql>`
+
+## 3. Studi Kasus: Warung Madura 🏪
+
+Kita bakal bikin database buat Warung. Kita butuh tabel produk yang nyimpen: Nama Barang, Harga, dan Stok.
+
+#### Langkah 1: Bikin Wadahnya (Database)
+
+```sql
+-- 1. Bikin Database baru
+CREATE DATABASE warung_pian;
+
+-- 2. Masuk ke database itu (PENTING! Jangan lupa ini)
+USE warung_pian;
+```
+
+**Output:** Database changed
+
+#### Langkah 2: Bikin Raknya (Tabel)
+
+Kita bikin tabel produk.
+
+```sql
+
+CREATE TABLE produk (
+    id INT AUTO_INCREMENT PRIMARY KEY, -- ID otomatis nambah (1, 2, 3...)
+    nama VARCHAR(100) NOT NULL,        -- Huruf, maks 100 karakter, wajib isi
+    harga INT DEFAULT 0,               -- Angka, default 0
+    stok INT DEFAULT 0,                -- Angka, default 0
+    kategori VARCHAR(50)               -- Kategori barang
+);
+
+    INT: Integer (Angka bulat).
+
+    VARCHAR: Variable Character (Teks).
+
+    PRIMARY KEY: Kunci utama (Data gak boleh kembar).
+```
+
+#### Langkah 3: Masukin Barang (INSERT / Create)
+
+Warung mulai buka, kita nyetok barang.
+
+```sql
+
+-- Masukin satu barang
+INSERT INTO produk (nama, harga, stok, kategori)
+VALUES ('Indomie Goreng', 3500, 50, 'Makanan');
+
+-- Masukin banyak barang sekaligus
+INSERT INTO produk (nama, harga, stok, kategori)
+VALUES
+    ('Kopi Kapal Api', 1500, 100, 'Minuman'),
+    ('Telur Ayam (1kg)', 28000, 10, 'Sembako'),
+    ('Rokok Surya', 25000, 20, 'Rokok');
+```
+
+#### Langkah 4: Liat Barang (SELECT / Read) 🔍
+
+Ini perintah yang paling sering lo pake seumur hidup.
+
+```sql
+
+-- 1. Liat SEMUA data
+SELECT * FROM produk;
+
+-- 2. Cuma liat nama dan harga
+SELECT nama, harga FROM produk;
+
+-- 3. Filter: Cari yang harganya di bawah 5000
+SELECT * FROM produk WHERE harga < 5000;
+
+-- 4. Filter: Cari yang namanya ada kata 'Indomie'
+SELECT * FROM produk WHERE nama LIKE '%Indomie%';
+```
+
+#### Langkah 5: Ganti Harga (UPDATE) ✏️
+
+Harga telur naik nih. Kita harus update.
+
+```sql
+
+-- Ubah harga telur jadi 30.000
+UPDATE produk
+SET harga = 30000
+WHERE nama = 'Telur Ayam (1kg)';
+```
+
+<Callout type="error" emoji="⚠️">
+  {" "}
+  **BAHAYA:** Jangan lupa pake `WHERE`! Kalau lo cuma ketik `UPDATE produk SET harga
+  = 30000;` (tanpa `WHERE`), SEMUA barang di toko lo bakal jadi 30.000 harganya.
+  Bisa bangkrut!{" "}
+</Callout>
+#### Langkah 6: Barang Laku/Dibuang (DELETE) 🗑️
+
+Rokok Surya udah abis atau dilarang jual.
+
+```sql
+
+DELETE FROM produk WHERE nama = 'Rokok Surya';
+```
+
+## 4. Rekomendasi Tools (GUI) 🖥️
+
+Capek ngetik di terminal item-putih? Programmer jaman now biasanya pake aplikasi visual biar mata gak sakit.
+
+    * DBeaver (Gratis, Paling Powerfull) - Recommended buat Linux/Mac.
+
+    * TablePlus (Tampilannya cakep banget, ada versi gratis terbatas).
+
+    * VS Code Extension: Cari extension "MySQL" by Weijan Chen. Bisa akses DB langsung dari VS Code!

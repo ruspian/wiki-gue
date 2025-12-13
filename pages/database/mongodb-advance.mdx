@@ -1,0 +1,129 @@
+import { Callout } from "nextra/components";
+
+# MongoDB Lanjutan: Aggregation Framework 🌪️
+
+Kalau `find()` cuma buat mengambil data mentah, **Aggregation** adalah cara kita memproses data tersebut sebelum dikasih ke user.
+
+Konsepnya kayak **Ban Berjalan (Pipeline)** di pabrik.
+Data masuk -> Disaring -> Dikelompokkan -> Diubah -> Hasil Keluar.
+
+---
+
+## 1. Aggregation Pipeline 🏭
+
+Bayangkan kita punya collection `orders` (Pesanan Warung).
+
+```json
+// Data Sampel
+[
+  { "item": "Indomie", "price": 3500, "qty": 2, "status": "lunas" },
+  { "item": "Kopi", "price": 3000, "qty": 1, "status": "hutang" },
+  { "item": "Indomie", "price": 3500, "qty": 5, "status": "lunas" }
+]
+```
+
+Kita mau tau: _"Berapa total omzet dari pesanan yang sudah lunas?"_
+
+Di SQL kita pake `WHERE` dan `SUM`. Di MongoDB, kita pake Stages:
+
+```js
+db.orders.aggregate([
+  // Stage 1: Filter ($match) - Ambil cuma yang LUNAS
+  {
+    $match: { status: "lunas" },
+  },
+
+  // Stage 2: Hitung ($group) - Jumlahkan (price * qty)
+  {
+    $group: {
+      _id: "$item", // Kelompokkan per Barang
+      totalOmzet: { $sum: { $multiply: ["$price", "$qty"] } },
+    },
+  },
+]);
+```
+
+**Hasilnya:** Indomie total omzetnya berapa, Kopi berapa. Tanpa kodingan JS di backend, database yang ngitungin!
+
+## 2. Lookup (JOIN di MongoDB) 🔗
+
+Siapa bilang NoSQL gak bisa JOIN? Kita bisa gabungin data antar collection pake `$lookup`.
+
+Misal:
+
+    * Collection users (Data User)
+
+    * Collection orders (Ada field user_id)
+
+Kita mau liat Order lengkap dengan Nama User-nya.
+
+```js
+db.orders.aggregate([
+  {
+    $lookup: {
+      from: "users", // Gabung ke collection apa?
+      localField: "user_id", // Kunci di sini
+      foreignField: "_id", // Kunci di sana
+      as: "data_pembeli", // Nama field baru hasilnya
+    },
+  },
+]);
+```
+
+Hasilnya nanti di dalam data order ada array `data_pembeli` yang isinya profil user tersebut.
+
+## 3. Indexing (Wajib Banget!) ⚡
+
+MongoDB itu default-nya scan semua dokumen kalau nyari data (Collection Scan). Kalau data lo ada 1 juta, server lo bakal meledak.
+
+Lo **WAJIB** bikin `Index` buat `field` yang sering dicari.
+
+```js
+// Bikin Index buat field 'username' biar login cepet
+db.users.createIndex({ username: 1 });
+
+// Bikin Compound Index (Cari berdasarkan Nama DAN Umur)
+db.users.createIndex({ nama: 1, umur: -1 });
+```
+
+**Cara Cek Performa:** Pake `.explain("executionStats")` di akhir query lo buat liat seberapa cepet query lo jalan.
+
+## 4. Schema Validation (Aturan Main) 👮
+
+Walaupun MongoDB itu Schema-less (Bebas), tapi buat aplikasi serius kayak Absensi SMK, kita butuh aturan. Masa 'Umur' diisi teks?
+
+Kita bisa pasang satpam di level database:
+
+```js
+db.createCollection("siswa", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["nama", "nis", "kelas"], // Field Wajib
+      properties: {
+        nama: {
+          bsonType: "string",
+          description: "Harus teks donk!",
+        },
+        nis: {
+          bsonType: "string",
+          minLength: 5,
+        },
+        kelas: {
+          enum: ["10", "11", "12"], // Cuma boleh pilih ini
+          description: "Kelas cuma ada 10, 11, 12",
+        },
+      },
+    },
+  },
+});
+```
+
+Kalau ada yang coba insert data ngawur, MongoDB bakal nolak mentah-mentah!
+
+<Callout type="info" emoji="🚀">
+  {" "}
+  **Tips Pro:** Biasanya validasi ini kita handle di level aplikasi pake Zod (di
+  Next.js) atau Mongoose Schema. Tapi tau validasi native di database itu nilai plus
+  banget.{" "}
+</Callout>

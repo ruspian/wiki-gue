@@ -1,0 +1,61 @@
+import { Callout } from "nextra/components";
+
+# NoSQL Modern: MongoDB 🍃
+
+Kalau lo benci bikin Tabel dan Relasi yang ribet (harus `ALTER TABLE` tiap mau nambah kolom), **MongoDB** adalah teman lo.
+MongoDB menyimpan data dalam format **BSON** (Binary JSON).
+
+## 1. Bentuk Datanya (Dokumen) 📄
+
+Kalau di SQL lo harus bikin kolom dulu secara kaku, di MongoDB lo tinggal lempar JSON aja. Bebas!
+
+**Contoh Data User di MongoDB:**
+
+```json
+{
+  "_id": "507f1f77bcf86cd799439011",
+  "nama": "Pian",
+  "skills": ["Next.js", "React", "Linux"], // Bisa simpan Array!
+  "alamat": {
+    "kota": "Jakarta", // Bisa simpan Object di dalam Object!
+    "kode_pos": 12345
+  },
+  "is_active": true
+}
+```
+
+Coba lakuin nyimpen **Array** `skills` kayak di atas pake MySQL? Ribet! Harus bikin tabel terpisah (`user_skills`) terus di-JOIN. Di MongoDB? Langsung masuk satu paket.
+
+## 2. Kapan Wajib Pake MongoDB? 🤔
+
+    1. **Katalog Produk yang Variatif:** Misal lo jual Baju (punya Ukuran, Warna) dan jual Laptop (punya RAM, Processor).
+
+        * **Di SQL:** Kolomnya bakal banyak yang kosong (NULL).
+
+        * **Di MongoDB:** Struktur tiap produk bisa beda-beda. Gak masalah.
+
+    2. **Aplikasi Chat:** History chat itu datanya panjang, cepet, dan strukturnya simpel. MongoDB jago banget nulis data beginian (Write Heavy).
+
+    3. **Content Management System (CMS):** Di mana struktur konten bisa berubah-ubah sesuai kemauan user.
+
+## 3. Mongoose (Temennya MongoDB) 🐹
+
+Kalau di SQL kita punya Prisma, di MongoDB kita biasanya pake library bernama Mongoose.
+
+Mongoose tugasnya bikin struktur MongoDB yang "terlalu bebas" jadi agak lebih teratur. Biar kodingan lo gak berantakan kalau tim lo mulai nulis data sembarangan.
+
+```js
+// Contoh Schema Mongoose (mirip Prisma tapi buat MongoDB)
+const userSchema = new Schema({
+  name: String,
+  email: String,
+  skills: [String], // Array of Strings
+});
+```
+
+<Callout type="warning" emoji="⚠️">
+  {" "}
+  **Kelemahan MongoDB:** Jangan pake MongoDB kalau aplikasi lo butuh Transaksi Keuangan
+  yang rumit (antar banyak tabel). SQL (Postgres/MySQL) masih lebih jago buat urusan
+  duit yang butuh konsistensi tingkat dewa (ACID).{" "}
+</Callout>

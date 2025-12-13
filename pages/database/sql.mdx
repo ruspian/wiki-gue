@@ -1,0 +1,50 @@
+import { Callout } from "nextra/components";
+
+# Raja SQL: MySQL vs PostgreSQL 🐘
+
+Dua-duanya sama-sama pake bahasa SQL, sama-sama tabel. Terus bedanya apa?
+
+## 1. MySQL 🐬
+
+Database paling populer di dunia. Hampir semua hosting murah (cPanel) pasti kasih MySQL.
+
+- **Kelebihan:**
+  - **Merakyat:** Tutorialnya ada di mana-mana.
+  - **Read-Heavy:** Sangat cepat kalau cuma buat baca data (cocok buat blog/berita).
+  - **Murah:** Didukung semua provider hosting dari yang Rp 10rb-an.
+- **Kekurangan:**
+  - Fiturnya gak sebanyak PostgreSQL buat data kompleks.
+  - Agak "kurang galak" soal validasi data (kadang data aneh bisa lolos masuk).
+- **Cocok Buat:** Website standar, Blog (WordPress), E-commerce sederhana, Project Belajar.
+
+## 2. PostgreSQL (Postgres) 🐘
+
+Ini adalah database "Anak Skena" IT jaman sekarang. Banyak startup modern (termasuk yang pake Next.js) lebih milih ini.
+
+- **Kelebihan:**
+  - **Fitur Sultan:** Bisa nyimpen JSON di dalem tabel SQL (Hybrid!).
+  - **Geo-Spatial:** Jago banget ngurusin data Lokasi/Peta (pake plugin PostGIS).
+  - **Strict:** Lebih galak soal aturan data, jadi data lo lebih aman dan konsisten.
+- **Kekurangan:**
+  - Sedikit lebih berat dibanding MySQL.
+  - Settingannya kadang lebih ribet dikit buat pemula.
+- **Cocok Buat:** Aplikasi Enterprise, Startup Unicorn, Aplikasi Absensi (GIS), Aplikasi Keuangan.
+
+---
+
+## Tabel Perbandingan Singkat
+
+| Fitur                | MySQL 🐬        | PostgreSQL 🐘         |
+| :------------------- | :-------------- | :-------------------- |
+| **Popularitas**      | Sangat Tinggi   | Tinggi & Naik Terus   |
+| **Kompleksitas**     | Mudah           | Menengah - Sulit      |
+| **JSON Support**     | Ada (Terbatas)  | Sangat Bagus          |
+| **Hosting**          | Ada di mana aja | Biasanya di VPS/Cloud |
+| **Pasangan Next.js** | Oke             | **Perfect Match**     |
+
+<Callout type="info" emoji="💡">
+  **Rekomendasi:** Kalau lo pake **Vercel** atau **Supabase**, mereka secara
+  default pake **PostgreSQL**. Makanya tutorial Next.js jaman now hampir semua
+  pake Postgres. Tapi kalau lo deploy di **VPS murah** atau **Shared Hosting**,
+  MySQL adalah pilihan aman.
+</Callout>
