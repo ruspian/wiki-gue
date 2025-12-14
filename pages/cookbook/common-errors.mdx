@@ -1,0 +1,88 @@
+import { Callout } from 'nextra/components'
+
+# Fix Common Errors 🚑
+
+Daftar "penyakit langganan" di Next.js dan obatnya.
+
+## 1. Hydration Failed / Text Content Does Not Match 💧
+
+**Error:**
+`Error: Text content does not match server-rendered HTML.`
+
+**Penyebab:**
+Ada perbedaan konten antara Server (SSR) dan Browser (Client).
+Sering terjadi kalau lo render:
+* Jam/Waktu (`new Date()`)
+* Angka Acak (`Math.random()`)
+* Data dari `localStorage` / `window`
+
+**Solusi:**
+Pastikan komponen itu cuma render setelah "Mounted" di browser.
+
+```tsx
+'use client'
+import { useState, useEffect } from 'react'
+
+export default function Jam() {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Kalau belum mounted, jangan tampilin apa-apa (atau tampilin loading)
+  if (!mounted) return null 
+
+  return <div>{new Date().toLocaleTimeString()}</div>
+}
+```
+
+## . Module Not Found: Can't resolve 'fs' 📂
+
+**Error:** Muncul pas lo import library backend (kayak fs, path, bcrypt) di dalam komponen yang ada 'use client'.  
+
+**Penyebab:** Browser gak punya akses ke File System (fs) laptop lo. Itu cuma boleh di Server.  
+
+**Solusi:** Pindahkan logika yang pake library itu ke Server Actions atau API Route. Jangan taruh di komponen UI.
+## 3. Image Hostname Not Configured 🖼️
+
+**Error:** Gambarnya nge-blank atau error pas pake komponen `<Image src="..." />` dari URL luar (misal Google atau UploadThing).
+
+**Solusi: **Lo harus "izinkan" domain tersebut di next.config.mjs.
+
+```js
+// next.config.mjs
+const nextConfig = {
+  images: {
+    remotePatterns: [
+      { hostname: "utfs.io" },       // UploadThing
+      { hostname: "lh3.googleusercontent.com" }, // Google Profile
+      { hostname: "images.unsplash.com" } // Unsplash
+    ],
+  },
+};
+
+export default nextConfig;
+```
+Jangan lupa restart server (Ctrl+C -> npm run dev) setelah ubah file config!
+## 4. Prisma: Too Many Connections 🧱
+
+**Error:** Timed out fetching a new connection from the connection pool.
+
+**Penyebab:** Pas lagi coding (dev mode), setiap kali lo save file, Next.js bikin koneksi baru ke database tanpa nutup yang lama. Akhirnya database penuh.
+
+**Solusi:** Gunakan pola Singleton saat inisialisasi Prisma. Pastikan file src/lib/prisma.ts lo isinya kayak gini:
+```tsx
+
+import { PrismaClient } from "@prisma/client"
+
+const globalForPrisma = global as unknown as { prisma: PrismaClient }
+
+export const prisma =
+  globalForPrisma.prisma ||
+  new PrismaClient({
+    log: ["query"], // Opsional: biar keliatan query SQL-nya
+  })
+
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma
+```

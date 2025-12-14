@@ -1,0 +1,120 @@
+import { Callout } from 'nextra/components'
+
+# Utility Functions (Snippets) 🛠️
+
+Ini gudang fungsi-fungsi kecil ("Helper") yang wajib ada di folder `src/utils` atau `src/lib`.
+Tinggal copas aja kalau butuh.
+
+## 1. Format Rupiah (IDR) 💰
+
+Wajib buat Marketplace Desa atau PPDB (bayar SPP).
+
+```ts
+export const formatRupiah = (number: number) => {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(number);
+};
+
+// Cara pakai: 
+// formatRupiah(50000) -> Output: "Rp 50.000"
+```
+
+## 2. Format Tanggal Indo 📅
+
+Biar tanggalnya gak bahasa Inggris (e.g., "17 August 1945").
+```ts
+export const formatDateIndo = (dateString: string | Date) => {
+  return new Date(dateString).toLocaleDateString("id-ID", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    weekday: "long", // senin, selasa...
+  });
+};
+
+// Cara pakai: 
+// formatDateIndo("2025-08-17") -> Output: "Minggu, 17 Agustus 2025"
+```
+## 3. Class Name Merger (cn) 🎨
+
+Kalau lo pake Tailwind + Shadcn UI, fungsi ini wajib ada buat ngegabungin class biar gak konflik/tabrakan. Syarat: install dulu `npm i clsx tailwind-merge`
+```ts
+
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
+// Cara pakai: 
+// <div className={cn("bg-red-500 p-4", props.className)}>
+// (Class bawaan bg-red-500 bakal aman gak ketimpa sembarangan)
+```
+## 4. Delay / Sleep ⏳
+
+Buat simulasi loading pas lagi testing komponen `loading.tsx`.
+```ts
+export const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// Cara pakai: 
+// await wait(2000); // Nunggu 2 detik baru kode bawahnya jalan
+```
+
+## 5. Format File Size (Bytes to MB) 📦
+
+Pas lo upload file pake UploadThing, ukuran filenya itu dalam **Bytes** (angka doang).
+User gak ngerti "2048000 bytes". Mereka ngertinya "2 MB". Pake fungsi ini.
+
+```ts
+export function formatBytes(bytes: number, decimals = 2) {
+  if (!+bytes) return '0 Bytes';
+
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+}
+
+// Cara pakai:
+// formatBytes(2500000) -> Output: "2.38 MB"
+```
+
+## 6. Slug Generator (SEO Friendly URL) 🔗
+
+Kalau lo bikin blog atau Produk Desa. Judul: "Cara Ternak Lele 2024" -> URL: /blog/cara-ternak-lele-2024
+```ts
+export function slugify(text: string) {
+  return text
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-")     // Ganti spasi jadi strip
+    .replace(/[^\w\-]+/g, "") // Buang karakter aneh (?!@#)
+    .replace(/\-\-+/g, "-");  // Ganti strip dobel jadi satu
+}
+
+// Cara pakai:
+// slugify("Halo Dunia! Apa Kabar?") -> Output: "halo-dunia-apa-kabar"
+```
+## 7. Truncate Text (Potong Teks) ✂️
+
+Buat nampilin cuplikan berita di halaman depan (Dashboard). Kalau teksnya kepanjangan, potong terus kasih titik-titik `"..."`.
+```ts
+export function truncate(str: string, length: number) {
+  if (!str) return "";
+  if (str.length <= length) return str;
+  return str.slice(0, length) + "...";
+}
+
+// Cara pakai:
+// truncate("Ini adalah deskripsi produk yang sangat panjang sekali lho", 20)
+// Output: "Ini adalah deskripsi..."
+```

@@ -10,6 +10,7 @@
   "database": "Database Fundamentals",
   "prisma": "Prisma ORM",
   "tanstack": "TanStack Query",
+  "cookbook": "Snippets & Fix Error",
   "contact": {
     "title": "Hubungi Gue",
     "type": "page"

@@ -1,0 +1,83 @@
+import { Callout } from 'nextra/components'
+
+# VS Code Setup & Extensions 💻
+
+Editor itu ibarat dapur. Kalau pisau tumpul dan bumbu berantakan, masaknya lama.
+Ini setup wajib biar coding Next.js + Tailwind jadi **Ngebut**.
+
+## 1. Extensions Wajib (Install Ini!) 🧩
+
+Cari di menu Extensions (Kotak-kotak di kiri) dan install:
+
+### A. Tampilan & Ikon
+* **Material Icon Theme:** Biar ikon folder/file jelas bedanya (React beda, TS beda).
+* **One Dark Pro:** Tema warna yang enak di mata (opsional, tapi recommended).
+
+### B. Kodingan Frontend (Next.js)
+* **ES7+ React/Redux/React-Native snippets:**
+    * *Guna:* Ngetik template dasar React dalam 1 detik.
+    * *Cara Pakai:* Ketik `rafce` lalu Enter di file kosong -> Jadi komponen!
+* **Tailwind CSS IntelliSense:**
+    * *Guna:* Autocomplete class Tailwind. Ketik `text-red` langsung muncul pilihannya.
+    * *Syarat:* Wajib install extension ini biar gak perlu ngafal ribuan class.
+* **Prettier - Code formatter:**
+    * *Guna:* Merapikan kodingan otomatis pas di-Save. Gak perlu spasi manual.
+
+### C. Helper & Backend
+* **Prisma:** Biar file `schema.prisma` berwarna dan ada autocompletenya.
+* **Pretty TypeScript Errors:** Error TypeScript biasanya susah dibaca. Extension ini bikin errornya jadi manusiawi.
+* **Auto Rename Tag:** Kalau ganti tag pembuka `<div>`, tag penutup `</div>` ikut ganti otomatis.
+
+---
+
+## 2. User Settings (Magic Config) ⚙️
+
+Biar VS Code lo makin sakti, kita ubah settingan JSON-nya.
+Tekan `F1` atau `Ctrl+Shift+P` -> Ketik **"Open User Settings (JSON)"**.
+
+Copas ini ke dalam kurung kurawal `{ ... }`:
+
+```json
+{
+  // 1. Font & Tampilan
+  "editor.fontFamily": "'JetBrains Mono', 'Fira Code', Consolas, monospace",
+  "editor.fontLigatures": true, // Biar tanda => jadi nyambung keren
+  "editor.fontSize": 14,
+  "workbench.iconTheme": "material-icon-theme",
+
+  // 2. Formatter (Rapiin otomatis pas Save)
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit" // Fix error ESLint otomatis
+  },
+
+  // 3. Tailwind CSS & HTML
+  "editor.quickSuggestions": {
+    "strings": true // Biar autocomplete Tailwind muncul di dalam string
+  },
+  "files.associations": {
+    "*.css": "tailwindcss" // Biar file CSS biasa dianggap Tailwind
+  },
+
+  // 4. Terminal & Explorer
+  "terminal.integrated.defaultProfile.windows": "Git Bash", // Pake Git Bash di Windows
+  "explorer.compactFolders": false, // Biar folder gak numpuk satu baris
+  "editor.wordWrap": "on", // Biar kodingan panjang turun ke bawah (gak perlu scroll samping)
+}
+```
+
+## 3. Shortcuts Dewa ⚡
+
+Hafalin ini biar gak sering-sering megang mouse:
+
+|Shortcut (Win/Linux)	|Fungsi|
+|:--- |:---|
+|Ctrl + P	|Cari file cepat (gak perlu klik folder explorer)|
+|Ctrl + Shift + P	|Buka Command Palette (pusat perintah)|
+|Ctrl + /	|Comment / Uncomment baris|
+|Alt + ⬆️ / ⬇️	|Pindahin baris kodingan ke atas/bawah|
+|Alt + Shift + ⬇️	|Duplicate (copy) baris ke bawah|
+|Ctrl + D	|Select kata yang sama (buat edit massal)|
+
+<Callout type="info" emoji="🚀"> **Pro Tip:** Biasakan pake `Ctrl + P` buat pindah file. Misal mau buka `Header.tsx`, jangan cari di folder. Cukup `Ctrl + P` -> ketik "Head" -> Enter. Hemat waktu banget! </Callout>
