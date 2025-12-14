@@ -1,5 +1,5 @@
 {
-  "index": "🏠 Home",
+  "index": "Home",
   "git": "Git & GitHub",
   "javascript": "JavaScript",
   "typescript": "TypeScript",
@@ -9,6 +9,7 @@
   "nextjs": "Next.js",
   "database": "Database Fundamentals",
   "prisma": "Prisma ORM",
+  "tanstack": "TanStack Query",
   "contact": {
     "title": "Hubungi Gue",
     "type": "page"

@@ -1,0 +1,81 @@
+import { Callout } from 'nextra/components'
+
+# Fetching Data: useQuery 🎣
+
+Kalau lo mau ambil data dari API (GET), lupakan `useEffect`. Gunakan `useQuery`.
+
+
+
+## 1. Syntax Dasar 📝
+
+Pastikan komponen lo adalah **Client Component** (karena `useQuery` butuh hooks).
+
+```tsx
+'use client' // WAJIB!
+
+import { useQuery } from '@tanstack/react-query'
+import axios from 'axios'
+
+export default function UserList() {
+  
+  // 1. Definisikan Query
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ['users'], // ID Unik (Penting!)
+    queryFn: async () => {
+      const res = await axios.get('[https://jsonplaceholder.typicode.com/users](https://jsonplaceholder.typicode.com/users)')
+      return res.data
+    }
+  })
+
+  // 2. Handle Loading
+  if (isLoading) {
+    return <div className="p-10">Lagi memuat data bos...</div>
+  }
+
+  // 3. Handle Error
+  if (isError) {
+    return <div className="text-red-500">Error: {error.message}</div>
+  }
+
+  // 4. Tampilkan Data (Kalau sukses)
+  return (
+    <div className="p-4">
+      <h1 className="text-2xl font-bold mb-4">Daftar User</h1>
+      <ul className="space-y-2">
+        {data.map((user: any) => (
+          <li key={user.id} className="border p-2 rounded shadow-sm">
+            {user.name} ({user.email})
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+```
+
+## 2. Bedah Kode 🕵️‍♂️
+
+Ada 2 properti wajib yang harus lo paham:
+#### A. `queryKey` (Kunci Identitas) 🔑
+
+Ini adalah array. Isinya bisa string atau object. React Query pake kunci ini buat Caching.
+
+    * `['users']` -> Cache buat daftar semua user.
+
+    * `['users', 1]` -> Cache buat user dengan ID 1.
+
+    * `['transaksi', { status: 'lunas' }]` -> Cache buat transaksi yang lunas doang.
+
+Kalau lo panggil `useQuery` dengan `key` yang sama di halaman lain, dia **GAK BAKAL REQUEST** ke server lagi (kalau datanya masih fresh). Dia ambil dari memori. Cerdas kan?
+#### B. `queryFn` (Fungsi Fetcher) 🏃
+
+Ini fungsi yang tugasnya request ke server. Harus `return Promise`. Bisa pake `axios`, `fetch`, atau `ky`. Bebas.
+#### 3. Fitur "Magic" Otomatis ✨
+
+Coba jalankan kode di atas, terus lakukan eksperimen ini:
+
+    * **Window Focus Refetching:** Buka tab browser lain (misal YouTube), terus balik lagi ke tab aplikasi lo. **Perhatikan:** React Query bakal otomatis "kedip" (fetching background) buat mastiin datanya gak basi.
+
+    * **Stale-While-Revalidate:** Kalau lo refresh halaman, dia bakal nampilin data dari cache duluan (instan), baru dia request ke server diam-diam buat update. User gak ngerasa loading sama sekali!
+
+<Callout type="info" emoji="🚀"> **Tips Pro:** Data yang didapet dari `useQuery` itu otomatis di-cache selama 5 menit (default). Jadi kalau user bolak-balik halaman A ke B, aplikasinya bakal terasa ngebut banget. </Callout>

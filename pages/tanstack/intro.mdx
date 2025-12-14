@@ -1,0 +1,65 @@
+import { Callout } from 'nextra/components'
+
+# Pengenalan: The Death of useEffect 💀
+
+Selama belajar React/Next.js dasar, lo pasti sering diajarin cara ambil data API kayak gini:
+
+```tsx
+// ❌ CARA LAMA (JANGAN DIPAKE LAGI)
+const [data, setData] = useState(null);
+const [isLoading, setIsLoading] = useState(true);
+const [error, setError] = useState(null);
+
+useEffect(() => {
+  fetch('/api/user')
+    .then((res) => res.json())
+    .then((data) => {
+      setData(data);
+      setIsLoading(false);
+    })
+    .catch((err) => setError(err));
+}, []);
+```
+
+**Kenapa cara di atas jelek?**
+
+    * **Ribet:** Lo harus bikin 3 state manual (data, loading, error) buat setiap request.
+
+    * **Gak Update:** Kalau user pindah tab terus balik lagi, datanya gak berubah (kecuali di-refresh).
+
+    * **Boros:** Kalau user bolak-balik halaman, dia bakal request ke server terus-menerus (gak ada cache).
+
+Disinilah TanStack Query (dulu namanya React Query) jadi pahlawan.
+## Konsep: Server State vs Client State 🧠
+
+Biar gak bingung kapan pake Zustand/Redux dan kapan pake TanStack Query, lo harus paham bedanya dua tipe data ini:
+#### 1. Client State (Milik Browser) 🏠
+
+Data yang "hidup" dan diatur sepenuhnya di browser pengguna.
+
+    * **Contoh:** Status Dark Mode, Isi Form yang belum disubmit, Menu Sidebar (Buka/Tutup).
+
+    * **Tools:** useState, Zustand, Redux.
+
+#### 2. Server State (Milik Server) ☁️
+
+Data yang aslinya ada di Database server. Browser cuma "minjem" buat nampilin doang.
+
+    * **Contoh:** Daftar User, Detail Produk, List Transaksi.
+
+    * **Sifat:**
+
+        - Bisa diubah orang lain dari jarak jauh (asynchronous).
+
+        - Bisa "basi" (stale) kalau lo gak update tampilannya.
+
+    * **Tools:** TanStack Query, SWR.
+
+<Callout type="info" emoji="💡"> **Rule of Thumb:** Kalau datanya berasal dari API/Database -> Pake TanStack Query. Kalau datanya cuma interaksi UI lokal -> Pake useState/Zustand. </Callout>
+## Apa Untungnya Pake TanStack Query?
+
+    * **Auto Caching:** Data disimpen di memori. Pindah halaman berasa instan.
+
+    * **Auto Refetch:** Pindah tab browser terus balik lagi? Dia cek otomatis ada data baru gak.
+
+    * **Deduping:** Kalau ada 2 komponen butuh data yang sama, dia cuma request sekali. Hemat kuota server!

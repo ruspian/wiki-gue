@@ -1,0 +1,107 @@
+import { Callout } from 'nextra/components'
+
+# SEO & Metadata: Biar Web Lo Ganteng 🔍
+
+Pernah share link di WhatsApp terus muncul gambar dan judulnya? Itu namanya **Open Graph (OG)**.
+Pernah cari di Google terus website muncul paling atas? Itu namanya **SEO**.
+
+Di Next.js (App Router), kita gak pake file HTML `<head>` lagi. Kita pake **Metadata API**.
+
+## 1. Static Metadata (Halaman Tetap) 🗿
+
+Biasanya dipasang di `layout.tsx` (biar ngefek ke satu web) atau `page.tsx` (halaman khusus).
+
+Cek file **`src/app/layout.tsx`** lo. Pasti ada kode ini:
+
+```tsx
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: {
+    default: "Portal Pesantren Modern", // Judul default
+    template: "%s | Pesantren Modern",  // Template buat halaman anak
+  },
+  description: "Platform digital untuk manajemen santri dan wali murid.",
+  
+  // Konfigurasi Open Graph (Buat sosmed/WA)
+  openGraph: {
+    title: "Portal Pesantren Modern",
+    description: "Cek nilai dan hafalan santri secara real-time.",
+    url: "[https://pesantrenku.com](https://pesantrenku.com)",
+    siteName: "PesantrenKu",
+    images: [
+      {
+        url: "[https://pesantrenku.com/og-image.jpg](https://pesantrenku.com/og-image.jpg)", // Gambar ukuran 1200x630
+        width: 1200,
+        height: 630,
+      },
+    ],
+    locale: "id_ID",
+    type: "website",
+  },
+};
+```
+
+Sekarang kalau lo bikin halaman baru, misal `src/app/about/page.tsx`, lo bisa ganti judulnya doang:
+```ts
+
+// src/app/about/page.tsx
+export const metadata = {
+  title: "Tentang Kami", // Hasilnya: "Tentang Kami | Pesantren Modern"
+};
+
+export default function AboutPage() { ... }
+```
+## 2. Dynamic Metadata (Halaman Berubah-ubah) ⚡
+
+Gimana kalau halamannya Detail Siswa (/siswa/[id])? Kita mau judul tab-nya sesuai nama siswa, misal: "Profil: Otong | SMK Keren".
+
+Kita pake fungsi `generateMetadata`.
+```tsx
+
+// src/app/santri/[id]/page.tsx
+import { Metadata } from "next";
+
+type Props = {
+  params: { id: string }
+}
+
+// 1. Fungsi buat generate metadata
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const id = params.id
+  
+  // Fetch data siswa dari database (pake Prisma/API)
+  // const siswa = await prisma.siswa.findUnique({ where: { id } })
+  const siswa = { nama: "Otong" } // Simulasi data
+
+  return {
+    title: `Profil: ${siswa.nama}`,
+    description: `Lihat detail nilai dari ${siswa.nama}`,
+    openGraph: {
+      images: ['/foto-siswa-default.jpg'], // Bisa disesuaikan
+    },
+  }
+}
+
+// 2. Komponen Halaman Utama
+export default function SiswaDetailPage({ params }: Props) {
+  return <h1>Detail Siswa: {params.id}</h1>
+}
+```
+## 3. The Magic File: opengraph-image.tsx 🎨
+
+Males bikin gambar satu-satu buat tiap halaman? Next.js punya fitur Image Generation.
+
+Lo bisa bikin file bernama `opengraph-image.tsx` di dalam folder halaman lo. Next.js bakal otomatis nge-generate gambar berisi teks judul halaman itu.
+
+Contoh struktur folder:
+```
+
+src/app/
+├── opengraph-image.tsx  <-- Gambar default satu web
+├── blog/
+│   ├── [slug]/
+│   │   ├── page.tsx
+│   │   └── opengraph-image.tsx <-- Gambar spesifik per blog post
+```
+<Callout type="success" emoji="🎉"> **Efeknya:** Sekarang coba lo deploy, terus copy link-nya ke WhatsApp atau Telegram. Link lo bakal tampil mewah dengan Gambar dan Deskripsi yang jelas. Gak malu-maluin lagi! </Callout>

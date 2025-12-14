@@ -1,0 +1,91 @@
+import { Callout } from 'nextra/components'
+
+# Mengubah Data: useMutation ✍️
+
+Gunakan `useMutation` untuk melakukan operasi **Create, Update, atau Delete** (POST, PUT, DELETE).
+
+Bedanya sama `useQuery`:
+1.  **Gak Jalan Otomatis:** `useQuery` jalan pas komponen muncul. `useMutation` cuma jalan pas kita suruh (misal: pas tombol diklik).
+2.  **Gak Butuh Key (Opsional):** Dia gak butuh di-cache, karena tujuannya ngubah server.
+
+---
+
+## 1. Syntax Dasar 📝
+
+Misal kita mau bikin tombol **"Hapus User"**.
+
+```tsx
+'use client'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import axios from 'axios'
+
+export default function DeleteButton({ userId }: { userId: string }) {
+  // 1. Panggil QueryClient (Buat ngatur cache nanti)
+  const queryClient = useQueryClient()
+
+  // 2. Definisikan Mutasi
+  const mutation = useMutation({
+    // Fungsi yang jalan pas dieksekusi
+    mutationFn: async (id: string) => {
+      return await axios.delete(`/api/users/${id}`)
+    },
+    
+    // Pas SUKSES, ngapain?
+    onSuccess: () => {
+      // 3. Jurus Maut: Invalidate Queries!
+      // Ini nyuruh React Query buat: "Eh, data 'users' udah basi nih gara-gara ada yang dihapus. Fetch ulang dong!"
+      queryClient.invalidateQueries({ queryKey: ['users'] })
+      
+      alert("User berhasil dihapus!")
+    },
+
+    // Pas ERROR, ngapain?
+    onError: (error) => {
+      alert("Gagal hapus: " + error.message)
+    }
+  })
+
+  return (
+    <button 
+      onClick={() => mutation.mutate(userId)} // <-- Cara Pakenya
+      disabled={mutation.isPending} // Disable pas lagi loading
+      className="bg-red-500 text-white p-2 rounded disabled:bg-gray-400"
+    >
+      {mutation.isPending ? "Lagi Menghapus..." : "Hapus User"}
+    </button>
+  )
+}
+```
+## 2. Jurus "Invalidate Queries" 🔄
+
+Ini konsep paling **PENTING** di React Query.
+
+Bayangkan skenario ini:
+
+    * Lo punya list user di layar (dari cache `['users']`).
+
+    * Lo hapus satu user pake mutasi di atas.
+
+    * Kalau lo GAK pake invalidateQueries, list di layar GAK BERUBAH (user yang dihapus masih nongol), padahal di database udah ilang.
+
+Dengan `queryClient.invalidateQueries({ queryKey: ['users'] })`, lo maksa React Query buat: _"Woy, data ['users'] udah berubah nih di server. Buang cache lama, ambil data baru sekarang!"_
+
+Hasilnya? UI lo update otomatis secara Real-time tanpa perlu refresh halaman browser (F5). Magic! ✨
+## 3. Kirim Data (Body) 📦
+
+Contoh kalau buat Form Tambah Data (POST).
+```tsx
+const mutation = useMutation({
+  mutationFn: async (newData: { nama: string, email: string }) => {
+    return await axios.post('/api/users', newData)
+  },
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ['users'] })
+    // Bisa reset form juga disini kalau pake state manual
+  }
+})
+
+// Cara panggil:
+// mutation.mutate({ nama: "Pian", email: "pian@gmail.com" })
+```
+<Callout type="info" emoji="💡"> **Tips UX:** Manfaatkan properti `mutation.isPending` buat nampilin spinner loading atau mematikan tombol biar user gak klik berkali-kali (spamming). </Callout>

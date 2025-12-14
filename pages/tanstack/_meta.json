@@ -1,0 +1,8 @@
+{
+  "intro": "Apa & Kenapa?",
+  "setup": "Instalasi & Setup Provider",
+  "queries": "Fetching Data",
+  "mutations": "Mengubah Data",
+  "devtools": "DevTools",
+  "infinite": "Infinite Scroll"
+}

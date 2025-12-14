@@ -1,0 +1,121 @@
+import { Callout } from 'nextra/components'
+
+# Loading & Error UI: Anti Layar Putih ⏳
+
+Di Next.js App Router, lo gak perlu lagi bikin state manual kayak:
+`const [isLoading, setIsLoading] = useState(true)`
+
+Next.js otomatis mendeteksi kalau server lagi sibuk ngambil data, dia bakal nyari file `loading.tsx`. Kalau ada error, dia cari `error.tsx`.
+
+## 1. Loading UI (Skeleton) 💀
+
+Pernah liat Youtube atau Facebook pas baru dibuka? Isinya kotak-kotak abu-abu kedap-kedip dulu kan? Itu namanya **Skeleton Loading**.
+
+Caranya gampang parah. Cukup bikin file `loading.tsx` di folder halaman lo.
+
+**Contoh Struktur:**
+```text
+src/app/
+├── dashboard/
+│   ├── page.tsx    <-- Halaman Utama (Fetch Data Lama)
+│   └── loading.tsx <-- Tampil duluan sebelum page.tsx siap
+```
+
+Isi `src/app/dashboard/loading.tsx`:
+```tsx
+export default function Loading() {
+  // Lo bisa pake komponen Skeleton dari Shadcn UI di sini
+  return (
+    <div className="w-full h-screen p-10 space-y-4">
+      <h1 className="text-2xl font-bold">Memuat Data Santri...</h1>
+      
+      {/* Efek Kotak-kotak Loading */}
+      <div className="animate-pulse flex space-x-4">
+        <div className="rounded-full bg-gray-300 h-10 w-10"></div>
+        <div className="flex-1 space-y-6 py-1">
+          <div className="h-2 bg-gray-300 rounded"></div>
+          <div className="space-y-3">
+            <div className="grid grid-cols-3 gap-4">
+              <div className="h-2 bg-gray-300 rounded col-span-2"></div>
+              <div className="h-2 bg-gray-300 rounded col-span-1"></div>
+            </div>
+            <div className="h-2 bg-gray-300 rounded"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+```
+<Callout type="info" emoji="🚀"> **Hasilnya:** Pas user buka `/dashboard`, mereka gak bakal liat layar putih. Mereka langsung liat animasi loading. Begitu data dari Database selesai diambil, otomatis loadingnya ilang dan diganti konten asli. Instant Feedback! </Callout>
+## 2. Error Handling (Anti Crash) 💥
+
+Gimana kalau database lo mati? Atau codingan lo error? Biasanya aplikasi React bakal **CRASH** satu layar penuh (Layar Merah Mengerikan).
+
+Dengan `error.tsx`, kita bisa membatasi kerusakan cuma di bagian yang error aja. Menu navigasi dan sidebar tetep aman.
+
+Isi `src/app/dashboard/error.tsx`: (Wajib pake `'use client'` karena error handler butuh interaksi browser)
+```tsx
+
+'use client' 
+
+import { useEffect } from 'react'
+
+export default function Error({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string }
+  reset: () => void
+}) {
+  
+  useEffect(() => {
+    // Log error ke console (atau ke Sentry)
+    console.error(error)
+  }, [error])
+
+  return (
+    <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
+      <h2 className="text-xl font-bold text-red-600">Waduh! Ada yang salah nih.</h2>
+      <p className="text-gray-600">Gagal memuat data dashboard.</p>
+      
+      {/* Tombol Sakti: Coba Lagi */}
+      <button
+        onClick={() => reset()} // <-- Ini bakal coba re-render halaman
+        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+      >
+        Coba Lagi (Refresh)
+      </button>
+    </div>
+  )
+}
+```
+## 3. Not Found (404 Custom) 🔍
+
+Kalau user iseng ngetik `/dashboard/halaman-ngawur`, jangan kasih tampilan 404 default yang jelek.
+
+Bikin file `not-found.tsx` di folder `src/app`.
+```tsx
+
+import Link from 'next/link'
+ 
+export default function NotFound() {
+  return (
+    <div className="flex flex-col items-center justify-center h-screen">
+      <h2 className="text-4xl font-bold">404 - Nyasar Bos?</h2>
+      <p className="mb-4">Halaman yang lo cari udah pindah ke dimensi lain.</p>
+      <Link href="/" className="text-blue-500 underline">
+        Balik ke Home aja
+      </Link>
+    </div>
+  )
+}
+```
+## Rangkuman File Spesial Next.js 📂
+
+|Nama File	|Fungsi	|Kapan Muncul?|
+|:--- |:---|:----|
+|`page.tsx`	|Konten Utama	|Pas data siap|
+|`loading.tsx`	|Loading State	|Pas lagi fetch data|
+|`error.tsx`	|Error Boundary	|Pas ada yang crash/gagal|
+|`not-found.tsx`	|404 Page	|Pas fungsi `notFound()` dipanggil|

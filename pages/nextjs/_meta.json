@@ -10,9 +10,12 @@
   "upload": "Upload File",
   "upload-cloudinary": "Cloudinary",
   "middleware": "Middleware",
+  "seo": "Metadata",
+  "ux-feedback": "Loading & Error UI",
   "zustand": "Zustand Global State",
   "nextauth": "NextAuth",
   "form-validation": "ZOD Validasi Form",
+  "react-hook-form": "React Hook Form",
   "shadcn": "Shadcn UI Library",
   "deployment": "Deployment"
 }

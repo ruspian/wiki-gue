@@ -1,0 +1,108 @@
+import { Callout } from 'nextra/components'
+
+# Infinite Scroll & Pagination 📜
+
+Pernah buka Instagram atau TikTok? Pas lo scroll ke bawah, kontennya gak abis-abis kan?
+Itu bukan magic. Itu namanya **Infinite Scroll**.
+
+Di TanStack Query, kita pake hook spesial bernama `useInfiniteQuery`.
+
+
+
+## 1. Konsep Dasar 🧠
+
+Backend lo harus mendukung **Pagination** dulu.
+Biasanya URL-nya kayak gini:
+* `/api/products?page=1` (Ambil 10 produk pertama)
+* `/api/products?page=2` (Ambil 10 produk berikutnya)
+
+`useInfiniteQuery` tugasnya adalah memanggil URL itu secara berurutan dan menggabungkan hasilnya jadi satu list panjang.
+
+## 2. Implementasi Code 💻
+
+Misal kita punya API dummy yang ngebalikin list data per halaman.
+
+```tsx
+'use client'
+import { useInfiniteQuery } from '@tanstack/react-query'
+import axios from 'axios'
+import { useEffect } from 'react'
+import { useInView } from 'react-intersection-observer' // Library bantu buat deteksi scroll mentok
+
+export default function ProductFeed() {
+  // Setup buat deteksi kalau user udah scroll sampe bawah
+  const { ref, inView } = useInView()
+
+  const {
+    data,
+    fetchNextPage, // Fungsi buat panggil halaman selanjutnya
+    hasNextPage,   // Cek apakah masih ada halaman sisa?
+    isFetchingNextPage, // Loading status khusus buat yang dibawah
+  } = useInfiniteQuery({
+    queryKey: ['products'],
+    queryFn: async ({ pageParam = 1 }) => {
+      // pageParam otomatis naik: 1, 2, 3...
+      const res = await axios.get(`/api/products?page=${pageParam}`)
+      return res.data
+    },
+    getNextPageParam: (lastPage, allPages) => {
+      // Logika buat nentuin halaman berikutnya nomor berapa
+      // Misal: kalau data yang didapet kurang dari 10, berarti udah abis (return undefined)
+      return lastPage.length === 10 ? allPages.length + 1 : undefined
+    },
+    initialPageParam: 1,
+  })
+
+  // Efek Otomatis: Kalau elemen paling bawah (ref) keliatan di layar, panggil halaman baru
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage()
+    }
+  }, [inView, hasNextPage])
+
+  return (
+    <div className="space-y-4 p-4">
+      <h1 className="text-2xl font-bold">Marketplace Desa</h1>
+
+      {/* Looping Halaman (Pages) */}
+      {data?.pages.map((page, i) => (
+        <div key={i} className="grid grid-cols-2 gap-4">
+          {/* Looping Produk di tiap halaman */}
+          {page.map((product: any) => (
+            <div key={product.id} className="border p-4 rounded shadow">
+              <img src={product.image} alt={product.name} className="w-full h-32 object-cover mb-2"/>
+              <h3 className="font-bold">{product.name}</h3>
+              <p>Rp {product.price}</p>
+            </div>
+          ))}
+        </div>
+      ))}
+
+      {/* Elemen Penanda Bawah (Sensor) */}
+      <div ref={ref} className="py-4 text-center">
+        {isFetchingNextPage 
+          ? "Sedang memuat produk lainnya..." 
+          : hasNextPage 
+            ? "Scroll lagi buat muat data" 
+            : "Semua produk sudah ditampilkan 🎉"}
+      </div>
+    </div>
+  )
+}
+```
+
+## 3. Penjelasan ✨
+
+    1. `data.pages:` Struktur datanya unik. Dia Array di dalam Array.
+
+        * `data.pages[0]` -> Isi halaman 1.
+
+        * `data.pages[1]` -> Isi halaman 2.
+
+        * Makanya kita butuh `map` dua kali (`map` pages dulu, baru `map` products).
+
+    2. `getNextPageParam`: Ini otak cerdasnya. Dia yang nentuin _"Abis halaman 1, lanjut ke halaman berapa?"._
+
+    3. `react-intersection-observer`: Library tambahan (kecil banget) buat jadi "mata-mata". Kalau elemen ref muncul di layar, dia teriak _"Woy, udah mentok bawah nih!"_, terus kita panggil `fetchNextPage()`.
+
+<Callout type="warning" emoji="⚠️"> **Syarat Backend:** Pastikan API backend lo (`GET /api/products`) beneran support parameter `?page=X` atau `?cursor=X`. Kalau backendnya ngasih semua data sekaligus (1000 data), fitur ini gak guna. </Callout>

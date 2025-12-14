@@ -1,0 +1,58 @@
+import { Callout } from 'nextra/components'
+
+# React Query DevTools 🐞
+
+Pernah bingung kenapa data lo gak muncul? Atau kenapa loading terus?
+Daripada nebak-nebak buah manggis, mending kita intip langsung isi otak React Query.
+
+## 1. Cara Mengakses 🔍
+
+Kalau lo udah ngikutin materi **Instalasi** kemarin, lo udah pasang komponen ini di `QueryProvider.tsx`:
+
+```tsx
+<ReactQueryDevtools initialIsOpen={false} />
+```
+Sekarang coba jalankan aplikasi (`npm run dev`) dan buka browser. Liat di Pojok Kanan Bawah. Ada logo kecil (biasanya gambar Bunga Merah/Kuning)?
+
+Klik Logo Itu! 🌸
+
+Nanti bakal muncul panel canggih kayak gini:
+## 2. Arti Warna-Warni Status 🎨
+
+Di panel DevTools, lo bakal liat list query yang lagi aktif (misal `['users']`). Perhatikan warnanya, itu ada artinya:
+
+    * **💚 Fresh (Hijau):** Data masih baru. React Query gak bakal minta ke server lagi walau komponen di-render ulang.
+
+    * **💙 Fetching (Biru):** Lagi loading (request ke server).
+
+    * **💛 Stale (Kuning):** Data udah "Basi". Masih bisa dipake buat ditampilin, tapi React Query bakal coba fetch ulang di background kalau ada kesempatan.
+
+    * **🩶 Inactive (Abu-abu):** Datanya ada di memori, tapi gak ada komponen di layar yang make data ini. Bakal dihapus otomatis setelah 5 menit (Garbage Collection).
+
+## 3. Fitur Andalan 🛠️
+
+Klik salah satu query di list (misal `['users']`), lo bisa ngelakuin ini:
+#### A. Intip Data (Data Explorer)
+
+Di sebelah kanan, lo bisa liat isi `JSON response` dari server. Gak perlu lagi `console.log(data)` di kodingan cuma buat ngecek struktur object-nya.
+#### B. Tombol Ajaib
+
+Di bagian atas panel detail, ada tombol-tombol sakti:
+
+    * **Refetch:** Paksa ambil data ulang sekarang juga.
+
+    * **Invalidate:** Tandain data sebagai "Basi" (biar di-fetch ulang otomatis).
+
+    * **Reset:** Hapus data dan balikin ke state awal (loading lagi).
+
+    * **Remove:** Hapus total dari cache.
+
+## 4. Kapan Berguna? 🤔
+
+    * **Debugging Loading:** Lo bisa set network browser jadi Slow 3G, terus liat statusnya berubah jadi Fetching (Biru).
+
+    * **Ngecek Caching:** Coba pindah halaman terus balik lagi. Kalau statusnya tetep Fresh (Hijau) dan gak berubah jadi Biru, berarti cache lo jalan sukses (Hemat kuota!).
+
+    * **Ngecek Error:** Kalau query merah, lo bisa liat detail error message-nya langsung di situ.
+
+<Callout type="warning" emoji="⚠️"> **Catatan:** DevTools ini Cuma Muncul di Development (localhost). Pas lo deploy ke Vercel (Production), dia otomatis ngilang. Jadi aman, user gak bakal liat. </Callout>

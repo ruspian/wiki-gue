@@ -1,0 +1,126 @@
+import { Callout } from 'nextra/components'
+
+# React Hook Form + Zod 📝
+
+Bikin form itu kelihatannya gampang, tapi aslinya neraka.
+Lo harus mikirin:
+1.  Nyimpen value tiap input (`useState`).
+2.  Nanganin Error (misal: "Email wajib diisi").
+3.  Loading State (tombol jadi disable pas diklik).
+4.  Reset form abis submit.
+
+**React Hook Form (RHF)** ngurusin itu semua otomatis. Performanya juga jauh lebih ngebut daripada pake state biasa.
+
+## 1. Install 📦
+
+Kita butuh RHF dan "penghubung"-nya ke Zod (`hookform/resolvers`).
+
+```bash
+npm install react-hook-form @hookform/resolvers zod
+```
+
+## 2. Kenapa Harus Pake Zod Resolver? 🤔
+
+Di materi Zod, Kita udah bikin skema validasi. Nah, RHF bisa pake skema itu buat ngecek inputan user secara real-time di browser.
+
+Jadi kalau user salah ngetik email, langsung muncul merah-merah SEBELUM data dikirim ke server. Hemat kuota server!
+## 3. Contoh Praktek: Form Login 🔐
+
+Anggap kita mau bikin form login sederhana.
+#### Langkah A: Bikin Skema (Schema)
+
+Biasanya di file terpisah, tapi buat contoh kita gabung sini aja.
+```tsx
+import { z } from "zod";
+
+const loginSchema = z.object({
+  email: z.string().email("Format email salah bro!"),
+  password: z.string().min(6, "Password minimal 6 karakter ya!"),
+});
+
+// Kita ambil Tipe datanya otomatis dari Zod
+type TLoginData = z.infer<typeof loginSchema>;
+```
+#### Langkah B: Bikin Komponen Form
+
+```tsx
+'use client' // Wajib Client Component karena ada interaksi user
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+export default function LoginForm() {
+  // 1. Setup Hook Form
+  const {
+    register, // Buat nempel ke input
+    handleSubmit, // Buat handle submit
+    formState: { errors, isSubmitting }, // Ambil error & status loading
+  } = useForm<TLoginData>({
+    resolver: zodResolver(loginSchema), // Sambungin ke Zod
+  });
+
+  // 2. Function pas tombol submit diklik
+  const onSubmit = async (data: TLoginData) => {
+    // data isinya udah pasti VALID & BERSIH
+    console.log("Data siap dikirim:", data);
+    
+    // Simulasi kirim ke server (tunggu 2 detik)
+    await new Promise((r) => setTimeout(r, 2000));
+    
+    alert("Login Berhasil!");
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 max-w-md mx-auto mt-10">
+      
+      {/* Input Email */}
+      <div className="flex flex-col gap-2">
+        <label>Email</label>
+        <input 
+          {...register("email")} // <-- MAGIC HAPPENS HERE
+          className="border p-2 rounded" 
+          placeholder="user@example.com"
+        />
+        {/* Munculin Error Email */}
+        {errors.email && (
+          <span className="text-red-500 text-sm">{errors.email.message}</span>
+        )}
+      </div>
+
+      {/* Input Password */}
+      <div className="flex flex-col gap-2">
+        <label>Password</label>
+        <input 
+          type="password"
+          {...register("password")} 
+          className="border p-2 rounded" 
+        />
+        {/* Munculin Error Password */}
+        {errors.password && (
+          <span className="text-red-500 text-sm">{errors.password.message}</span>
+        )}
+      </div>
+
+      {/* Tombol Submit */}
+      <button 
+        type="submit" 
+        disabled={isSubmitting} // Disable pas lagi loading
+        className="bg-blue-600 text-white p-2 rounded w-full disabled:bg-gray-400"
+      >
+        {isSubmitting ? "Lagi Mikir..." : "Masuk Sekarang"}
+      </button>
+
+    </form>
+  );
+}
+```
+
+## 4. Bedah Kode 🕵️‍♂️
+
+    * **register("nama_field"):** Ini fungsi ajaib. Dia otomatis ngurusin onChange, onBlur, ref, dll. Lo gak perlu nulis itu manual lagi.
+
+    * **formState: `{ errors }`:** Objek yang isinya pesan error dari Zod. Kalau user bener ngisinya, objek ini kosong.
+
+    * **isSubmitting:** Otomatis true pas fungsi onSubmit lagi jalan (nunggu await). Berguna banget buat UX biar user gak ngeklik tombol berkali-kali.
+
+<Callout type="info" emoji="💡"> **Tips Pro:** Kalau lo pake Shadcn UI, komponen Form mereka itu sebenernya wrapper dari React Hook Form ini. Jadi memahami dasar RHF ini wajib banget sebelum pake komponen form-nya Shadcn. </Callout>
