@@ -1,0 +1,88 @@
+import { Callout } from 'nextra/components'
+
+# Tips Pro & Plugins: Jurus Ringkas 🛠️
+
+Pasti ada momen di mana lo mikir:
+*"Gila, tombol gue class-nya panjang banget sampe 2 baris! HTML gue jadi kayak cacing kepanasan!"*
+
+Tenang, Tailwind punya solusinya.
+
+## 1. Directive `@apply` (Meringkas Class) 🧹
+
+Kalau lo capek nulis class yang sama berulang-ulang, lo bisa bungkus mereka jadi satu class CSS biasa.
+
+**Masalah:**
+```jsx
+<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-lg transform active:scale-95 transition-all">
+  Simpan
+</button>
+```
+
+**Solusi:** Buka file CSS global lo (g`lobals.css`), terus bikin `class` baru pake `@apply:`
+```css
+
+/* globals.css */
+.btn-ganteng {
+  @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-lg transform active:scale-95 transition-all;
+}
+```
+Hasil di HTML (Jadi Bersih!):
+```jsx
+<button className="btn-ganteng">
+  Simpan
+</button>
+```
+<Callout type="warning" emoji="⚠️"> **Peringatan:** Jangan keseringan pake `@apply`. Kalau semuanya dibikin gini, lo malah balik lagi ke jaman CSS biasa. Pake ini cuma buat elemen kecil yang dipake berulang-ulang (kayak Tombol atau Input). </Callout>
+## 2. Arbitrary Values (Nilai Suka-Suka) 📐
+
+Gimana kalau desainer minta lebar kotak harus 357px? Di Tailwind cuma ada w-96 (384px) atau w-80 (320px). Gak ada yang pas.
+
+Jangan panik. Pake Kurung Siku [].
+
+   1. `w-[357px]` -> Lebar fix 357 pixel.
+
+    2. `bg-[#1da1f2]` -> Warna spesifik (misal Biru Twitter) tanpa masukin config.
+
+    3. `top-[17%]` -> Posisi top 17 persen.
+
+```jsx
+
+<div className="w-[357px] bg-[#bada55] text-[15px]">
+  Kotak dengan ukuran dan warna aneh.
+</div>
+```
+## 3. Tailwind Plugins (Senjata Tambahan) 🔌
+
+Tailwind punya "DLC" (Downloadable Content) resmi yang bikin hidup makin gampang. Dua yang paling wajib lo tau:
+#### A. `@tailwindcss/typography` (Prose) 📝
+
+Kalau lo bikin Blog atau halaman yang isinya artikel panjang (kayak Wiki ini!), lo bakal capek ngestyle `h1`, `p`, `ul` satu-satu.
+
+Tinggal install plugin ini, terus kasih class prose di induknya. Otomatis semua teks di dalemnya jadi rapi dan enak dibaca.
+```bash
+
+npm install -D @tailwindcss/typography
+```
+
+```jsx
+<article className="prose lg:prose-xl">
+  <h1>Judul Artikel</h1>
+  <p>Paragraf ini otomatis punya jarak dan ukuran font yang enak dibaca...</p>
+</article>
+```
+#### B. `@tailwindcss/forms` 📝
+
+Form bawaan browser itu jelek beda-beda tiap browser. Plugin ini me-reset tampilan form biar jadi polos dan gampang distyle.
+``` bash
+
+npm install -D @tailwindcss/forms
+```
+<Callout type="success" emoji="🏁">
+ **TAMAT! Sekarang lo udah tau:**
+
+    * Cara meringkas class (`@apply`).
+
+    * Cara pake nilai bebas (`[]`).
+
+    * Plugin buat nulis artikel (typography). 
+    </Callout>
