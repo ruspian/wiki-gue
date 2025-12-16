@@ -1,0 +1,85 @@
+import { Callout } from 'nextra/components'
+
+# The Box Model: Kotak Ajaib 📦
+
+Camkan satu hal ini baik-baik:
+**SEMUA elemen di website itu bentuknya KOTAK.**
+
+Gak peduli lo liat tombol bulet, foto profil bunder, atau segitiga. Aslinya dia itu **Kotak**.
+Kalau lo paham konsep kotak ini, lo bisa ngatur tata letak apa aja.
+
+
+
+## 1. Anatomi Kotak (Analogi Paket Shopee) 🎁
+
+Bayangin lo beli HP online. Paketnya nyampe. Isinya apa aja?
+
+1.  **Content (Si HP-nya)** 📱
+    Ini isi utamanya. Teks, gambar, atau video.
+    * *CSS:* `width`, `height`.
+
+2.  **Padding (Bubble Wrap)** 🫧
+    Jarak antara **Barang** sama **Dinding Kardus**.
+    Biar barangnya gak kepentok. Posisinya di **DALAM** kotak.
+    * *Fungsi:* Bikin elemen jadi "Gembul" atau luas. Kalau tombol lo kekecilan, tambahin Padding.
+
+3.  **Border (Kardusnya)** 📦
+    Pinggiran kotaknya. Batas antara "Milik Gue" dan "Dunia Luar".
+    * *CSS:* `border: 1px solid black`.
+
+4.  **Margin (Social Distancing)** ↔️
+    Jarak antara **Kardus Gue** sama **Kardus Tetangga**.
+    Posisinya di **LUAR** kotak. Margin itu transparan, gak punya warna.
+    * *Fungsi:* Ngeser elemen biar gak dempet-dempetan.
+
+### Rumus Hafalan:
+* Mau geser **Isinya** biar lega? Pake **PADDING**.
+* Mau geser **Kotaknya** ngejauh dari orang lain? Pake **MARGIN**.
+
+## 2. Ilustrasi Kodingan 💻
+
+```css
+.kotak-paket {
+  width: 200px;         /* Lebar HP */
+  padding: 20px;        /* Tebal Bubble Wrap */
+  border: 5px solid red;/* Tebal Kardus */
+  margin: 50px;         /* Jarak ke paket lain */
+}
+```
+
+## 3. Jebakan Batman: box-sizing 🦇
+
+Ini masalah klasik yang bikin stress.
+
+Misal lo set `width: 100px`. Terus lo kasih `padding: 20px`. Secara logika, lebarnya tetep `100px` kan?
+
+**SALAH BESAR!** ❌ Secara default, browser ngitungnya gini: `100px` (width) + `20px` (padding kiri) + `20px` (padding kanan) = `140px`.
+
+Akibatnya? Elemen lo jadi Bengkak dan layout lo pecah (biasanya muncul scrollbar samping yang ngeselin).
+**Solusinya:** The Magic Spell ✨
+
+Lo harus paksa browser biar gak "Nambahin" ukuran. Pake mantra ini di paling atas file CSS lo:
+```css
+
+* {
+  box-sizing: border-box; /* Mantra Anti Bengkak */
+}
+```
+Artinya: _"Eh browser, kalau gue bilang lebar 100px, ya pokoknya totalnya 100px! Kalau gue tambah padding, lo kurangin jatah kontennya. Jangan malah digedein kotaknya!"_
+
+<Callout type="success" emoji="🎉"> **Berita Bagus:** Di Tailwind CSS, mantra border-box ini udah dipasang otomatis dari sananya. Jadi lo gak perlu pusing mikirin ini lagi. Tapi lo **WAJIB** tau kenapa Tailwind ngelakuin itu. </Callout>
+## 4. Margin Auto (Trik Tengahin Kotak) 🎯
+
+Gimana cara bikin kotak ada di tengah-tengah layar (secara horizontal)? Bukan `float: center` (itu gak ada).
+
+Caranya pake margin kiri-kanan AUTO.
+```css
+
+.kotak-tengah {
+  width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+  /* Atau singkatan: margin: 0 auto; */
+}
+```
+**Analogi:** Margin kiri dorong sekuat tenaga, Margin kanan dorong sekuat tenaga. Akhirnya si kotak kejepit pas di tengah.

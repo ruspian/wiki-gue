@@ -1,0 +1,95 @@
+import { Callout } from 'nextra/components'
+
+# Interaksi & Animasi (Pseudo-classes) 🖱️
+
+Website lo gak boleh kayak patung. Dia harus bereaksi pas user ngelakuin sesuatu.
+Di CSS, kita pake tanda **Titik Dua (`:`)** buat nandain "Keadaan" (State).
+
+## 1. State Wajib Hafal 🧠
+
+Ada 4 keadaan elemen yang paling sering dipake:
+
+#### A. `:hover` (Pas Disentuh Mouse) ✋
+Ini efek paling populer. Muncul pas kursor melayang di atas elemen.
+*(Gak berlaku di HP layar sentuh, karena gak ada kursor).*
+
+```css
+.tombol {
+  background-color: blue;
+  color: white;
+}
+
+.tombol:hover {
+  background-color: darkblue; /* Pas disentuh jadi makin gelap */
+  cursor: pointer; /* Kursor berubah jadi gambar jari telunjuk */
+}
+```
+
+#### B. :active (Pas Ditekan) 👇
+
+Muncul pas tombol sedang diklik (tahan mouse). Efeknya cuma sepersekian detik. Biasanya dipake buat efek tombol "mendelep" ke dalem.
+```css
+
+.tombol:active {
+  transform: scale(0.95); /* Tombol mengecil dikit pas ditekan */
+}
+```
+#### C. :focus (Pas Fokus Ngetik) 🎯
+
+Khusus buat `<input>` atau `<textarea>`. Muncul pas user lagi ngetik di dalemnya. Penting biar user tau mereka lagi ngisi kolom yang mana.
+```css
+
+input {
+  border: 1px solid gray;
+}
+
+input:focus {
+  border: 2px solid blue; /* Border jadi tebal & biru */
+  outline: none; /* Hilangin garis biru bawaan Chrome yang jelek */
+}
+```
+#### D. :disabled (Pas Gak Bisa Diklik) 🚫
+
+Buat tombol atau input yang dimatiin (misal: belum centang "Setuju Syarat & Ketentuan").
+```css
+
+button:disabled {
+  background-color: gray;
+  cursor: not-allowed; /* Kursor jadi tanda stop ⛔ */
+  opacity: 0.5; /* Jadi agak transparan */
+}
+```
+## 2. Transition (Bikin Alus) 🎬
+
+Coba lo pake `:hover` tanpa `transition`. Perubahannya pasti KAGET (Langsung ganti warna dalam 0 detik). Biar elegan, kita kasih efek Transisi (Perubahan pelan-pelan).
+```css
+
+.tombol {
+  background-color: blue;
+  /* Properti | Durasi | Tipe Gerakan */
+  transition: all 0.3s ease; 
+}
+
+.tombol:hover {
+  background-color: red;
+}
+```
+Artinya: _"Eh tombol, kalau ada perubahan warna, jangan langsung berubah! Santai aja, 0.3 detik ya durasinya."_
+
+<Callout type="info" emoji="🚀"> **Tips Pro:** Selalu taruh properti transition di keadaan AWAL (.tombol), jangan di keadaan .tombol:hover. Biar pas mouse keluar, warnanya balik ke asal dengan mulus juga (gak kaget). </Callout>
+3. Cursor (Bentuk Mouse) 👆
+
+Lo bisa ngatur bentuk kursor mouse user pas nyentuh elemen tertentu.
+|Value	|Bentuk	|Kapan Dipake?|
+|:---|:---|:---|
+|pointer	|👆 Jari Telunjuk	|Tombol / Link.|
+|text	|ꕯ Garis Teks	|Paragraf / Input.|
+|wait	|⏳ Jam Pasir	|Pas lagi loading.|
+|not-allowed	|🚫 Dilarang	|Tombol Disabled.|
+|move	|✥ Panah 4 Arah	|Elemen yang bisa digeser (Drag & Drop).|
+
+```css
+.kartu-bisa-digeser {
+  cursor: move;
+}
+```

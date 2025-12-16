@@ -1,0 +1,110 @@
+import { Callout } from 'nextra/components'
+
+# Flexbox: Sang Penyelamat Tata Letak 📐
+
+Lupakan `float`, lupakan `position: absolute` buat layout dasar.
+Flexbox adalah cara modern buat ngejejerin elemen, baik ke samping (baris) atau ke bawah (kolom).
+
+
+
+## 1. Konsep Dasar: Supir & Penumpang 🚌
+
+Bayangin **Flex Container** itu sebuah **Bis**, dan elemen di dalemnya adalah **Penumpang**.
+Supir Bis (Container) punya kuasa penuh buat ngatur posisi penumpangnya.
+
+```css
+.container {
+  display: flex; /* Mantra pemanggil Flexbox */
+}
+```
+
+Begitu lo ketik display: `flex`, semua anak di dalemnya otomatis bakal Berbaris ke Samping (Row). Gak peduli seberapa lebar mereka, mereka bakal coba muat dalam satu baris.
+## 2. Jurus Mengatur Posisi (X & Y) ↔️↕️
+
+Ada dua properti sakti yang wajib lo hafal di luar kepala.
+#### A. justify-content (Sumbu Utama / Horizontal)
+
+Ini buat ngatur posisi Kiri-Kanan (kalau arahnya Row).
+|Value	|Efeknya	|Analogi|
+|:---|:---|:---|
+|flex-start	|Rata Kiri (Default)	|Antri sembako normal.|
+|center	|Rata Tengah	|Foto keluarga.|
+|flex-end	|Rata Kanan	|Musuhan sama yang kiri.|
+|space-between	|Pojok-pojokan	|Jaga jarak aman (kiri mentok, kanan mentok).|
+|space-around	|Ada jarak rata	|Social distancing yang adil.|
+
+```css
+.container {
+  display: flex;
+  justify-content: center; /* Elemen jadi di tengah layar */
+}
+```
+#### B. align-items (Sumbu Silang / Vertikal)
+
+Ini buat ngatur posisi Atas-Bawah.
+|Value	|Efeknya|
+|:---|:---|
+|stretch	|Tarik sampe penuh (Default)|
+|center	|Tengah Vertikal|
+|flex-start	|Nempel Atas|
+|flex-end	|Nempel Bawah|
+
+<Callout type="info" emoji="💡"> 
+**Trik Paling Dicari:** Gimana cara bikin kotak bener-bener di tengah layar (Tengah Kiri-Kanan & Atas-Bawah)?
+```css
+
+.container {
+  display: flex;
+  justify-content: center; /* Tengah X */
+  align-items: center;     /* Tengah Y */
+  height: 100vh;           /* Tinggi set layar penuh */
+}
+```
+</Callout>
+## 3. Flex Direction 🔄
+
+Kadang lo mau jejerin ke bawah (Kolom), bukan ke samping.
+```css
+
+.container {
+  flex-direction: column;
+}
+```
+    * `row`: Default. Ke samping (Kiri ke Kanan).
+
+    * `column`: Ke bawah (Atas ke Bawah).
+
+    * `row-reverse`: Ke samping tapi dibalik (Kanan ke Kiri).
+
+    * `column-reverse`: Ke bawah tapi dibalik (Bawah ke Atas).
+
+**Hati-hati:** Kalau lo ganti jadi column, sumbunya muter! `justify-content` jadi ngatur Atas-Bawah, `align-items` jadi ngatur Kiri-Kanan.
+## 4. Gap ↔️
+
+Dulu kita pake margin-right di setiap anak, terus anak terakhir marginnya dihapus. Ribet. Sekarang ada Gap.
+```css
+
+.container {
+  display: flex;
+  gap: 20px; /* Otomatis kasih jarak 20px di antara setiap elemen */
+}
+```
+## 5. Cheat Sheet Tailwind 💅
+
+Karena nanti kita pake Tailwind, ini contekan singkatnya:
+||CSS Biasa	|Tailwind Class|
+|:---|:---|
+|display: flex	|flex|
+|flex-direction: column	|flex-col|
+|justify-content: center	|justify-center|
+|justify-content: space-between	|justify-between|
+|align-items: center	|items-center|
+|gap: 20px	|gap-5 (20px / 4)|
+```jsx
+
+// Contoh di Next.js / Tailwind
+<div className="flex flex-col items-center justify-center gap-4">
+  <h1>Judul di Tengah</h1>
+  <button>Tombol</button>
+</div>
+```

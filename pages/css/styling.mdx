@@ -1,0 +1,108 @@
+import { Callout } from 'nextra/components'
+
+# Typography & Decoration 💅
+
+Layout (Flexbox) itu ibarat **Tata Ruang Rumah**.
+Nah, materi ini ibarat **Milih Cat Tembok & Beli Horden**. Ini yang bikin website lo enak dipandang.
+
+## 1. Typography (Seni Mengatur Huruf) 🔠
+
+Teks adalah konten utama web. Kalau teksnya jelek, orang males baca.
+
+#### A. Font Family (Jenis Huruf)
+```css
+body {
+  /* Komputer bakal nyari Arial dulu, kalau gak ada pake Helvetica, dst */
+  font-family: 'Arial', 'Helvetica', sans-serif;
+}
+```
+
+* `Serif`: Ada "kakinya" (Times New Roman). Kesan: Klasik, Resmi.
+
+* `Sans-serif`: Gak ada kakinya (Arial, Roboto). Kesan: Modern, Bersih. (Paling sering dipake di web).
+
+#### B. Font Size & Weight (Ukuran & Ketebalan)
+```css
+
+h1 {
+  font-size: 32px;   /* Gedein */
+  font-weight: bold; /* Tebalin (bisa juga pake angka: 700) */
+}
+
+p {
+  font-size: 16px;   /* Standar */
+  font-weight: normal; /* Biasa (400) */
+  line-height: 1.5;  /* Jarak antar baris (biar gak dempet) */
+}
+```
+#### C. Text Align (Perataan)
+```css
+
+.judul { text-align: center; } /* Tengah */
+.paragraf { text-align: justify; } /* Rata Kiri Kanan (Jarang dipake di web) */
+```
+## 2. Colors (Warna-Warni) 🎨
+
+Di CSS, ada beberapa cara nyebut warna.
+#### A. Nama Warna (Bahasa Inggris)
+
+Gampang diinget, tapi pilihannya dikit.
+```css
+
+color: red;
+background-color: lightblue;
+```
+#### B. Hex Code (Kode Pagar) #️⃣
+
+Ini standar industri. Kombinasi Merah-Hijau-Biru (RGB) dalam heksadesimal.
+```css
+
+color: #FF5733; /* Warna Oranye Spesifik */
+color: #000000; /* Hitam */
+color: #FFFFFF; /* Putih */
+```
+#### C. RGB & RGBA (Transparan) 👻
+
+Kalau lo butuh warna yang nembus pandang (transparan), pake RGBA. Huruf 'A' itu Alpha (Opasitas).
+```css
+
+/* Merah, Hijau, Biru, Transparansi (0 - 1) */
+background-color: rgba(0, 0, 0, 0.5); /* Hitam transparan 50% */
+```
+## 3. Decoration (Hiasan Kotak) 🎁
+
+Biar kotak lo gak kaku kayak kardus mi instan.
+#### A. Border (Garis Tepi)
+```css
+.kotak {
+  /* Tebal | Jenis Garis | Warna */
+  border: 2px solid black; 
+}
+```
+**Jenis garis:** `solid` (lurus), `dashed` (putus-putus), `dotted` (titik-titik).
+#### B. Border Radius (Sudut Tumpul) ⚪
+
+Ini rahasia desain modern (UI ala iPhone). Bikin sudut kotak jadi melengkung.
+```CSS
+
+.tombol {
+  border-radius: 8px; /* Melengkung dikit */
+}
+
+.avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%; /* Jadi BULET SEMPURNA (Lingkaran) */
+}
+```
+#### C. Box Shadow (Bayangan) 👥
+
+Biar elemen lo kerasa "Melayang" atau timbul (3D).
+```css
+
+.kartu {
+  /* X-offset | Y-offset | Blur | Warna */
+  box-shadow: 0px 4px 10px rgba(0,0,0, 0.1);
+}
+```
+<Callout type="info" emoji="🚀"> **Tips Desain:** Jangan pake warna #000 (Hitam Pekat) buat teks paragraf, bikin mata cepet lelah. Pake abu-abu gelap kayak #333 atau #1f2937 biar lebih soft. </Callout>

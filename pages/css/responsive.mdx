@@ -1,0 +1,96 @@
+import { Callout } from 'nextra/components'
+
+# Responsive Design & Media Query 📱
+
+Dulu, orang bikin dua website: `facebook.com` (buat laptop) dan `m.facebook.com` (buat HP).
+Itu capek, bos! Koding dua kali, bayar server dua kali.
+
+Sekarang, kita pake **Responsive Design**.
+Website lo pinter. Dia bisa "ngaret" atau "nyusut" menyesuaikan lebar layar user.
+
+## 1. Viewport Meta Tag (Syarat Sah) 🔑
+
+Sebelum mulai, pastiin baris ini ada di HTML lo (biasanya di `<head>`).
+Kalau pake Next.js, ini udah otomatis ada.
+
+```html
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+```
+
+Artinya: _"Eh browser, tolong atur lebar website ini ngikutin lebar layar HP (device-width), jangan di-zoom out kayak liat peta dunia."_
+## 2. Media Query (@media) 📐
+
+Ini adalah mantra ajaibnya. Kita bisa bilang: _"Kalau layarnya sempit, background-nya Merah. Kalau layarnya lebar, background-nya Biru."_
+```css
+/* 1. Style Umum (Default) */
+body {
+  background-color: red; /* Di HP warnanya Merah */
+  font-size: 14px;
+}
+
+/* 2. Style Khusus Laptop (Layar > 768px) */
+@media (min-width: 768px) {
+  body {
+    background-color: blue; /* Berubah jadi Biru pas di Laptop/Tablet */
+    font-size: 18px; /* Huruf jadi gede */
+  }
+}
+```
+## 3. Mobile-First Workflow ☝️
+
+Ini mindset developer pro. _"Desain buat HP dulu (Layar Kecil), baru diperluas buat Laptop."_
+
+Kenapa? Karena nambahin fitur (layar lebar) lebih gampang daripada nyempitin fitur (layar kecil).
+
+Contoh Kasus: Grid Produk
+
+    * Di HP: Produk disusun 1 kolom (atas-bawah).
+
+    * Di Laptop: Produk disusun 3 kolom (kiri-kanan).
+
+
+```css
+/* --- DEFAULT (Tampilan HP) --- */
+.container-produk {
+  display: flex;
+  flex-direction: column; /* Ke bawah */
+  gap: 10px;
+}
+
+/* --- TAMPILAN LAPTOP (Layar > 1024px) --- */
+@media (min-width: 1024px) {
+  .container-produk {
+    flex-direction: row; /* Berubah jadi ke samping */
+    gap: 30px;
+  }
+}
+```
+## 4. Breakpoints Umum (Hafalan Ukuran) 📏
+
+Batas-batas ukuran layar yang sering dipake (Standard Tailwind CSS):
+|Breakpoint	|Ukuran (min-width)	|Perangkat|
+|:---|:---|:---|
+|sm (Small)	|640px	|HP Besar / Tablet Kecil|
+|md (Medium)	|768px	|Tablet (iPad)|
+|lg (Large)	|1024px	|Laptop Standar|
+|xl (Extra Large)	|1280px|	Monitor Desktop|
+## 5. Spoiler: Tailwind CSS 🍃
+
+Nanti pas lo pake Tailwind, lo gak perlu nulis `@media` panjang-panjang kayak di atas. Cukup pake prefix `md:` atau `lg:`.
+
+CSS Biasa:
+```css
+
+div { background: red; }
+@media (min-width: 768px) { div { background: blue; } }
+```
+Tailwind CSS:
+```jsx
+
+<div className="bg-red-500 md:bg-blue-500">
+  Kotak Ajaib
+</div>
+```
+(Bacanya: Defaultnya merah. Pas masuk layar Medium (md), ganti jadi biru). Simpel banget kan?
+
+<Callout type="success" emoji="🎉"> **Kesimpulan:** Jangan pernah ngedesain web cuma liat layar laptop lo sendiri. Sering-sering pencet F12 -> Toggle Device Toolbar di Chrome buat ngecek tampilan web lo di ukuran HP. </Callout>

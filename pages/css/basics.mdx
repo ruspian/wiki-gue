@@ -1,0 +1,74 @@
+import { Callout } from 'nextra/components'
+
+# Pengenalan CSS & Selektor 🎨
+
+HTML itu ibarat **Tengkorak**. Kuat, tapi serem kalau diliat malem-malem.
+Nah, **CSS (Cascading Style Sheets)** itu ibarat **Kulit, Baju, dan Make-up**-nya.
+
+Tanpa CSS, website lo cuma teks item putih kayak dokumen Word yang lupa di-save. Gak asik.
+
+
+
+## 1. Rumus Dasar (Syntax) 📝
+
+Cara ngomong sama CSS itu gampang. Polanya cuma gini:
+**"Eh Woy [SIAPA], tolong ganti [APANYA] jadi [GIMANA] dong!"**
+
+Dalam bahasa alien (coding), ditulisnya gini:
+
+
+
+```css
+/* Selektor { Properti: Nilai; } */
+
+h1 {
+  color: red;        /* Warnanya jadi MERAH */
+  font-size: 50px;   /* Gedein jadi 50 PIXEL */
+  text-align: center; /* Geser ke TENGAH */
+}
+```
+
+## 2. Cara Nembak Elemen (Selektor) 🔫
+
+Gimana caranya lo bilang: _"Woy tombol login, warnanya biru ya! Tapi tombol hapus warnanya merah!"_? Padahal dua-duanya sama-sama tag `<button>`.
+
+Disinilah kita butuh Selektor (Alat Penunjuk).
+#### A. Tag Selector 💣
+
+Ini selektor paling brutal. Kena semua tanpa pandang bulu.
+```css
+p { color: gray; }
+```
+Artinya: _"Bimsalabim warna semua paaragraf jadi abu-abu!"_
+#### B. Class Selector 👕
+
+Pake tanda Titik (`.`). Ini yang paling sering dipake. Bisa dipake rame-rame kayak seragam sekolah.
+```css
+
+.tombol-biru {
+  background-color: blue;
+  color: white;
+}
+```
+**HTML-nya:** `<button class="tombol-biru">Login</button>`
+#### C. ID Selector (Si KTP) 🆔
+
+Pake tanda Pagar (`#`). Ini barang sakral. Sifatnya **UNIK**. Cuma boleh ada satu elemen yang pake **ID** ini dalam satu halaman.
+```css
+
+#header-utama {
+  border-bottom: 5px solid black;
+}
+```
+**HTML-nya:** `<header id="header-utama">...</header>`
+#### 3. Dimana Naruh CSS-nya? 🏠
+
+Ada 3 cara, tapi cuma satu yang **"Jos"**.
+
+    * **Inline Style** (Dahlah): ❌ Nulis langsung di tag HTML. Bikin kodingan kotor dan susah diurus. `<h1 style="color: red;">Judul</h1>`
+
+    * **Internal Style** (Boleh sayang boleh): ⚠️ Nulis di bagian atas file (`<head>`). Oke buat file kecil, tapi ribet kalau file-nya banyak.
+
+    * **External Style** (Jos Gandos): ✅ Bikin file `.css` terpisah (misal `style.css`), terus dipanggil. Ini cara profesional.
+
+<Callout type="success" emoji="🎉"> **Spoiler Next Level:** Nanti pas kita pake Tailwind CSS, kita bakal ngelanggar aturan nomor 1 (Inline). Tapi tenang, Tailwind punya cara ajaib biar tetep rapi. Nanti kita bahas! </Callout>

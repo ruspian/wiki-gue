@@ -1,0 +1,97 @@
+import { Callout } from 'nextra/components'
+
+# Position & Float 📌
+
+Sebelum ada Flexbox, developer pake teknik **Float** dan **Position** buat ngatur tata letak.
+Walaupun Flexbox udah ada, **Position** tetep WAJIB dikuasai buat kasus khusus (misal: Sticky Header atau Modal).
+
+## 1. Float (Masa Lalu) ⛵
+
+Dulu, ini dipake buat layout (kiri-kanan). Tapi aslinya, Float itu cuma buat **Bungkus Teks di Samping Gambar** (kayak di koran).
+
+```css
+img {
+  float: left; /* Gambar minggir ke kiri */
+  margin-right: 10px;
+}
+```
+
+_Efeknya: Teks di bawahnya bakal naik dan ngelilingin gambar itu.
+_
+<Callout type="warning" emoji="⛔"> **Fatwa Float:** Jangan pake float buat layout utama (misal: Sidebar kiri, Konten kanan). Itu kuno dan bikin sakit kepala (karena elemen induknya jadi "kempes"). Gunakan Float CUMA kalau lo mau efek teks ngelilingin gambar. Titik. </Callout>
+## 2. Position (Jurus Menumpuk Elemen) 🏗️
+
+Secara default, elemen HTML itu antri rapi ke bawah (disebut Static). Tapi kadang kita mau elemen itu "melayang", "nempel", atau "tumpuk-tumpukan".
+
+Properti position punya 4 jurus utama:
+#### A. Relative 👻
+
+Dia pindah posisi, TAPI tempat aslinya tetep dipesan (kosong). Elemen lain gak bakal nyerobot tempat dia.
+```css
+
+.kotak {
+  position: relative;
+  top: 20px;  /* Turun 20px dari posisi normalnya */
+  left: 10px; /* Geser 10px dari kiri */
+}
+```
+#### B. Absolute 🦅
+
+Dia keluar dari antrian normal. Dia melayang di atas elemen lain. Tempat aslinya dianggap hilang, jadi elemen lain bakal naik nyerobot.
+
+**Hukum Wajib Absolute:** Dia bakal memposisikan diri berdasarkan Induk Terdekat yang punya posisi (relative). Kalau gak ada induk yang relative, dia bakal nempel ke Layar Browser (Body).
+```css
+
+/* SANGKAR (Induk) */
+.bapak {
+  position: relative; /* Wajib ada biar anaknya gak kabur */
+  width: 500px;
+  height: 500px;
+}
+
+/* BURUNG (Anak) */
+.anak {
+  position: absolute;
+  top: 0;
+  right: 0; /* Nempel di pojok kanan atas Bapaknya */
+}
+```
+#### C. Fixed 📌
+
+Dia nempel ke Layar Kaca (Viewport). Mau discroll kemanapun, dia tetep di situ. Cocok buat: Navbar, Tombol Chat WA, Iklan Mengganggu.
+```css
+
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+```
+#### D. Sticky 🍯
+
+Awalnya dia relative (ikut scroll biasa). Tapi pas dia nyentuh batas tertentu (top: 0), dia berubah jadi fixed (nempel). Cocok buat: Judul Tabel, Filter Menu.
+```css
+
+.judul {
+  position: sticky;
+  top: 0; /* Bakal nempel pas nyentuh atap layar */
+}
+```
+## 3. Z-Index (Tumpukan Kartu) 🃏
+
+Kalau ada elemen yang posisinya `absolute` atau `fixed`, pasti ada yang ketutupan. Siapa yang di atas? Siapa yang di bawah?
+
+Diatur pake z-index. Makin gede angkanya, makin di atas posisinya.
+```css
+
+.modal {
+  position: fixed;
+  z-index: 999; /* Paling atas, ngalahin yang lain */
+}
+
+.konten {
+  position: relative;
+  z-index: 1;
+}
+```
+<Callout type="error" emoji="⚠️"> **Syarat Z-Index:** `z-index` **CUMA BERFUNGSI** kalau elemennya punya position (`relative`/`absolute`/`fixed`). Kalau posisinya `static` (default), dikasih z-index 1000 pun gak bakal ngaruh. </Callout>
