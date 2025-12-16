@@ -1,0 +1,113 @@
+import { Callout } from 'nextra/components'
+
+# Hyperlink & Atribut Global 🔗
+
+Apa bedanya Buku Cetak sama Website?
+Buku harus dibaca urut (halaman 1 ke 2). Website bisa loncat-loncat.
+Fitur loncat inilah yang disebut **Hyperlink**.
+
+## 1. Tag Anchor (`<a>`) ⚓
+
+Tag `<a>` adalah pintu ke dunia lain.
+
+```html
+<a href="[https://google.com](https://google.com)">Pergi ke Google</a>
+```
+
+**Jenis-Jenis Link:**
+#### A. Link ke Website Lain (External)
+```html
+
+<a href="[https://youtube.com](https://youtube.com)" target="_blank" rel="noopener noreferrer">
+  Buka YouTube
+</a>
+```
+    * `target="_blank"`: Buka di Tab Baru. Biar user gak ninggalin web lo.
+
+    * `rel="noopener noreferrer"`: WAJIB dipasang kalau pake `target="_blank"`. Ini buat keamanan biar web tujuan gak bisa nge-hack tab asli lo.
+
+#### B. Link ke Halaman Sendiri (Internal)
+```html
+
+<a href="/profil">Lihat Profil Saya</a>
+```
+#### C. Link Loncat Indah (Anchor Scroll) Pernah klik tombol "Contact" terus layarnya nge-scroll otomatis ke bawah? Itu pake ID.
+```html
+
+<a href="#kontak">Hubungi Kami</a>
+
+<section id="kontak">
+  <h2>Ini Bagian Kontak</h2>
+</section>
+```
+<Callout type="warning" emoji="⚠️"> 
+**Peringatan Next.js:** Kalau link ke halaman dalam web sendiri (Internal), JANGAN pake &lt;a&gt; biasa. Gunakan komponen &lt;Link&gt; dari Next.js biar loadingnya instan (SPA).
+```jsx
+
+import Link from 'next/link'
+
+// ✅ BENAR
+<Link href="/dashboard">Dashboard</Link>
+```
+</Callout>
+## 2. Atribut Global (ID vs Class) 🆔
+
+Setiap tag HTML (`div`, `p`, `h1`) bisa ditempelin "Stiker" identitas. Ada dua jenis stiker:
+#### A. ID (id="...") 
+
+Sifatnya UNIK. Dalam satu halaman, cuma boleh ada SATU elemen dengan ID tertentu.
+
+    * **Analogi:** Nomor KTP / NIK. Gak mungkin ada dua orang NIK-nya sama.
+
+    * **Guna:** Buat target JavaScript atau Anchor Link tadi.
+
+```html
+
+<h1 id="judul-utama">Website Desa</h1>
+```
+#### B. Class (class="...")
+
+Sifatnya MASSAL. Boleh dipake rame-rame.
+
+    * **Analogi:** Seragam Sekolah. Semua siswa pake baju yang sama.
+
+    * **Guna:** Buat Styling (CSS / Tailwind).
+
+```html
+
+<button class="btn-biru">Simpan</button>
+<button class="btn-biru">Kirim</button>
+<button class="btn-biru">Hapus</button>
+```
+## 3. Atribut Data (data-*) 📦
+
+Kadang lo butuh nyimpen data rahasia di elemen HTML buat dipake sama JavaScript, tapi gak mau data itu muncul di layar.
+
+Pake atribut `data-`. Namanya bebas terserah lo.
+```html
+
+<div 
+  id="produk-1" 
+  data-harga="50000" 
+  data-stok="10" 
+  data-pemilik="Pak Haji"
+>
+  Sepatu Kuda
+</div>
+```
+Nanti di JavaScript/React, lo bisa ambil datanya gampang banget. Ini sering dipake buat fitur Keranjang Belanja atau Filter.
+```jsx
+
+// Contoh JavaScript (Logic)
+const produk = document.getElementById('produk-1');
+console.log(produk.dataset.harga); // Output: "50000"
+```
+<Callout type="success" emoji="🎉"> 
+**Intinya:**
+
+    * Mau pindah halaman? Pake &lt;a&gt; (atau &lt;Link&gt; di Next.js).
+
+    * Mau nandain satu elemen spesial? Pake `id`.
+
+    * Mau dandanin banyak elemen sekaligus? Pake `class`. 
+    </Callout>

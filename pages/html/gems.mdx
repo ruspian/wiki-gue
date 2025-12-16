@@ -1,0 +1,71 @@
+import { Callout } from 'nextra/components'
+
+# Fitur Rahasia & Simbol (HTML5 Gems) 💎
+
+Banyak yang ngira HTML itu cuma buat nampilin teks diem. Salah besar.
+HTML5 punya fitur interaktif yang bikin lo gak perlu nyentuh JavaScript.
+
+## 1. Accordion (Buka-Tutup) Tanpa JS 😲
+
+Mau bikin halaman **FAQ (Tanya Jawab)** yang bisa diklik terus muncul jawabannya?
+Gak perlu React State `isOpen` / `setIsOpen`. Pake tag `<details>` dan `<summary>`.
+
+```html
+<details>
+  <summary>Apakah Pendaftaran Santri Masih Buka?</summary>
+  <p>Masih dong! Pendaftaran buka sampai tanggal 30 Desember.</p>
+</details>
+
+<details>
+  <summary>Berapa Biaya SPP?</summary>
+  <p>Gratis buat yatim piatu. Bayar buat yang mampu.</p>
+</details>
+```
+
+* `<details>`: Wadah utamanya.
+
+* `<summary>`: Judul yang selalu kelihatan (bisa diklik).
+
+* Sisanya bakal tersembunyi dan cuma muncul kalau diklik. Magic! ✨
+
+## 2. Progress Bar & Meter 📊
+
+Mau nampilin Skill Bar atau Sisa Kuota Penyimpanan?
+```html
+
+<label>Upload File:</label>
+<progress value="70" max="100">70%</progress>
+
+<label>Sisa Stok:</label>
+<meter value="2" min="0" max="10">2 dari 10</meter>
+```
+## 3. HTML Entities (Simbol Aneh) 🔣
+
+Di keyboard lo gak ada simbol Copyright, Euro, atau Spasi Keras. Kita pake kode khusus yang diawali `&` dan diakhiri `;`.
+
+|Kode	|Hasil	|Nama	|Kapan Dipake?|
+|:---|:---|:---|:---|
+|&copy;	|©	|Copyright	|Footer web (&copy; 2025).|
+|&nbsp;	|( )	|Non-breaking Space	|Bikin spasi yang "keras" biar teks gak turun baris.|
+|&lt;	|`<`	|Less Than	|Kalau lo mau nulis rumus matematika 5 < 10 biar gak dikira tag HTML.|
+|&gt;	|>	|Greater Than	|Kebalikannya.|
+|&amp;	|&	|Ampersand	|Nulis "Tom & Jerry" (Resmi).|
+|&trade;	|™	|Trademark	|Brand dagang.|
+## 4. Meta Tags (Biar Ganteng di WA) 📱
+
+Pernah share link di WhatsApp terus muncul gambar thumbnail dan judul yang keren? Itu namanya Open Graph (OG Tags).
+
+Kalau di HTML biasa ditaruh di `<head>`. Kalau di Next.js, kita atur di file `layout.tsx` atau `page.tsx` pake metadata.
+
+Contoh Logic-nya:
+```html
+
+<title>Pondok Pesantren Modern</title>
+
+<meta name="description" content="Pondok terbaik di desa..." />
+
+<meta property="og:title" content="Pondok Pesantren Modern" />
+<meta property="og:description" content="Ayo mondok! Fasilitas lengkap, gratis WiFi." />
+<meta property="og:image" content="[https://website-lo.com/foto-cover.jpg](https://website-lo.com/foto-cover.jpg)" />
+```
+<Callout type="info" emoji="🚀"> **Pro Tip:** Jangan remehkan OG Image. Link yang ada gambarnya pas di-share di Grup WA Keluarga, kemungkinannya diklik 3x lebih besar daripada link polos. </Callout>

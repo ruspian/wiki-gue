@@ -1,0 +1,86 @@
+import { Callout } from 'nextra/components'
+
+# Semantic HTML & SEO 🔍
+
+Pernah liat kodingan yang isinya `<div>` semua?
+```html
+<div class="header">...</div>
+<div class="menu">...</div>
+<div class="konten">...</div>
+<div class="footer">...</div>
+```
+
+Itu namanya **"Div Soup"**. Kode kayak gitu susah dibaca manusia dan dibenci Google.
+
+Google Bot (robot pencari) gak ngerti mana konten utama, mana cuma iklan sidebar, kalau semuanya `<div>`.
+## 1. Tag Semantik (Punya Arti) 🧠
+
+**HTML5** menyediakan tag khusus yang menjelaskan _"Ini bagian apa sih?"_.
+
+|Tag	|Fungsi	|Analoginya|
+|:--- |:---|:---|
+|`<header>`	|Kepala halaman. Isinya logo & menu.	|Topi / Kop Surat|
+|`<nav>`	|Navigasi. Isinya link menu utama.	|Peta / Penunjuk Jalan|
+|`<main>`	|Konten Utama. Cuma boleh satu per halaman.	|Daging Steak-nya|
+|`<article>`	|Konten mandiri (Blog post, Berita).	|Satu artikel koran|
+|`<section>`	|Bagian dari konten (Bab 1, Bab 2).	|Bab buku|
+|`<aside>`	|Sidebar / Info tambahan (Iklan, "Baca Juga").	|Catatan kaki / Sticky Note|
+|`<footer>`	|Kaki halaman. Copyright, Link sosmed.	|Sepatu / Footer Surat|
+
+Contoh Struktur yang Benar:
+```html
+
+<body>
+  <header>
+    <nav>...</nav>
+  </header>
+  
+  <main>
+    <article>
+      <h1>Judul Berita</h1>
+      <p>Isi berita...</p>
+    </article>
+    
+    <aside>
+      <p>Berita Terkait...</p>
+    </aside>
+  </main>
+  
+  <footer>
+    <p>&copy; 2025 Ruspian Majid</p>
+  </footer>
+</body>
+```
+## 2. Kenapa Harus Repot? (SEO) 🚀
+
+SEO (Search Engine Optimization) adalah teknik biar web lo muncul di halaman 1 Google.
+
+    * **Google Lebih Paham:** Kalau lo pake `<article>`, Google Bilek _"Oh, ini isi beritanya"_. Kalau pake `<aside>`, Google Bilek _"Oh, ini cuma sampingan, gak terlalu penting"_.
+
+    * **Aksesibilitas (A11y):** User tunanetra pake alat pembaca layar (Screen Reader). Alat ini bisa loncat langsung ke `<main>` tanpa harus dengerin menu navigasi yang panjang. Itu sangat membantu mereka.
+
+## 3. Checklist SEO Dasar di HTML ✅
+
+Selain tag semantik, pastikan lo cek ini:
+
+    1. Hierarchy Heading (`<h1>` - `<h6>`):
+
+        * `<h1>`: Judul Halaman (Cuma boleh 1).
+
+        * `<h2>`: Sub-judul.
+
+        * `<h3>`: Anak sub-judul.
+
+        Jangan loncat! Habis H1 jangan langsung H4.
+
+    2. Alt Text Gambar:
+
+        * ❌ **`<img src="foto.jpg" />`** (Google buta, gak tau ini gambar apa).
+
+        * ✅ **`<img src="foto.jpg" alt="Kegiatan Gotong Royong" />`** (Google jadi tau, dan bisa muncul di Google Images).
+
+    3. Meta Description:
+
+        * Deskripsi pendek yang muncul di bawah link biru Google. Di Next.js ini diatur di metadata.
+
+<Callout type="success" emoji="🎉"> **Kesimpulan:** Kodingan yang baik itu bukan cuma yang "tampilannya bagus", tapi juga strukturnya bener. Website lo nanti bakal lebih gampang ditemukan di Google kalau lo pake Semantic HTML. </Callout>

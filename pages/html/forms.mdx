@@ -1,0 +1,84 @@
+import { Callout } from 'nextra/components'
+
+# Form & Input 📝
+
+Form adalah cara User "ngobrol" sama Server. Tanpa form, website cuma brosur statis yang cuma bisa dibaca.
+
+## 1. Elemen Dasar Form
+
+Wadah utamanya adalah tag `<form>`. Di dalamnya ada input dan tombol.
+
+```html
+<form>
+  <input type="text" />
+  
+  <button type="submit">Kirim</button>
+</form>
+```
+## 2. Input Types (Jenis-Jenis Masukan) ⌨️
+
+HTML punya banyak tipe input bawaan yang canggih. Browser (Chrome/Safari) bakal otomatis validasi atau ganti tampilan keyboard di HP sesuai tipe ini.
+
+|Tipe Input	|Fungsi	|Tampilan di HP|
+|:--- |:--- |:---|
+|`<input type="text">`	|Teks biasa (Nama, Alamat).	|Keyboard biasa.|
+|`<input type="email">`	|Email. Browser ngecek harus ada `@`.	|Keyboard ada tombol `@`.|
+|`<input type="password">`	|Sandi. Huruf jadi bintang `***`.	|Keyboard biasa.|
+|`<input type="number">`	|Angka (Umur, Harga).	|Keyboard angka (Numpad).|
+|`<input type="date">`	|Tanggal (Tgl Lahir).	|Muncul kalender (Datepicker).|
+|`<input type="file">`	|Upload File (Foto, PDF).	|Buka galeri/file manager.|
+|`<input type="checkbox">`	|Contreng (Setuju S&K). |Bisa pilih banyak.	Kotak ceklis.|
+|`<input type="radio">`	|Pilihan Tunggal (Laki/Perempuan).	|Bulatan.|
+## 3. Elemen Pendukung (Wajib Tau) 🛠️
+
+Selain `<input>`, ada elemen lain yang sering dipake:
+#### A. Label (Penting Buat UX)
+
+Jangan cuma taro teks di sebelah `input`. Pake tag `<label>`. Fungsinya: Kalau teks label diklik, inputnya otomatis aktif (kursor masuk).
+
+Versi HTML Biasa:
+```html
+
+<label for="nama">Nama Lengkap:</label>
+<input type="text" id="nama" />
+```
+Versi React/Next.js (PENTING!): Ganti for jadi htmlFor.
+```jsx
+
+<label htmlFor="nama">Nama Lengkap:</label>
+<input type="text" id="nama" />
+```
+#### B. Textarea
+
+Buat input teks panjang (Alamat lengkap, Deskripsi produk).
+```html
+
+<textarea rows="4" placeholder="Tulis deskripsi..."></textarea>
+```
+#### C. Select (Dropdown)
+
+Buat pilihan yang udah disediakan (Pilih Kelas, Pilih Provinsi).
+```html
+
+<select>
+  <option value="10">Kelas 10</option>
+  <option value="11">Kelas 11</option>
+  <option value="12">Kelas 12</option>
+</select>
+```
+## 4. Perbedaan di Next.js 🚀
+
+Kalau di HTML jadul, kita pake atribut `action="proses.php"`. Di Next.js, kita jarang pake itu. Kita biasanya pake `Event Handler` atau `Server Actions`.
+```jsx
+
+// Contoh Modern (Pake React Hook Form nanti)
+<form onSubmit={handleSubmit(onSubmit)}>
+   {/* ... input ... */}
+</form>
+
+// Contoh Server Action (Next.js 14+)
+<form action={simpanDataSantri}>
+   {/* ... input ... */}
+</form>
+```
+<Callout type="warning" emoji="⚠️"> **Tips Aksesibilitas:** Selalu pasangkan &lt;label&gt; dengan &lt;input&gt;. User yang jempolnya gede (di HP) atau user tuna netra bakal sangat berterima kasih. </Callout>

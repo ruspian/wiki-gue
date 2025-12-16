@@ -1,0 +1,97 @@
+import { Callout } from 'nextra/components'
+
+# Multimedia: Biar Web Lo Rame 🎬
+
+Web jaman now itu harus visual. Orang lebih suka liat gambar atau video daripada baca teks panjang-panjang (kecuali lo lagi baca novel).
+
+Di HTML, masukin media itu gampang banget. Gak perlu install plugin aneh-aneh kayak jaman dulu (Adobe Flash? RIP 🪦).
+
+## 1. Gambar (Images) 🖼️
+
+Tag `<img>` itu unik. Dia **Jomblo**, gak punya pasangan penutup (gak ada `</img>`). Cukup buka aja.
+
+```html
+<img 
+  src="/foto-otong.jpg" 
+  alt="Otong pusing" 
+  width="500" 
+/>
+```
+
+**Atribut Wajib:**
+
+    * `src` (Source): Alamat gambarnya di mana. Bisa file lokal atau link internet.
+
+    * `alt` (Alternative Text): Deskripsi gambar.
+
+        - Kenapa penting? Google itu "buta". Dia gak tau itu gambar kucing atau gambar gorengan. Dengan `alt`, lo kasih tau Google: _"Coy, ini gambar Otong lagi pusing"_.
+
+        Kalau internet user lemot dan gambar gagal load, teks ini yang bakal muncul.
+
+<Callout type="warning" emoji="⚠️"> **Note buat Next.js User:** Nanti pas coding beneran, kita bakal pake komponen canggih namanya &lt;Image /&gt; dari Next.js biar loadingnya ngebut. Tapi di balik layar, dia sebenernya ngerender tag &lt;img&gt; html biasa ini kok. </Callout>
+## 2. Audio & Video (Bioskop Mini) 🍿
+
+Mau pasang rekaman atau video cuplikan dracin? HTML5 punya player bawaan yang udah cakep.
+1. Video (.mp4)
+```html
+
+<video width="320" height="240" controls poster="thumbnail.jpg">
+  <source src="ciio-pura-pura-miskin.mp4" type="video/mp4">
+  Yah, browser HP lo jadul banget bro. Gak support video.
+</video>
+```
+    * `controls`: Wajib pasang! Biar user bisa Play/Pause. Kalau gak ada ini, videonya diem doang kayak patung.
+
+    * `poster`: Gambar cover yang muncul sebelum video diputer (Thumbnail).
+
+    * `autoplay`: Muter otomatis. Hati-hati! User paling benci masuk web tiba-tiba ada suara video kenceng. Bisa-bisa web lo langsung ditutup.
+
+2. Audio (.mp3)
+```html
+
+<audio controls>
+  <source src="murottal-juz30.mp3" type="audio/mpeg">
+</audio>
+```
+## 3. Iframe (Jendela Tetangga) 🌍
+
+Gimana kalau videonya ada di YouTube? Atau mau nampilin Google Maps? Jangan di-download terus di-upload ke server lo! Berat, bos! Server bisa meledak.
+
+**Caranya:** Kita "bolongin" web kita buat ngintip web orang lain. Namanya `Iframe` (Inline Frame).
+1. Embed YouTube
+
+    * Buka YouTube, klik Share.
+
+    * Pilih Embed.
+
+    * Copas kodenya.
+
+```html
+
+<iframe 
+  width="560" 
+  height="315" 
+  src="[https://www.youtube.com/embed/VIDEO_ID](https://www.youtube.com/embed/VIDEO_ID)" 
+  title="YouTube video player" 
+  allowfullscreen>
+</iframe>
+```
+2. Embed Google Maps (Lokasi Pondok)
+
+    * Buka Maps, cari lokasi pondok lo.
+
+    * Klik Share -> Embed a map.
+
+    * Copas HTML-nya.
+
+```html
+
+<iframe 
+  src="[https://www.google.com/maps/embed?pb=](https://www.google.com/maps/embed?pb=)..." 
+  width="600" 
+  height="450" 
+  style="border:0;" 
+  allowfullscreen="" 
+  loading="lazy"> </iframe>
+```
+<Callout type="info" emoji="🚀"> **Tips Pro:** Pake loading=&quot;lazy&quot; di iframe Maps. Itu bikin maps-nya cuma di-load pas user nge-scroll sampe bawah. Kalau user cuma liat header doang, kuota mereka aman. </Callout>

@@ -1,0 +1,78 @@
+import { Callout } from 'nextra/components'
+
+# Struktur & Tag Dasar HTML 🧱
+
+Sebelum ngoding jauh-jauh, kita harus kenalan dulu sama "Mbah"-nya website.
+
+## 1. Apa Itu HTML? 🤔
+HTML singkatan dari **HyperText Markup Language**.
+Catat ya: **Markup Language**, bukan Programming Language. Dia gak punya logika (gak bisa itung-itungan 1+1).
+
+Dia tugasnya cuma satu: **Menyusun Kerangka**.
+## 2. Struktur Dokumen 🦴
+
+Setiap file HTML standar punya struktur kayak gini:
+
+```html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Website Pian</title>
+</head>
+<body>
+    <h1>Halo Dunia!</h1>
+</body>
+</html>
+```
+
+<Callout type="info" emoji="💡"> **Di Next.js:** Lo gak perlu nulis struktur ini di setiap file. Next.js udah otomatis ngurusin &lt;html&gt;, &lt;head&gt;, dan &lt;body&gt; di file `layout.tsx`. </Callout>
+## 3. Tag Wajib Hafal 🏷️
+
+Ini tag-tag yang bakal lo pake 99% setiap hari pas ngoding React/Next.js.
+#### A. Teks & Judul
+
+    * `<h1>` sampai `<h6>`: Judul. `<h1>` itu judul utama (cuma boleh satu per halaman).
+
+    * `<p>`: Paragraf. Buat teks biasa.
+
+    * `<span>`: Buat ngebungkus teks kecil di tengah kalimat (inline).
+
+#### B. Wadah (Container)
+
+    * `<div>`: Kotak kosong. Paling sering dipake buat ngebungkus elemen lain (misal buat dikasih Flexbox/Grid di Tailwind).
+
+    * `<section>`: Mirip div, tapi buat menandakan "Bagian" dari halaman (misal: Bagian Hero, Bagian Testimoni).
+
+#### C. Media & Link
+
+    * `<img src="..." alt="...">`: Buat gambar. Wajib ada alt (deskripsi) biar aksesibel.
+
+    * `<a href="...">`: Link ke halaman lain.
+
+#### D. List (Daftar)
+
+    * `<ul>` + `<li>`: List pake titik (Bullet points).
+
+    * `<ol>` + `<li>`: List pake nomor (1, 2, 3).
+
+#### 3. Contoh di JSX (React) ⚛️
+
+Di React/Next.js, penulisan HTML agak beda dikit (namanya JSX). Perbedaan paling umum:
+
+    * `class` diganti jadi `className`.
+
+    * Tag yang gak punya penutup wajib ditutup pake garis miring (`/`).
+
+HTML Biasa:
+```html
+
+<img src="foto.jpg" class="gambar-keren">
+<input type="text">
+```
+JSX (React/Next.js):
+```jsx
+
+<img src="foto.jpg" className="gambar-keren" /> {/* Pake slash di akhir */}
+<input type="text" />
+```

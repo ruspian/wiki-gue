@@ -1,0 +1,73 @@
+import { Callout } from 'nextra/components'
+
+# HTML Tables: Ngerapihin Data 📊
+
+Lo pernah liat Excel kan? Nah, `<table>` itu Excel versi HTML.
+Fungsinya cuma satu: **Nampilin Data Berbaris**.
+
+Contoh: Daftar Mantan, Rekap Absen, Daftar Hutang Temen.
+
+<Callout type="error" emoji="⛔">
+  **Peringatan Keras:**
+  Jangan pernah pake `<table>` buat ngatur tata letak website (Layout).
+  Itu dosa masa lalu (tahun 2000-an). Buat layout, pake **CSS Flexbox/Grid** aja. Tabel khusus buat data!
+</Callout>
+
+## 1. Anatomi Tabel (Bedah Mayat) 💀
+
+Tabel di HTML itu agak ribet strukturnya, harus urut. Gak boleh asal masuk.
+
+```html
+<table border="1">
+  <thead>
+    <tr> <th>No</th> 
+        <th>Nama</th>
+      <th>Keterangan</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td>1</td> <td>Ruspian Majid</td>
+      <td>Alpa (Ketiduran)</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Ujang</td>
+      <td>Hadir</td>
+    </tr>
+  </tbody>
+
+  <tfoot>
+    <tr>
+      <td colspan="3">Total Siswa: 2</td>
+    </tr>
+  </tfoot>
+</table>
+```
+
+**Rumus Hafalan Biar Gak Lupa:**
+
+    * `<table>`: Rumahnya.
+
+    * `<tr>` (Table Row): Bikin Baris baru (Kanan ke Kiri).
+
+    * `<th>` (Table Head): Judul Kolom (Huruf tebel, posisinya di tengah).
+
+    * `<td>` (Table Data): Isi Datanya (Huruf biasa).
+
+## 2. Jurus Fusion (Merge Cells) 🧩
+
+Kadang lo butuh gabungin kotak biar keren, kayak fitur "Merge" di Excel.
+
+    * `colspan` (Column Span): Melebarkan sel ke Samping (Makan jatah kolom sebelahnya).
+
+    * `rowspan` (Row Span): Melebarkan sel ke Bawah (Makan jatah baris bawahnya).
+
+```html
+
+<tr>
+  <td>Total Bayar</td>
+  <td colspan="2">Rp 1.000.000</td> 
+  </tr>
+```
