@@ -1,0 +1,90 @@
+import { Callout } from 'nextra/components'
+
+# Anti Burik di HP & Interaksi 📱✨
+
+Dulu, kalau mau bikin web yang beda tampilan di HP dan Laptop, kita harus nulis `@media screen and (min-width: 768px)`... Panjang banget buset! 😫
+
+Di Tailwind, lo cuma perlu **"Ngebisikin"** elemennya pake **Prefix**.
+
+## 1. Rumus Prefix 🧪
+
+Caranya gampang:
+**`[KONDISI]:[CLASS]`**
+
+Contoh:
+* **`hover:bg-red-500`** -> "Woy tombol, kalau **di-hover**, background jadi merah ya!"
+* **`md:w-1/2`** -> "Woy kotak, kalau layarnya **Medium (Laptop)**, lebarnya jadi setengah ya!"
+
+---
+
+## 2. Responsive Design (Mobile First) 📲
+
+Tailwind itu menganut aliran **Mobile First**.
+Artinya: **Style default yang lo tulis itu buat HP (Layar Kecil).**
+
+Kalau mau ubah buat laptop, pake prefix `md:` atau `lg:`.
+
+### Daftar Breakpoint Wajib Hafal:
+| Prefix | Artinya | Ukuran Layar |
+| :--- | :--- | :--- |
+| **(Gak pake prefix)** | **Tampilan HP (Default)** | < 640px |
+| `sm:` | Tablet Kecil / HP Bongsor | > 640px |
+| `md:` | Tablet / Laptop Kecil | > 768px |
+| `lg:` | Laptop Standar | > 1024px |
+| `xl:` | Monitor Gede | > 1280px |
+
+### Contoh Kasus: Grid Produk
+* **Di HP:** 1 Kolom (Atas-Bawah).
+* **Di Laptop:** 3 Kolom (Jejer Samping).
+
+```jsx
+<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+  <div className="bg-red-500">Produk 1</div>
+  <div className="bg-blue-500">Produk 2</div>
+  <div className="bg-green-500">Produk 3</div>
+</div>
+```
+
+* `grid-cols-1`: Di HP, kolomnya cuma 1.
+
+* `md:grid-cols-3`: Pas masuk layar Medium (Laptop), kolomnya jadi 3.
+
+Simple parah kan? Gak perlu ngetik `@media` sama sekali.
+
+## 3. States (Hover, Focus, Active) 🖱️
+
+Biar web lo gak kaku kayak patung, kasih efek interaksi.
+
+    * `hover`: -> Pas mouse melayang di atasnya.
+
+    * `focus`: -> Pas lagi ngetik di input form.
+
+    * `active`: -> Pas tombol lagi ditekan.
+
+```jsx
+
+<button className="bg-blue-500 hover:bg-blue-700 active:scale-95 transition-all">
+  Klik Aku Mas!
+</button>
+```
+    * `hover:bg-blue-700`: Pas disentuh, warna jadi lebih gelap.
+
+    * `active:scale-95`: Pas dipencet, tombolnya mengecil dikit (efek mendelep).
+
+    * `transition-all`: Biar perubahannya mulus (animasi), gak kaget.
+
+## 4. Dark Mode (Mode Gelap) 🌙
+
+Ini fitur favorit anak muda jaman now. Tailwind udah support bawaan!
+
+Cukup pake prefix `dark`:.
+```jsx
+
+<div className="bg-white text-black dark:bg-gray-900 dark:text-white">
+  <h1 className="text-2xl font-bold">Halo Dunia!</h1>
+  <p>Coba nyalain mode gelap di HP lo.</p>
+</div>
+```
+    Artinya: _"Kalau light mode, background putih teks item. Kalau dark mode, background item teks putih."_
+
+<Callout type="success" emoji="🎉"> **Tips Pro:** Biasain nulis `class` urut dari HP dulu, baru `Responsive`, baru `Hover`. Contoh: `bg-red-500 md:bg-blue-500 hover:bg-green-500`. Biar bacanya enak dan logis. </Callout>

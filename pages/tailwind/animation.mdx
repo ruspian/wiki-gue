@@ -1,0 +1,100 @@
+import { Callout } from 'nextra/components'
+
+# Animasi & Kustomisasi 🕺
+
+Website yang diem mulu itu ngebosenin. Kadang kita butuh elemen yang gerak dikit, misal pas lagi *Loading* atau notifikasi masuk.
+
+Tailwind punya animasi bawaan yang ringan dan gampang dipake.
+
+## 1. Animasi Bawaan (Built-in) 🎬
+
+Ada 4 jurus animasi standar yang siap pakai:
+
+#### A. `animate-spin` (Muter Terus) 🔄
+Wajib dipake buat **Loading Indicator**.
+```jsx
+<div className="animate-spin w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full">
+  </div>
+  ```
+
+  #### B. animate-bounce (Loncat-loncat) 🏀
+
+Cocok buat panah "Scroll ke Bawah" atau notifikasi biar dinotice user.
+```jsx
+
+<div className="animate-bounce bg-red-500 text-white p-2 rounded-full">
+  👇 Klik di bawah sini!
+</div>
+```
+#### C. animate-pulse (Kedap-kedip) 💓
+
+Ini sering dipake buat Skeleton Loading (Kotak abu-abu yang muncul sebelum data asli keluar).
+```jsx
+
+<div className="animate-pulse bg-gray-300 w-full h-32 rounded-lg">
+  </div>
+```
+#### D. animate-ping (Radar) 📡
+
+Buat notifikasi genting. Efeknya kayak radar nyari sinyal.
+```jsx
+
+<span className="relative flex h-3 w-3">
+  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+  <span className="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
+</span>
+```
+## 2. Transform (Miring & Zoom) 📐
+
+Selain animasi gerak terus, kita bisa ubah bentuk elemen (biasanya digabung sama :hover).
+
+    * `scale-110`: Zoom in (Membesar 110%).
+
+    * `rotate-45`: Muter 45 derajat.
+
+    * `-rotate-12`: Muter ke kiri dikit.
+
+```jsx
+
+<img 
+  src="/foto-pian.jpg" 
+  className="w-20 h-20 rounded-full hover:scale-110 hover:rotate-6 transition-transform duration-300"
+/>
+```
+## 3. Kustomisasi Config (Warna Sendiri) 🎨
+
+Gimana kalau lo mau bikin website warnanya "Hijau Lumut" yang gak ada di Tailwind? Masa kita balik ke CSS biasa? Oh tentu tidak.
+
+Kita bisa daftarin warna itu di file `tailwind.config.ts` (ada di root project lo).
+
+Buka `tailwind.config.ts`:
+```jsx
+
+import type { Config } from "tailwindcss";
+
+const config: Config = {
+  theme: {
+    extend: {
+      colors: {
+        // Kita nambahin warna baru di sini
+        'hijau-pesantren': '#1a4d2e', 
+        'emas-mewah': '#d4af37',
+      },
+      fontFamily: {
+        // Nambahin font Google
+        'tulisan-tangan': ['Dancing Script', 'cursive'], 
+      }
+    },
+  },
+  // ... sisanya
+};
+export default config;
+```
+**Cara Pakainya di HTML:** Langsung aja panggil namanya!
+```jsx
+
+<div className="bg-hijau-pesantren text-emas-mewah font-tulisan-tangan p-10">
+  Selamat Datang di Pondok Kami
+</div>
+```
+<Callout type="success" emoji="🎉"> **Kesimpulan:** Tailwind itu bukan penjara. Lo bebas nambahin warna, font, atau animasi apa aja lewat file Config. Jadi web lo gak bakal kelihatan "Pasaran". </Callout>

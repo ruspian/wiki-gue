@@ -1,0 +1,86 @@
+import { Callout } from 'nextra/components'
+
+# Tata Letak: Flexbox & Grid 📐
+
+Jujur aja, di CSS biasa nulis Flexbox itu capek:
+`display: flex; justify-content: center; align-items: center;` (Panjang bener!).
+
+Di Tailwind, kita persingkat jadi mantra pendek. Cukup hafal dua jurus ini: **Flex** dan **Grid**.
+
+## 1. Flexbox (Si Baris Berbaris) 🤸‍♂️
+
+Kuncinya cuma satu: Tambahin class **`flex`**.
+Otomatis "anak-anak" di dalemnya bakal berbaris ke samping.
+
+### A. Mengatur Arah (Direction)
+* **`flex-row`**: Jejer ke samping kiri-kanan (Default).
+* **`flex-col`**: Jejer ke bawah atas-bawah (Kayak tumpukan piring).
+
+### B. Mengatur Posisi (Justify & Items)
+Inget rumus ini biar gak ketuker:
+* **`justify-...`** = Ngatur arah Utama (Kiri-Kanan kalau row).
+* **`items-...`** = Ngatur arah Sebaliknya (Atas-Bawah kalau row).
+
+| Class Tailwind | CSS Asli | Efeknya |
+| :--- | :--- | :--- |
+| `justify-center` | `justify-content: center` | Tengah (Sumbu Utama). |
+| `justify-between` | `justify-content: space-between` | Pojok-pojokan (Jauh-jauhan). |
+| `items-center` | `align-items: center` | Tengah (Sumbu Silang). |
+| `gap-4` | `gap: 1rem` | Kasih jarak antar elemen. |
+
+**Contoh: Tengahin Kotak (The Holy Grail)**
+Ini kodingan paling dicari umat manusia:
+
+```jsx
+<div className="flex justify-center items-center h-screen bg-gray-100">
+  
+  <div className="bg-blue-500 p-10 text-white rounded-lg">
+    Aku Tepat di Tengah Layar! 😎
+  </div>
+
+</div>
+```
+## 2. CSS Grid (Si Kotak Bento) 🍱
+
+Kalau Flexbox itu satu dimensi (baris/kolom), Grid itu dua dimensi. Cocok banget buat bikin Galeri Foto, Kartu Produk, atau Dashboard.
+Rumus Grid:
+
+    * Wadah: grid
+
+    * Jumlah Kolom: grid-cols-[ANGKA]
+
+    * Jarak: gap-[ANGKA]
+
+```jsx
+
+<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+  
+  <div className="bg-red-200 h-32">Kotak 1</div>
+  <div className="bg-red-200 h-32">Kotak 2</div>
+  <div className="bg-red-200 h-32">Kotak 3</div>
+  <div className="bg-red-200 h-32">Kotak 4 (Otomatis turun ke bawah)</div>
+
+</div>
+```
+**Jurus Maruk (Col Span)**
+
+Kadang ada satu kotak yang mau kita bikin lebar sendiri (misal buat Header berita).
+
+    * `col-span-2`: Makan jatah 2 kolom.
+
+    * `col-span-full`: Makan semua kolom sampe mentok.
+
+```jsx
+
+<div className="grid grid-cols-3 gap-4">
+  <div className="col-span-2 bg-blue-500">Aku Lebar (2 Kolom)</div>
+  <div className="bg-red-500">Aku Sempit (1 Kolom)</div>
+</div>
+```
+<Callout type="info" emoji="💡"> 
+**Tips:** Kapan pake Flex? Kapan pake Grid?
+
+    Pake Flex kalau elemennya cuma segaris (Navbar, Tombol di dalam form).
+
+    Pake Grid kalau elemennya banyak dan kotak-kotak (Daftar Produk, Galeri). 
+    </Callout>

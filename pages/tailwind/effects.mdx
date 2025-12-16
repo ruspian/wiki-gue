@@ -1,0 +1,78 @@
+import { Callout } from 'nextra/components'
+
+# Efek Visual: Shadow, Opacity & Blur ✨
+
+Desain "Flat" (datar) itu udah mulai ditinggalin.
+Sekarang jaman **Depth (Kedalaman)**. Elemen harus berasa punya "nyawa", bisa melayang, bisa tembus pandang.
+
+## 1. Box Shadow (Bayangan) 👥
+
+Biar elemen lo gak nempel tembok, kita kasih bayangan biar berasa "Timbul" atau melayang.
+
+* **`shadow-sm`**: Bayangan tipis banget (kayak kertas nempel meja).
+* **`shadow`**: Standar.
+* **`shadow-lg`**: Bayangan lebar (berasa agak tinggi).
+* **`shadow-xl`** / **`shadow-2xl`**: Melayang tinggi banget (kayak UFO).
+* **`shadow-none`**: Ilangin bayangan.
+
+```jsx
+<button className="bg-white px-6 py-3 rounded-lg shadow-lg hover:shadow-2xl transition-all">
+  Tombol Melayang
+</button>
+```
+
+_Efeknya:_ Pas tombol diem dia melayang, pas di-hover dia makin naik ke atas (bayangannya makin gede). Keren kan?
+
+## 2. Opacity (Transparansi) 👻
+
+Bikin elemen jadi tembus pandang kayak hantu. Skalanya 0 - 100.
+
+    * `opacity-0`: Ilang total (Invisible).
+
+    * `opacity-50`: Setengah transparan.
+
+    * `opacity-100`: Padat (Default).
+
+```jsx
+
+<div className="bg-black opacity-50 text-white p-4">
+  Yah, teksnya ikutan pudar... 😭
+</div>
+```
+<Callout type="warning" emoji="⚠️"> 
+**Hati-hati:** Kalau pake `opacity`, semua isi di dalemnya (termasuk teks) ikutan pudar. Kalau mau background-nya doang yang transparan tapi teksnya tetep jelas, pake Alpha Channel:
+
+`bg-black/50` (Artinya: Warna hitam, kekuatan 50%). 
+</Callout>
+## 3. Blur & Backdrop Filter (Efek Kaca) 🌫️
+
+Ini jurus andalan desain Glassmorphism (Ala Windows 11 atau iOS). Ada dua jenis blur:
+#### A. Blur Biasa (blur-sm)
+
+Nge-blur elemen itu sendiri. Dipake buat: Sensor foto muka, atau bikin background abstrak.
+#### B. Backdrop Blur (backdrop-blur-sm) 🏆
+
+Nge-blur **APA YANG ADA DI BELAKANGNYA**. Ini yang bikin efek "Kaca Buram".
+
+Resep Bikin Kartu Kaca (Glass Effect):
+
+    1. Background putih transparan (bg-white/30).
+
+    2. Kasih backdrop-blur-md (biar burem belakangnya).
+
+    3. Kasih border tipis putih (border-white/20) biar ada pinggirannya.
+
+```jsx
+
+<div className="relative h-64 bg-blue-500">
+  <div className="absolute top-10 left-10 text-white font-bold text-4xl">
+    Background Asli
+  </div>
+  
+  <div className="absolute top-20 left-20 w-64 h-32 bg-white/30 backdrop-blur-md border border-white/20 p-4 rounded-xl shadow-lg">
+    <h1 className="text-white font-bold">Efek Kaca</h1>
+    <p className="text-white text-sm">Liat deh, tulisan di belakang jadi burem!</p>
+  </div>
+</div>
+```
+<Callout type="error" emoji="⛔"> **Peringatan Performa:** Efek backdrop-blur itu berat itungannya buat browser. Jangan dipake kebanyakan di HP kentang, nanti scroll-nya jadi patah-patah (lag). Pake secukupnya aja di Navbar atau Modal. </Callout>
