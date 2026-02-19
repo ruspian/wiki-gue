@@ -1,4 +1,4 @@
-import { Callout } from 'nextra/components'
+import { Callout } from "nextra/components";
 
 # Bye Bye CSS Ribet 👋
 
@@ -8,30 +8,30 @@ Jujur deh, lo pernah gak ngalamin ini pas ngoding CSS biasa?
 2.  Buka file CSS.
 3.  Ngetik style panjang lebar.
 4.  Balik lagi ke HTML.
-5.  Bingung kasih nama class baru: *"Aduh, ini namanya `card-body` atau `card-content` ya?"* 🤯
+5.  Bingung kasih nama class baru: _"Aduh, ini namanya `card-body` atau `card-content` ya?"_ 🤯
 
 Itu namanya **Context Switching**. Otak lo dipaksa loncat-loncat antar file. Itu yang bikin capek.
 
-## 1. Revolusi "Sat-Set" (Utility-First) ⚡
+## 1. Revolusi
 
 **Tailwind CSS** dateng dengan ide gila:
 **"Gak usah bikin nama class. Gak usah pindah file. Tulis aja style-nya langsung di HTML."**
 
-
-
 Coba kita adu mekanik: **Bikin Tombol Biru.**
 
-### Cara Lama (CSS Murni) 🐢
+### Cara Lama
+
 Lo harus ngarang nama class dulu, terus ngetik CSS-nya terpisah.
 
 **HTML:**
+
 ```html
 <button class="btn-biru-mantap">Klik Saya</button>
 ```
 
 CSS:
-```css
 
+```css
 .btn-biru-mantap {
   background-color: #3b82f6;
   color: white;
@@ -40,15 +40,15 @@ CSS:
   /* Kalau mau ganti dikit, harus edit file ini lagi */
 }
 ```
-Cara Tailwind (The Modern Way) 🚀:
+
+### Cara Tailwind :
 
 Gak perlu ngarang nama. Langsung tempel jurusnya.
-```jsx
 
-<button className="bg-blue-500 text-white py-2 px-5 rounded">
-  Klik Saya
-</button>
+```jsx
+<button className="bg-blue-500 text-white py-2 px-5 rounded">Klik Saya</button>
 ```
+
     * `bg-blue-500`: Background biru level 500.
 
     * `text-white`: Teks putih.
@@ -60,6 +60,7 @@ Gak perlu ngarang nama. Langsung tempel jurusnya.
     * `rounded`: Sudut tumpul.
 
 Hasilnya sama, tapi waktunya beda jauh. Lo gak perlu mikir nama btn-biru-mantap.
+
 ## 2. Bedanya sama Bootstrap? 🤔
 
 Banyak yang nanya: _"Lah, ini mah sama aja kayak Bootstrap dong?"_
@@ -80,7 +81,7 @@ Banyak yang nanya: _"Lah, ini mah sama aja kayak Bootstrap dong?"_
 
         * Hasilnya? Website lo punya Identitas Unik (Gak pasaran).
 
-## 3. Keuntungan Terselubung 🕵️‍♂️
+## 3. Keuntungan
 
 Selain cepet, ada bonus lainnya:
 
@@ -88,4 +89,8 @@ Selain cepet, ada bonus lainnya:
 
     2. **Gak Takut Hapus Kode:** Pernah gak lo takut hapus CSS karena: _"Jangan-jangan class ini dipake di halaman lain?"_ Di Tailwind, style itu nempel di elemennya. Kalau elemennya dihapus, style-nya ikut ilang. Aman sentosa.
 
-<Callout type="info" emoji="🚀"> **Fakta Lapangan:** Netflix, NASA, dan OpenAI (ChatGPT) pake Tailwind CSS. Jadi kalau lo pake ini, lo udah selevel sama engineer kelas dunia. 😎 </Callout>
+<Callout type="info" emoji="🚀">
+  {" "}
+  **Fakta Lapangan:** Netflix, NASA, dan OpenAI (ChatGPT) pake Tailwind CSS.
+  Jadi kalau lo pake ini, lo udah selevel sama engineer kelas dunia. 😎{" "}
+</Callout>
